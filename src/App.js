@@ -1,24 +1,34 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./Components/Navbar";
 import Footer from "./Components/Footer";
-import LandingPage from "./Views/LandingPage";
 import { PAGETHEME } from "./Constants/colors";
-import * as dotenv from "dotenv";
-dotenv.config();
+import { routes } from "./Constants/routes";
+import { useState } from "react";
 
 function App() {
+  const [pageColor, setPageColor] = useState(PAGETHEME.Blue);
+
+  const COMPONENT_ROUTES = routes.map((component, idx) => {
+    return (
+      <Route key={idx} path={component.path} element={component.element} />
+    );
+  });
+
   return (
     <>
-      <Navbar style={{ color: PAGETHEME.Blue }} />
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          paddingBottom: "100px",
-        }}
-      >
-        <LandingPage style={{ color: PAGETHEME.Blue }} />
-      </div>
-      <Footer />
+      <BrowserRouter>
+        <Navbar style={{ color: pageColor }} changeTheme={setPageColor} />
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            paddingBottom: "100px",
+          }}
+        >
+          <Routes>{COMPONENT_ROUTES}</Routes>
+        </div>
+        <Footer />
+      </BrowserRouter>
     </>
   );
 }
