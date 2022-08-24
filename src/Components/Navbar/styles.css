@@ -55,6 +55,9 @@
   .navbar-redirect-link {
     display: none;
   }
+  .redirect-links {
+    display: none;
+  }
   .navbar-redirect-section {
     justify-content: center;
     padding: 0;
