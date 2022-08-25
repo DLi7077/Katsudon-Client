@@ -1,9 +1,9 @@
 import { Avatar } from "@mui/material";
-import pfp from "../../Assets/devin.jpg";
 import "./styles.css";
+
 /**
  * @param {string} username
- * @param {string} profilePictureURL
+ * @param {string} profile_picture_url
  * @param {number} followers
  * @param {number} following
  * @param {string} biography
@@ -13,16 +13,12 @@ import "./styles.css";
  * @returns A profile component
  */
 export default function Profile(props) {
-  const username = "ButterRiolu";
-  const profilePicture = pfp;
-  const followers = 10;
-  const following = 100;
-  const biography = "Hey its me";
-  const easySolved = 136;
-  const mediumSolved = 106;
-  const hardSolved = 6;
-  const totalSolved = easySolved + mediumSolved + hardSolved;
+  const { userInfo } = props;
+  const { username, biography, followers, following, profile_picture_url } =
+    userInfo;
 
+  const { Easy, Medium, Hard } = props.difficultyDistribution;
+  const totalSolved = Easy + Medium + Hard;
   const fractionToPercent = (fraction) => {
     return `${fraction * 100}%`;
   };
@@ -32,12 +28,12 @@ export default function Profile(props) {
       <div className="profile-user-info">
         <div className="profile-top-wrapper">
           <div className="follow-stat">
-            <div className="follow-value">{followers}</div>
+            <div className="follow-value">{followers.length}</div>
             <div className="follow-text"> Followers</div>
           </div>
           <div className="profile-picture">
             <Avatar
-              src={profilePicture}
+              src={profile_picture_url}
               style={{
                 width: "100%",
                 height: "100%",
@@ -46,27 +42,33 @@ export default function Profile(props) {
             />
           </div>
           <div className="follow-stat">
-            <div className="follow-value">{following}</div>
+            <div className="follow-value">{following.length}</div>
             <div className="follow-text"> Following</div>
           </div>
         </div>
         <div className="profile-username">{username}</div>
-        <div className="profile-biography">{biography}</div>
+        <div className="profile-biography">{biography ?? ""}</div>
       </div>
       <div className="profile-solved-section">
         <div className="profile-solved-count">Solved: {totalSolved}</div>
         <div className="profile-solved-distribution">
           <div
             className="profile-solved-easy"
-            style={{ width: fractionToPercent(easySolved / totalSolved) }}
+            style={{
+              width: fractionToPercent(totalSolved ? Easy / totalSolved : 0),
+            }}
           />
           <div
             className="profile-solved-medium"
-            style={{ width: fractionToPercent(mediumSolved / totalSolved) }}
+            style={{
+              width: fractionToPercent(totalSolved ? Medium / totalSolved : 0),
+            }}
           />
           <div
             className="profile-solved-hard"
-            style={{ width: fractionToPercent(hardSolved / totalSolved) }}
+            style={{
+              width: fractionToPercent(totalSolved ? Hard / totalSolved : 0),
+            }}
           />
         </div>
       </div>
