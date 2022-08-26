@@ -4,23 +4,29 @@ import { useEffect, useState } from "react";
 import "./styles.css";
 import UserAPI from "../../Api/UserAPI";
 import SolutionTable from "../../Components/SolutionTable";
+import SolutionModal from "../../Components/SolutionModal";
 
 export default function ProfilePage(props) {
-  const user = "6306b34920cf5f80f7d0c20d";
   const username = "Devin";
 
   const [userInfo, setUserInfo] = useState({});
   const [solutions, setSolutions] = useState({});
   const [isLoading, setLoading] = useState(true);
+  const [solutionDisplay, setSolutionDisplay] = useState(false);
+  const [problemBlock, setProblemBlock] = useState({});
+  const [solutionsBlock, setSolutionsBlock] = useState({});
 
-  async function getUserDetails(user) {
+  async function getUserDetails(username) {
     setLoading(true);
+    let user_id;
 
-    await UserAPI.getUserSolutions(user).then((res) => {
-      setSolutions(res);
-    });
     await UserAPI.getUserProfile(username).then((res) => {
       setUserInfo(res.user);
+      user_id = res.user._id;
+    });
+
+    await UserAPI.getUserSolutions(user_id).then((res) => {
+      setSolutions(res);
     });
 
     setTimeout(() => {
@@ -28,8 +34,20 @@ export default function ProfilePage(props) {
     }, 500);
   }
 
+  const handleOpenSolutionModel = (problem, solutions) => {
+    setProblemBlock(problem);
+    setSolutionsBlock(solutions);
+    setSolutionDisplay(true);
+  };
+
+  const handleCloseSolutionModel = () => {
+    setProblemBlock({});
+    setSolutionsBlock({});
+    setSolutionDisplay(false);
+  };
+
   useEffect(() => {
-    getUserDetails(user);
+    getUserDetails(username);
   }, []);
 
   return (
@@ -49,14 +67,26 @@ export default function ProfilePage(props) {
         </div>
       )}
       {!isLoading && (
-        <div className="profile-page-container">
-          <Profile
-            userInfo={userInfo}
-            difficultyDistribution={solutions.difficulty_distribution}
-            x={solutions}
-          />
-          <SolutionTable solutions={solutions} style={{ color: "#BD7AFF" }} />
-        </div>
+        <>
+          <div className="profile-page-container">
+            <Profile
+              userInfo={userInfo}
+              difficultyDistribution={solutions.difficulty_distribution}
+              x={solutions}
+            />
+            <SolutionTable
+              solutions={solutions}
+              handleOpenSolutionModel={handleOpenSolutionModel}
+              style={{ color: "#BD7AFF" }}
+            />
+            <SolutionModal
+              open={solutionDisplay}
+              handleClose={handleCloseSolutionModel}
+              problem={problemBlock}
+              solutions={solutionsBlock}
+            />
+          </div>
+        </>
       )}
     </div>
   );

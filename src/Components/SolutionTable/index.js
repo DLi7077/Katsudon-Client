@@ -9,7 +9,7 @@ import {
 import FileOpenIcon from "@mui/icons-material/FileOpen";
 import { keys, map, omit, without } from "lodash";
 import { PROBLEM_DIFFICULTY } from "../../Constants/colors";
-import { LANGUAGE_LOGOS } from "../../Constants/languageLogos";
+import { LANGUAGE_LOGOS } from "../../Constants/language";
 import "./styles.css";
 
 /**
@@ -95,10 +95,9 @@ export default function SolutionTable(props) {
                         display: "flex",
                         justifyContent: "flex-start",
                         alignItems: "center",
-                        gap: "2rem",
+                        gap: "0.5rem",
                       }}
                     >
-                      {/* languages used */}
                       {map(
                         without(keys(details.solutions), "recent"),
                         (language, idx) => {
@@ -115,7 +114,14 @@ export default function SolutionTable(props) {
                     </div>
                   </TableCell>
                   <TableCell style={classes.tableCell}>
-                    <IconButton>
+                    <IconButton
+                      onClick={() => {
+                        props.handleOpenSolutionModel(
+                          details.problem,
+                          details.solutions
+                        );
+                      }}
+                    >
                       <FileOpenIcon style={classes.fileOpen} />
                     </IconButton>
                   </TableCell>

@@ -24,6 +24,11 @@ code {
     monospace;
 }
 
+img {
+  height: auto !important;
+  max-width: 100%;
+}
+
 .content-container {
   box-sizing: border-box;
 
