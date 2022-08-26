@@ -5,17 +5,27 @@ const fractionToPercent = (fraction) => {
   return `${fraction * 100}%`;
 };
 
-const difficultyGenerator = (solved, total, difficulty) =>
-  !!solved && (
-    <Tooltip title={solved}>
-      <div
-        className={`profile-solved-${difficulty}`}
-        style={{
-          width: fractionToPercent(total ? solved / total : 0),
-        }}
-      />
-    </Tooltip>
+const difficultyGenerator = (solved, total, difficulty) => {
+  const difficultyTitle = difficulty[0].toUpperCase() + difficulty.slice(1);
+  return (
+    !!solved && (
+      <Tooltip
+        title={
+          <div style={{ fontSize: "1rem" }}>
+            {difficultyTitle}: {solved}
+          </div>
+        }
+      >
+        <div
+          className={`profile-solved-${difficulty}`}
+          style={{
+            width: fractionToPercent(total ? solved / total : 0),
+          }}
+        />
+      </Tooltip>
+    )
   );
+};
 
 /**
  * @param {string} username
