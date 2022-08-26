@@ -1,0 +1,86 @@
+.solution-container {
+  position: relative;
+  margin-top: 5vh;
+  display: flex;
+  justify-content: space-between;
+  background-color: #a0a0a0;
+  color: white;
+  width: 95vw;
+  height: 80vh;
+  font-size: 1.25rem;
+  border-radius: 8px;
+}
+
+.solution-container-exit {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 3rem;
+  width: 4rem;
+  background-color: rgb(237, 123, 57);
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.leetcode-title {
+  font-size: 1.5rem;
+}
+
+.problem-block {
+  background-color: #2a2a2a;
+  box-sizing: border-box;
+  width: 40vw;
+  border-radius: 8px;
+  overflow-y: scroll;
+  margin: 1rem;
+}
+
+pre {
+  background-color: rgb(26, 26, 26);
+  white-space: pre-line;
+  padding: 0.25rem;
+  border-radius: 8px;
+}
+
+.solution-block {
+  background-color: #2a2a2a;
+  width: 55vw;
+  position: sticky;
+  top: 0;
+  border-radius: 8px;
+  overflow-y: auto;
+  margin: 1rem;
+}
+
+.modal-content {
+  padding: 1rem;
+}
+
+.solution-code {
+  overflow: auto;
+}
+
+@media only screen and (max-width: 1000px) {
+  .solution-container {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: 90vh;
+    gap: 1rem;
+  }
+
+  .problem-block {
+    width: 100%;
+    margin: 0;
+    border-radius: 0;
+    border-bottom: 4px solid white;
+  }
+
+  .solution-block {
+    width: 100%;
+    margin: 0;
+    border-radius: 0;
+  }
+}

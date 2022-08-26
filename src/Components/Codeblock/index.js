@@ -4,11 +4,10 @@ export default function CodeBlock(props) {
   return (
     <CopyBlock
       text={props.code}
-      language="cpp"
+      language={props.language}
       theme={vs2015}
       showLineNumbers={true}
-      startingLineNumber={0}
-      wrapLines={false}
+      // wrapLines={false}
     />
   );
 }

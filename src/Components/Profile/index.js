@@ -1,5 +1,21 @@
-import { Avatar } from "@mui/material";
+import { Avatar, Tooltip } from "@mui/material";
 import "./styles.css";
+
+const fractionToPercent = (fraction) => {
+  return `${fraction * 100}%`;
+};
+
+const difficultyGenerator = (solved, total, difficulty) =>
+  !!solved && (
+    <Tooltip title={solved}>
+      <div
+        className={`profile-solved-${difficulty}`}
+        style={{
+          width: fractionToPercent(total ? solved / total : 0),
+        }}
+      />
+    </Tooltip>
+  );
 
 /**
  * @param {string} username
@@ -19,10 +35,6 @@ export default function Profile(props) {
 
   const { Easy, Medium, Hard } = props.difficultyDistribution;
   const totalSolved = Easy + Medium + Hard;
-  const fractionToPercent = (fraction) => {
-    return `${fraction * 100}%`;
-  };
-
   return (
     <div className="profile-container">
       <div className="profile-user-info">
@@ -52,24 +64,9 @@ export default function Profile(props) {
       <div className="profile-solved-section">
         <div className="profile-solved-count">Solved: {totalSolved}</div>
         <div className="profile-solved-distribution">
-          <div
-            className="profile-solved-easy"
-            style={{
-              width: fractionToPercent(totalSolved ? Easy / totalSolved : 0),
-            }}
-          />
-          <div
-            className="profile-solved-medium"
-            style={{
-              width: fractionToPercent(totalSolved ? Medium / totalSolved : 0),
-            }}
-          />
-          <div
-            className="profile-solved-hard"
-            style={{
-              width: fractionToPercent(totalSolved ? Hard / totalSolved : 0),
-            }}
-          />
+          {difficultyGenerator(Easy, totalSolved, "easy")}
+          {difficultyGenerator(Medium, totalSolved, "medium")}
+          {difficultyGenerator(Hard, totalSolved, "hard")}
         </div>
       </div>
     </div>
