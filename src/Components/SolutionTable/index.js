@@ -105,7 +105,7 @@ export default function SolutionTable(props) {
                             <img
                               key={idx}
                               src={LANGUAGE_LOGOS[language]}
-                              alt="language"
+                              alt={language}
                               style={classes.languageLogo}
                             />
                           );
