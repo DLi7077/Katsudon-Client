@@ -12,7 +12,7 @@ export const LANGUAGE_LOGOS = {
   "C++": CPP,
   JavaScript: JavaScript,
   Java: Java,
-  Python2: Python,
+  Python: Python,
   Python3: Python,
   TypeScript: TypeScript,
 };
@@ -23,7 +23,7 @@ export const LANGUAGE_COMPILE_MAPPING = {
   "C++": "cpp",
   JavaScript: "javascript",
   Java: "java",
-  Python2: "python",
+  Python: "python",
   Python3: "python",
   TypeScript: "typescript",
 };

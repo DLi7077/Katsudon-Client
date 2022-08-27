@@ -7,9 +7,10 @@ import SolutionTable from "../../Components/SolutionTable";
 import SolutionModal from "../../Components/SolutionModal";
 
 export default function ProfilePage(props) {
-  const username = "Devin";
+  let params = new URL(document.location).searchParams;
+  const username = params.get("user");
 
-  const [userInfo, setUserInfo] = useState({});
+  const [userInfo, setUserInfo] = useState(null);
   const [solutions, setSolutions] = useState({});
   const [isLoading, setLoading] = useState(true);
   const [solutionDisplay, setSolutionDisplay] = useState(false);
@@ -20,10 +21,16 @@ export default function ProfilePage(props) {
     setLoading(true);
     let user_id;
 
-    await UserAPI.getUserProfile(username).then((res) => {
-      setUserInfo(res.user);
-      user_id = res.user._id;
-    });
+    await UserAPI.getUserProfile(username)
+      .then((res) => {
+        setUserInfo(res.user);
+        user_id = res.user._id;
+      })
+      .catch(() => {
+        setTimeout(() => {
+          setLoading(false);
+        }, 200);
+      });
 
     await UserAPI.getUserSolutions(user_id).then((res) => {
       setSolutions(res);
@@ -66,7 +73,7 @@ export default function ProfilePage(props) {
           />
         </div>
       )}
-      {!isLoading && (
+      {userInfo && !isLoading && (
         <>
           <div className="profile-page-container">
             <Profile
@@ -87,6 +94,20 @@ export default function ProfilePage(props) {
             />
           </div>
         </>
+      )}
+      {!userInfo && (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100%",
+            fontSize: "2rem",
+            color: "white",
+          }}
+        >
+          "{username}" is not a valid user
+        </div>
       )}
     </div>
   );

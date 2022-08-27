@@ -1,5 +1,4 @@
-import { IconButton, Modal } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import { Modal } from "@mui/material";
 import { Markup } from "react-render-markup";
 import { get, keys, without } from "lodash";
 import CodeBlock from "../Codeblock";
