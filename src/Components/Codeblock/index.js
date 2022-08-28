@@ -1,13 +1,16 @@
-import { CopyBlock, vs2015 } from "react-code-blocks";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { atomDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 export default function CodeBlock(props) {
   return (
-    <CopyBlock
-      text={props.code}
+    <SyntaxHighlighter
       language={props.language}
-      theme={vs2015}
-      showLineNumbers={true}
-      // wrapLines={false}
-    />
+      style={atomDark}
+      showLineNumbers
+      lineNumberStyle={{ minWidth: 0 }}
+      showInlineLineNumbers
+    >
+      {props.code}
+    </SyntaxHighlighter>
   );
 }

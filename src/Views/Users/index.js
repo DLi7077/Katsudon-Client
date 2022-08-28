@@ -44,7 +44,7 @@ export default function Users() {
     setLoading(true);
 
     selectedUser && getSelectedUserDetails(selectedUser);
-    console.log(selectedUser);
+    
     setLoading(false);
   }, [selectedUser]);
 
