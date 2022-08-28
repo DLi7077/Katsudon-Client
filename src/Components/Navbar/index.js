@@ -1,4 +1,5 @@
 import "./styles.css";
+import { get } from "lodash";
 import { Link, useLocation } from "react-router-dom";
 import { IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -11,7 +12,8 @@ export default function Navbar(props) {
 
   useEffect(() => {
     const { pathname } = location;
-    setLogoColor(routeColors[pathname]);
+    setLogoColor(get(routeColors, `${pathname}.color`));
+    props.changeTheme(get(routeColors, pathname));
   }, [location]);
 
   return (
@@ -48,7 +50,7 @@ export default function Navbar(props) {
 
             <div className="redirect-links">
               <Link
-                to="/welcome"
+                to="/problems"
                 className="navbar-redirect-link"
                 style={{ textDecoration: "none" }}
               >

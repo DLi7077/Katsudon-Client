@@ -61,7 +61,10 @@ export default function ProfilePage(props) {
   }, [username]);
 
   return (
-    <div className="content-container">
+    <div
+      className="content-container"
+      style={{ backgroundColor: props.backgroundColor }}
+    >
       {isLoading && (
         <div
           style={{
@@ -72,7 +75,7 @@ export default function ProfilePage(props) {
           }}
         >
           <CircularProgress
-            style={{ color: PAGETHEME.Purple, width: "8rem", height: "8rem" }}
+            style={{ color: props.color, width: "8rem", height: "8rem" }}
           />
         </div>
       )}
@@ -83,7 +86,8 @@ export default function ProfilePage(props) {
             <SolutionTable
               solutions={solutions}
               handleOpenSolutionModel={handleOpenSolutionModel}
-              style={{ color: PAGETHEME.Purple }}
+              headerColor={props.color}
+              backgroundColor={"#302E38"}
             />
             <SolutionModal
               open={solutionDisplay}

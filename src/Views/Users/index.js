@@ -7,7 +7,7 @@ import "./styles.css";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
 
-export default function Users() {
+export default function Users(props) {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [currrentUserDetails, setCurrentUserDetails] = useState(null);
@@ -44,12 +44,15 @@ export default function Users() {
     setLoading(true);
 
     selectedUser && getSelectedUserDetails(selectedUser);
-    
+
     setLoading(false);
   }, [selectedUser]);
 
   return (
-    <div className="content-container">
+    <div
+      className="content-container"
+      style={{ backgroundColor: props.backgroundColor }}
+    >
       <div className="user-page-content-container">
         <div className="user-page-search-container">
           {!isLoading && (

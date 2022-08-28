@@ -3,11 +3,11 @@ import "./styles.css";
 
 export default function LandingPage(props) {
   return (
-    <div className="content-container">
-      <div
-        className="landingpage-heading"
-        style={props.color ?? { color: "white" }}
-      >
+    <div
+      className="content-container"
+      style={{ backgroundColor: props.backgroundColor }}
+    >
+      <div className="landingpage-heading" style={{ color: "white" }}>
         <div className="landingpage-title">
           <div>Katsudon </div>
           <img src={LeetcodeLogo} alt="leetcode" className="leetcode-logo" />
@@ -20,21 +20,22 @@ export default function LandingPage(props) {
       </div>
       <div className="content-block">
         <div>
-          <div className="section-title" style={props.style}>
+          <div className="section-title" style={{ color: props.color }}>
             How it works
           </div>
           <div className="section">
             This website is dependent on the{" "}
-            <span style={props.style}>カツドン (Katsudon)</span> chrome
-            extension.
+            <span style={{ color: props.color }}>カツドン (Katsudon)</span>{" "}
+            chrome extension.
             <br />
             When you successfully submit a Leetcode problem,{" "}
-            <span style={props.style}>Katsudon</span> scrapes the details of the
-            page's HTML and sends the needed information to the database
+            <span style={{ color: props.color }}>Katsudon</span> scrapes the
+            details of the page's HTML and sends the needed information to the
+            database
           </div>
         </div>
         <div>
-          <div className="section-title" style={props.style}>
+          <div className="section-title" style={{ color: props.color }}>
             Tech Stack
           </div>
           <div className="section">
@@ -42,19 +43,19 @@ export default function LandingPage(props) {
             <br />
             Using MongoDB as the noSQL database.
             <br />
-            <span style={props.style}>Katsudon</span> chrome extension built
-            with JavaScript and small hints of HTML
+            <span style={{ color: props.color }}>Katsudon</span> chrome
+            extension built with JavaScript and small hints of HTML
             <br />
             Frontend built with ReactJS and CSS
           </div>
         </div>
 
         <div>
-          <div className="section-title" style={props.style}>
+          <div className="section-title" style={{ color: props.color }}>
             Credits
           </div>
           <div className="section">
-            <span style={props.style}>Qasim Wani</span>
+            <span style={{ color: props.color }}>Qasim Wani</span>
             <br />
             This project was greatly motivated by QasimWani's LeetHub chrome
             extension, which auto commits your leetcode solutions to a github
@@ -69,7 +70,7 @@ export default function LandingPage(props) {
           </div>
           <div style={{ height: "1rem" }} />
           <div className="section">
-            <span style={props.style}>Kevin Chen</span>
+            <span style={{ color: props.color }}>Kevin Chen</span>
             <br />
             Kevin:
             <li>"Hey guys should we buy a leetcode premium and share it?"</li>
@@ -90,7 +91,7 @@ export default function LandingPage(props) {
             <li> ...Guess I'll try to make it myself</li>
           </div>
           <div className="section">
-            <span style={props.style}>SQL Professor</span>
+            <span style={{ color: props.color }}>SQL Professor</span>
             <br />
             Me: Hey professor, is there a way for me to create a schema to
             represent a graph of connections without having an having a garbage

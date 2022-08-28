@@ -46,7 +46,7 @@ const headers = ["Problem", "Language", "Solution", "Solved At"];
 export default function SolutionTable(props) {
   const classes = {
     table: {},
-    tableHeader: { ...props.style, fontSize: "1.5rem" },
+    tableHeader: { color: props.headerColor, fontSize: "1.5rem" },
     tableCell: {
       textAlign: "left",
       fontSize: "1.25rem",
@@ -75,7 +75,10 @@ export default function SolutionTable(props) {
             })}
           </TableRow>
         </TableHead>
-        <TableBody className="solution-table-body">
+        <TableBody
+          className="solution-table-body"
+          style={{ backgroundColor: props.backgroundColor }}
+        >
           {map(
             omit(props.solutions, "difficulty_distribution"),
             (details, id) => {

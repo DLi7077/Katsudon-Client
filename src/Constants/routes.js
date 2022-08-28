@@ -15,4 +15,5 @@ export const routeColors = {
   "/welcome": PAGETHEME.Blue,
   "/profile": PAGETHEME.Purple,
   "/users": PAGETHEME.LightBlue,
+  "/problems": PAGETHEME.Orange,
 };

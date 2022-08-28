@@ -1,5 +1,12 @@
 import React from "react";
 
-export default function LeetcodeProblems() {
-  return <div className="content-container">Leetcode Problems</div>;
+export default function LeetcodeProblems(props) {
+  return (
+    <div
+      className="content-container"
+      style={{ backgroundColor: props.backgroundColor }}
+    >
+      Leetcode Problems
+    </div>
+  );
 }
