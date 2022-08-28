@@ -1,10 +1,19 @@
 import "./styles.css";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { PAGETHEME } from "../../Constants/colors";
+import { useEffect, useState } from "react";
+import { routeColors } from "../../Constants/routes";
 
 export default function Navbar(props) {
+  const location = useLocation();
+  const [logoColor, setLogoColor] = useState(null);
+
+  useEffect(() => {
+    const { pathname } = location;
+    setLogoColor(routeColors[pathname]);
+  }, [location]);
+
   return (
     <>
       <div className="navbar-container">
@@ -15,7 +24,7 @@ export default function Navbar(props) {
         </div>
         <div className="navbar-redirect-section">
           <div className="navbar-link-wrapper">
-            <div className="navbar-logo" style={props.style}>
+            <div className="navbar-logo" style={{ color: logoColor }}>
               カツドン
             </div>
             <div className="redirect-links">
@@ -23,9 +32,6 @@ export default function Navbar(props) {
                 to="/welcome"
                 className="navbar-redirect-link"
                 style={{ textDecoration: "none" }}
-                onClick={() => {
-                  props.changeTheme(PAGETHEME.Blue);
-                }}
               >
                 Leaderboard
               </Link>
@@ -35,9 +41,6 @@ export default function Navbar(props) {
                 to="/users"
                 className="navbar-redirect-link"
                 style={{ textDecoration: "none" }}
-                onClick={() => {
-                  props.changeTheme(PAGETHEME.LightBlue);
-                }}
               >
                 Users
               </Link>
@@ -48,9 +51,6 @@ export default function Navbar(props) {
                 to="/welcome"
                 className="navbar-redirect-link"
                 style={{ textDecoration: "none" }}
-                onClick={() => {
-                  props.changeTheme(PAGETHEME.Orange);
-                }}
               >
                 Leetcode Problems
               </Link>
@@ -61,9 +61,6 @@ export default function Navbar(props) {
             to="/profile"
             className="navbar-redirect-link"
             style={{ textDecoration: "none" }}
-            onClick={() => {
-              props.changeTheme(PAGETHEME.Purple);
-            }}
           >
             Sign In
           </Link>

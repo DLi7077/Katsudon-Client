@@ -1,15 +1,18 @@
-import UserProfile from "../../Components/UserProfile";
-import CircularProgress from "@mui/material/CircularProgress";
 import { useEffect, useState } from "react";
-import "./styles.css";
+import { useLocation } from "react-router-dom";
+import UserProfile from "../../Components/UserProfile";
+import { PAGETHEME } from "../../Constants/colors";
+import CircularProgress from "@mui/material/CircularProgress";
+import getSearchParams from "../../Utils/getSearchParams";
 import UserAPI from "../../Api/UserAPI";
 import SolutionTable from "../../Components/SolutionTable";
 import SolutionModal from "../../Components/SolutionModal";
+import "./styles.css";
+import { get } from "lodash";
 
 export default function ProfilePage(props) {
-  let params = new URL(document.location).searchParams;
-  const username = params.get("user");
-
+  const queryParams = getSearchParams(useLocation());
+  const username = get(queryParams, "user");
   const [userInfo, setUserInfo] = useState(null);
   const [solutions, setSolutions] = useState({});
   const [isLoading, setLoading] = useState(true);
@@ -69,7 +72,7 @@ export default function ProfilePage(props) {
           }}
         >
           <CircularProgress
-            style={{ color: "#BD7AFF", width: "8rem", height: "8rem" }}
+            style={{ color: PAGETHEME.Purple, width: "8rem", height: "8rem" }}
           />
         </div>
       )}
@@ -80,7 +83,7 @@ export default function ProfilePage(props) {
             <SolutionTable
               solutions={solutions}
               handleOpenSolutionModel={handleOpenSolutionModel}
-              style={{ color: "#BD7AFF" }}
+              style={{ color: PAGETHEME.Purple }}
             />
             <SolutionModal
               open={solutionDisplay}
