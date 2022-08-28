@@ -1,8 +1,8 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./Components/Navbar";
 import Footer from "./Components/Footer";
 import { PAGETHEME } from "./Constants/colors";
-import { routes } from "./Constants/routes";
+import { routes, routeColors } from "./Constants/routes";
 import { useState } from "react";
 
 function App() {
@@ -16,8 +16,8 @@ function App() {
 
   return (
     <>
-      <BrowserRouter>
-        <Navbar style={{ color: pageColor }} changeTheme={setPageColor} />
+      <HashRouter>
+        <Navbar changeTheme={setPageColor} />
         <div
           style={{
             display: "flex",
@@ -28,7 +28,7 @@ function App() {
           <Routes>{COMPONENT_ROUTES}</Routes>
         </div>
         <Footer />
-      </BrowserRouter>
+      </HashRouter>
     </>
   );
 }
