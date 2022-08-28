@@ -18,6 +18,7 @@
     "react-render-markup": "^3.5.0",
     "react-router-dom": "^6.3.0",
     "react-scripts": "4.0.3",
+    "react-select": "^5.4.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

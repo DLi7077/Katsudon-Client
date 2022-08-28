@@ -1,4 +1,5 @@
 import { Avatar, Tooltip } from "@mui/material";
+import { get, reduce } from "lodash";
 import "./styles.css";
 
 const fractionToPercent = (fraction) => {
@@ -38,13 +39,29 @@ const difficultyGenerator = (solved, total, difficulty) => {
  * @param {number} hardSolved
  * @returns A profile component
  */
-export default function Profile(props) {
+export default function UserProfile(props) {
   const { userInfo } = props;
-  const { username, biography, followers, following, profile_picture_url } =
-    userInfo;
+  const {
+    username,
+    biography,
+    followers,
+    following,
+    profile_picture_url,
+    solved,
+  } = userInfo;
 
-  const { Easy, Medium, Hard } = props.difficultyDistribution;
+  const { Easy, Medium, Hard } = reduce(
+    solved,
+    (accumulator, problem) => {
+      const currDifficulty = get(problem, "difficulty");
+      accumulator[currDifficulty] += 1;
+
+      return accumulator;
+    },
+    { Easy: 0, Medium: 0, Hard: 0 }
+  );
   const totalSolved = Easy + Medium + Hard;
+  
   return (
     <div className="profile-container">
       <div className="profile-user-info">

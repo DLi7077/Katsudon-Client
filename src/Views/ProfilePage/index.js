@@ -1,4 +1,4 @@
-import Profile from "../../Components/Profile";
+import UserProfile from "../../Components/UserProfile";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useEffect, useState } from "react";
 import "./styles.css";
@@ -55,7 +55,7 @@ export default function ProfilePage(props) {
 
   useEffect(() => {
     getUserDetails(username);
-  }, []);
+  }, [username]);
 
   return (
     <div className="content-container">
@@ -76,11 +76,7 @@ export default function ProfilePage(props) {
       {userInfo && !isLoading && (
         <>
           <div className="profile-page-container">
-            <Profile
-              userInfo={userInfo}
-              difficultyDistribution={solutions.difficulty_distribution}
-              x={solutions}
-            />
+            <UserProfile userInfo={userInfo} />
             <SolutionTable
               solutions={solutions}
               handleOpenSolutionModel={handleOpenSolutionModel}

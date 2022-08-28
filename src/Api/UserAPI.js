@@ -1,5 +1,14 @@
 import Api from "./Api";
 
+async function getAllUsers() {
+  return Api({
+    method: "get",
+    endpoint: "api/user/all",
+    params: {},
+    headers: {},
+  });
+}
+
 async function getUserSolutions(userId) {
   return Api({
     method: "get",
@@ -19,6 +28,7 @@ async function getUserProfile(username) {
 }
 
 const UserAPI = {
+  getAllUsers,
   getUserSolutions,
   getUserProfile,
 };
