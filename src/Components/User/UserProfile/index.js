@@ -61,9 +61,12 @@ export default function UserProfile(props) {
     { Easy: 0, Medium: 0, Hard: 0 }
   );
   const totalSolved = Easy + Medium + Hard;
-  
+
   return (
-    <div className="profile-container">
+    <div
+      className="profile-container"
+      style={{ border: `2px solid ${props.borderColor ?? "white"}` }}
+    >
       <div className="profile-user-info">
         <div className="profile-top-wrapper">
           <div className="follow-stat">

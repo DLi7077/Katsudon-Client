@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import UserProfile from "../../Components/UserProfile";
-import { PAGETHEME } from "../../Constants/colors";
+import UserProfile from "../../Components/User/UserProfile";
 import CircularProgress from "@mui/material/CircularProgress";
 import getSearchParams from "../../Utils/getSearchParams";
 import UserAPI from "../../Api/UserAPI";
@@ -9,6 +8,7 @@ import SolutionTable from "../../Components/SolutionTable";
 import SolutionModal from "../../Components/SolutionModal";
 import "./styles.css";
 import { get } from "lodash";
+import SkillBox from "../../Components/User/Skillbox";
 
 export default function ProfilePage(props) {
   const queryParams = getSearchParams(useLocation());
@@ -82,12 +82,15 @@ export default function ProfilePage(props) {
       {userInfo && !isLoading && (
         <>
           <div className="profile-page-container">
-            <UserProfile userInfo={userInfo} />
+            <div className="user-profile-wrapper">
+              <UserProfile userInfo={userInfo} borderColor="#FF66EB" />
+              <SkillBox solved={userInfo.solved} />
+            </div>
             <SolutionTable
               solutions={solutions}
               handleOpenSolutionModel={handleOpenSolutionModel}
               headerColor={props.color}
-              backgroundColor={"#302E38"}
+              backgroundColor={"#382E37"}
             />
             <SolutionModal
               open={solutionDisplay}

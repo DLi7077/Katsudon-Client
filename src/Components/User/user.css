@@ -1,0 +1,12 @@
+.user-page-section-header {
+  background-color: black;
+  color: white;
+  padding: 0.5rem;
+  padding-inline: 1rem;
+  border-radius: 8px 8px 0px 0px;
+  font-size: 1.5rem;
+}
+
+.user-page-section-content {
+  padding: 1rem;
+}

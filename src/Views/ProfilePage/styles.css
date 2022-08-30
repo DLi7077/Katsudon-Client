@@ -6,3 +6,10 @@
   gap: 3rem;
   padding: 2rem;
 }
+
+.user-profile-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 3rem;
+}

@@ -14,7 +14,7 @@ export default function Navbar(props) {
     const { pathname } = location;
     setLogoColor(get(routeColors, `${pathname}.color`));
     props.changeTheme(get(routeColors, pathname));
-  }, [location]);
+  }, [location, props]);
 
   return (
     <>

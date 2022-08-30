@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
+import CircularProgress from "@mui/material/CircularProgress";
 import { get, pick } from "lodash";
 import UserFilter from "../../Components/Filters/UserSearchBar";
-import UserProfile from "../../Components/UserProfile";
+import UserProfile from "../../Components/User/UserProfile";
 import UserAPI from "../../Api/UserAPI";
 import "./styles.css";
 import { Button } from "@mui/material";
@@ -12,6 +13,7 @@ export default function Users(props) {
   const [selectedUser, setSelectedUser] = useState(null);
   const [currrentUserDetails, setCurrentUserDetails] = useState(null);
   const [isLoading, setLoading] = useState(true);
+  const [userProfileLoading, setUserProfileLoading] = useState(false);
 
   async function getAllUsers() {
     await UserAPI.getAllUsers().then((res) => {
@@ -36,16 +38,18 @@ export default function Users(props) {
 
     getAllUsers();
 
-    setLoading(false);
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
   }, []);
 
   // Runs on User Selection, loads user profile card
   useEffect(() => {
-    setLoading(true);
-
+    setUserProfileLoading(true);
     selectedUser && getSelectedUserDetails(selectedUser);
-
-    setLoading(false);
+    setTimeout(() => {
+      setUserProfileLoading(false);
+    }, 500);
   }, [selectedUser]);
 
   return (
@@ -53,6 +57,20 @@ export default function Users(props) {
       className="content-container"
       style={{ backgroundColor: props.backgroundColor }}
     >
+      {isLoading && (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100%",
+          }}
+        >
+          <CircularProgress
+            style={{ color: props.color, width: "8rem", height: "8rem" }}
+          />
+        </div>
+      )}
       <div className="user-page-content-container">
         <div className="user-page-search-container">
           {!isLoading && (
@@ -64,7 +82,21 @@ export default function Users(props) {
           )}
         </div>
         <div className="user-page-user-profile-container">
-          {!isLoading && currrentUserDetails && (
+          {userProfileLoading && (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
+              }}
+            >
+              <CircularProgress
+                style={{ color: props.color, width: "4rem", height: "4rem" }}
+              />
+            </div>
+          )}
+          {!userProfileLoading && currrentUserDetails && (
             <>
               <UserProfile userInfo={currrentUserDetails} />
               <Link

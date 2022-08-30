@@ -1,0 +1,16 @@
+.skill-tag-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 1rem;
+}
+
+.skill-tag {
+  width: fit-content;
+  background-color: #e9ecef;
+  color: black;
+  font-size: 1.15rem;
+  padding: 0.25rem;
+  padding-inline: 1rem;
+  border-radius: 12px;
+}

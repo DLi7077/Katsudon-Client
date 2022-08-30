@@ -46,10 +46,10 @@ const headers = ["Problem", "Language", "Solution", "Solved At"];
 export default function SolutionTable(props) {
   const classes = {
     table: {},
-    tableHeader: { color: props.headerColor, fontSize: "1.5rem" },
+    tableHeader: { color: props.headerColor, fontSize: "1.4rem" },
     tableCell: {
       textAlign: "left",
-      fontSize: "1.25rem",
+      fontSize: "1.15rem",
       color: "white",
       margin: 0,
       padding: 0,

@@ -22,4 +22,6 @@
   align-items: center;
   color: white;
   row-gap: 1rem;
+  width: 250px;
+  height: 350px;
 }
