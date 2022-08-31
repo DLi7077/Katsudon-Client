@@ -4,7 +4,7 @@ export const PAGETHEME = {
   Green: { color: "#7AFF87", background: "#7AFF87" },
   LightBlue: { color: "#7AFFEF", background: "#22292A" },
   Purple: {
-    color: "#FF66EB",
+    color: "#AC39AC",
     background: "#2A2229",
     header: "#2E1F2C",
     section: "#382E37",

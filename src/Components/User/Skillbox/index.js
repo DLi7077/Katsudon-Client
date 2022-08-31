@@ -25,8 +25,6 @@ export default function SkillBox(props) {
     ["desc", "asc"]
   );
 
-  console.log(tags);
-
   return (
     <div>
       <div className="user-page-section-header"> Skills</div>
