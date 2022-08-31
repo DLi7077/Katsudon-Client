@@ -41,11 +41,8 @@ import "./styles.css";
 }
 */
 
-const headers = ["Problem", "Language", "Solution", "Solved At"];
-
 export default function SolutionTable(props) {
   const classes = {
-    table: {},
     tableHeader: { color: props.headerColor, fontSize: "1.4rem" },
     tableCell: {
       textAlign: "left",
@@ -59,6 +56,9 @@ export default function SolutionTable(props) {
     languageLogo: {
       width: "2.5rem",
     },
+    link: {
+      textDecoration: "none",
+    },
   };
 
   return (
@@ -66,13 +66,10 @@ export default function SolutionTable(props) {
       <Table className="solution-table">
         <TableHead>
           <TableRow className="header">
-            {headers.map((header, idx) => {
-              return (
-                <TableCell key={idx} style={classes.tableHeader}>
-                  {header}
-                </TableCell>
-              );
-            })}
+            <TableCell style={classes.tableHeader}>Problem</TableCell>
+            <TableCell style={classes.tableHeader}>Language</TableCell>
+            <TableCell style={classes.tableHeader}>Solution</TableCell>
+            <TableCell style={classes.tableHeader}>Solved At</TableCell>
           </TableRow>
         </TableHead>
         <TableBody
@@ -87,10 +84,19 @@ export default function SolutionTable(props) {
                   <TableCell
                     style={{
                       ...classes.tableCell,
-                      color: PROBLEM_DIFFICULTY[details.problem.difficulty],
                     }}
                   >
-                    {id}. {details.problem.title}
+                    <a
+                      href={details.problem.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      style={{
+                        color: PROBLEM_DIFFICULTY[details.problem.difficulty],
+                        ...classes.link,
+                      }}
+                    >
+                      {id}. {details.problem.title}
+                    </a>
                   </TableCell>
                   <TableCell style={classes.tableCell}>
                     <div
