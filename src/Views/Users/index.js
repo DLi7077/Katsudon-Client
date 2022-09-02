@@ -18,16 +18,15 @@ export default function Users(props) {
   async function getAllUsers() {
     await UserAPI.getAllUsers().then((res) => {
       const allUsers = res.users.map((userDetails) => {
-        return pick(userDetails, ["username", "profile_picture_url"]);
+        return pick(userDetails, ['_id', "username", "profile_picture_url"]);
       });
 
       setUsers(allUsers);
     });
   }
 
-  async function getSelectedUserDetails(selectedUser) {
-    const username = get(selectedUser, "username");
-    await UserAPI.getUserProfile(username).then((res) => {
+  async function getSelectedUserDetails(user_id) {
+    await UserAPI.getUserProfile(user_id).then((res) => {
       setCurrentUserDetails(res.user);
     });
   }
@@ -100,7 +99,7 @@ export default function Users(props) {
             <>
               <UserProfile userInfo={currrentUserDetails} />
               <Link
-                to={`/profile?user=${get(selectedUser, "username")}`}
+                to={`/profile?user_id=${get(selectedUser, "_id")}`}
                 style={{ textDecoration: "none" }}
               >
                 <Button style={{ color: "white", fontSize: "1.25rem" }}>

@@ -7,12 +7,10 @@ import UserAPI from "../../Api/UserAPI";
 import SolutionTable from "../../Components/SolutionTable";
 import SolutionModal from "../../Components/SolutionModal";
 import "./styles.css";
-import { get } from "lodash";
 import SkillBox from "../../Components/User/Skillbox";
 
 export default function ProfilePage(props) {
-  const queryParams = getSearchParams(useLocation());
-  const username = get(queryParams, "user");
+  const [queryParams, setQueryParams] = useState(getSearchParams(useLocation()))
   const [userInfo, setUserInfo] = useState(null);
   const [solutions, setSolutions] = useState({});
   const [isLoading, setLoading] = useState(true);
@@ -20,14 +18,13 @@ export default function ProfilePage(props) {
   const [problemBlock, setProblemBlock] = useState({});
   const [solutionsBlock, setSolutionsBlock] = useState({});
 
-  async function getUserDetails(username) {
+  async function getUserDetails() {
     setLoading(true);
-    let user_id;
 
-    await UserAPI.getUserProfile(username)
+    await UserAPI.getUserProfile(queryParams)
       .then((res) => {
+        console.log(res.user)
         setUserInfo(res.user);
-        user_id = res.user._id;
       })
       .catch(() => {
         setTimeout(() => {
@@ -35,7 +32,8 @@ export default function ProfilePage(props) {
         }, 200);
       });
 
-    await UserAPI.getUserSolutions(user_id).then((res) => {
+    await UserAPI.getUserSolutions(queryParams).then((res) => {
+      console.log(res)
       setSolutions(res);
     });
 
@@ -57,8 +55,8 @@ export default function ProfilePage(props) {
   };
 
   useEffect(() => {
-    getUserDetails(username);
-  }, [username]);
+    getUserDetails('Devin');
+  }, []);
 
   return (
     <div
@@ -87,7 +85,7 @@ export default function ProfilePage(props) {
               <SkillBox solved={userInfo.solved} />
             </div>
             <SolutionTable
-              solutions={solutions}
+              solutions={solutions.rows}
               handleOpenSolutionModel={handleOpenSolutionModel}
               headerColor={props.color}
               backgroundColor={"#382E37"}
@@ -112,7 +110,7 @@ export default function ProfilePage(props) {
             color: "white",
           }}
         >
-          "{username}" is not a valid user
+          "{'sdfsf'}" is not a valid user
         </div>
       )}
     </div>

@@ -1,4 +1,5 @@
 import Api from "./Api";
+import qs from 'qs'
 
 async function getAllUsers() {
   return Api({
@@ -9,19 +10,20 @@ async function getAllUsers() {
   });
 }
 
-async function getUserSolutions(userId) {
+async function getUserSolutions(queryParams) {
+  console.log(`api/solution/all?${qs.stringify(queryParams)}`)
   return Api({
     method: "get",
-    endpoint: `api/solution/${userId}`,
+    endpoint: `api/solution/all?${qs.stringify(queryParams)}`,
     params: {},
     headers: {},
   });
 }
 
-async function getUserProfile(username) {
+async function getUserProfile(queryParams) {
   return Api({
     method: "get",
-    endpoint: `api/user/${username}`,
+    endpoint: `api/user/profile?${qs.stringify(queryParams)}`,
     params: {},
     headers: {},
   });
