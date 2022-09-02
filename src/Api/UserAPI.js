@@ -11,7 +11,6 @@ async function getAllUsers() {
 }
 
 async function getUserSolutions(queryParams) {
-  console.log(`api/solution/all?${qs.stringify(queryParams)}`)
   return Api({
     method: "get",
     endpoint: `api/solution/all?${qs.stringify(queryParams)}`,

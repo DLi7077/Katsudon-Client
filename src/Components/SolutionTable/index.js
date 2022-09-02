@@ -5,9 +5,13 @@ import {
   TableRow,
   TableCell,
   IconButton,
+  CircularProgress,
 } from "@mui/material";
+import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import FileOpenIcon from "@mui/icons-material/FileOpen";
-import { keys, map, omit, without } from "lodash";
+import { keys, map } from "lodash";
 import { PROBLEM_DIFFICULTY } from "../../Constants/colors";
 import { LANGUAGE_LOGOS } from "../../Constants/language";
 import "./styles.css";
@@ -40,11 +44,12 @@ solutions:{
   }
 }
 */
-
 export default function SolutionTable(props) {
-  console.log(props.solutions);
   const classes = {
-    tableHeader: { color: props.headerColor, fontSize: "1.4rem" },
+    tableHeader: {
+      color: props.headerColor,
+      fontSize: "1.4rem",
+    },
     tableCell: {
       textAlign: "left",
       fontSize: "1.15rem",
@@ -60,84 +65,159 @@ export default function SolutionTable(props) {
     link: {
       textDecoration: "none",
     },
+    iconButton: {
+      color: "white",
+      padding: 0,
+    },
+    arrowIcon: {
+      color: "white",
+      fontSize: "2rem",
+    },
+  };
+
+  const isCurrentSort = (sortDir) => {
+    return props.sortBy === sortDir && props.sortDir !== 0;
   };
 
   return (
-    <div style={{ overflow: "auto" }}>
+    <div style={{ overflow: "auto", width: 'min(800px, 100vw)' }}>
       <Table className="solution-table">
         <TableHead>
           <TableRow className="header">
-            <TableCell style={classes.tableHeader}>Problem</TableCell>
+            <TableCell style={classes.tableHeader} colSpan={3}>
+              Problem
+              <IconButton
+                style={classes.iconButton}
+                onClick={() => {
+                  props.handleSortDirChange("problem_id");
+                }}
+              >
+                {isCurrentSort("problem_id") && props.sortDir === 1 && (
+                  <KeyboardArrowUpIcon style={classes.arrowIcon} />
+                )}
+                {isCurrentSort("problem_id") && props.sortDir === 2 && (
+                  <KeyboardArrowDownIcon style={classes.arrowIcon} />
+                )}
+                {!isCurrentSort("problem_id") && (
+                  <HorizontalRuleIcon style={classes.arrowIcon} />
+                )}
+              </IconButton>
+            </TableCell>
             <TableCell style={classes.tableHeader}>Language</TableCell>
             <TableCell style={classes.tableHeader}>Solution</TableCell>
-            <TableCell style={classes.tableHeader}>Solved At</TableCell>
+            <TableCell style={classes.tableHeader}>
+              Solved At
+              <IconButton
+                style={classes.iconButton}
+                onClick={() => {
+                  props.handleSortDirChange("last_solved_at");
+                }}
+              >
+                {isCurrentSort("last_solved_at") && props.sortDir === 1 && (
+                  <KeyboardArrowUpIcon style={classes.arrowIcon} />
+                )}
+                {isCurrentSort("last_solved_at") && props.sortDir === 2 && (
+                  <KeyboardArrowDownIcon style={classes.arrowIcon} />
+                )}
+                {!isCurrentSort("last_solved_at") && (
+                  <HorizontalRuleIcon style={classes.arrowIcon} />
+                )}
+              </IconButton>
+            </TableCell>
           </TableRow>
         </TableHead>
-        <TableBody
-          className="solution-table-body"
-          style={{ backgroundColor: props.backgroundColor }}
-        >
-          {map(props.solutions, (details, idx) => {
-            console.log(details, idx);
-            return (
-              <TableRow key={idx}>
-                <TableCell
+
+        {!props.loading && (
+          <TableBody
+            className="solution-table-body"
+            style={{ backgroundColor: props.backgroundColor }}
+          >
+            {map(props.solutions, (details, idx) => {
+              return (
+                <TableRow key={idx}>
+                  <TableCell
+                    style={{
+                      ...classes.tableCell,
+                    }}
+                    colSpan={3}
+                  >
+                    <a
+                      href={details.problem.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      style={{
+                        color: PROBLEM_DIFFICULTY[details.problem.difficulty],
+                        ...classes.link,
+                      }}
+                    >
+                      {details.problem.id}. {details.problem.title}
+                    </a>
+                  </TableCell>
+                  <TableCell style={classes.tableCell}>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "flex-start",
+                        alignItems: "center",
+                      }}
+                    >
+                      {map(keys(details.solutions), (language, idx) => {
+                        return (
+                          <img
+                            key={idx}
+                            src={LANGUAGE_LOGOS[language]}
+                            alt={language}
+                            style={classes.languageLogo}
+                          />
+                        );
+                      })}
+                    </div>
+                  </TableCell>
+                  <TableCell style={classes.tableCell}>
+                    <IconButton
+                      onClick={() => {
+                        props.handleOpenSolutionModel(
+                          details.problem,
+                          details.solutions
+                        );
+                      }}
+                    >
+                      <FileOpenIcon style={classes.fileOpen} />
+                    </IconButton>
+                  </TableCell>
+                  <TableCell style={classes.tableCell}>
+                    {details.last_solved_at.substring(0, 10)}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        )}
+        {props.loading && (
+          <TableBody>
+            <TableRow></TableRow>
+            <TableRow>
+              <TableCell colSpan={6}>
+                <div
                   style={{
-                    ...classes.tableCell,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "100%",
                   }}
                 >
-                  <a
-                    href={details.problem.url}
-                    target="_blank"
-                    rel="noreferrer"
+                  <CircularProgress
                     style={{
-                      color: PROBLEM_DIFFICULTY[details.problem.difficulty],
-                      ...classes.link,
+                      color: "white",
+                      width: "3rem",
+                      height: "3rem",
                     }}
-                  >
-                    {details.problem.id}. {details.problem.title}
-                  </a>
-                </TableCell>
-                <TableCell style={classes.tableCell}>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "flex-start",
-                      alignItems: "center",
-                      gap: "0.5rem",
-                    }}
-                  >
-                    {map(keys(details.solutions), (language, idx) => {
-                      return (
-                        <img
-                          key={idx}
-                          src={LANGUAGE_LOGOS[language]}
-                          alt={language}
-                          style={classes.languageLogo}
-                        />
-                      );
-                    })}
-                  </div>
-                </TableCell>
-                <TableCell style={classes.tableCell}>
-                  <IconButton
-                    onClick={() => {
-                      props.handleOpenSolutionModel(
-                        details.problem,
-                        details.solutions
-                      );
-                    }}
-                  >
-                    <FileOpenIcon style={classes.fileOpen} />
-                  </IconButton>
-                </TableCell>
-                <TableCell style={classes.tableCell}>
-                  {details.last_solved_at.substring(0, 10)}
-                </TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
+                  />
+                </div>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        )}
       </Table>
     </div>
   );

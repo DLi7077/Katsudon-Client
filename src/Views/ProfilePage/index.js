@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import UserProfile from "../../Components/User/UserProfile";
-import CircularProgress from "@mui/material/CircularProgress";
+import { CircularProgress } from "@mui/material";
 import getSearchParams from "../../Utils/getSearchParams";
 import UserAPI from "../../Api/UserAPI";
 import SolutionTable from "../../Components/SolutionTable";
@@ -10,20 +10,22 @@ import "./styles.css";
 import SkillBox from "../../Components/User/Skillbox";
 
 export default function ProfilePage(props) {
-  const [queryParams, setQueryParams] = useState(getSearchParams(useLocation()))
+  const location = useLocation();
+  const [queryParams, setQueryParams] = useState(getSearchParams(location));
   const [userInfo, setUserInfo] = useState(null);
   const [solutions, setSolutions] = useState({});
   const [isLoading, setLoading] = useState(true);
+  const [tableLoading, setTableLoading] = useState(true);
   const [solutionDisplay, setSolutionDisplay] = useState(false);
   const [problemBlock, setProblemBlock] = useState({});
   const [solutionsBlock, setSolutionsBlock] = useState({});
+  const [sortBy, setSortBy] = useState("problem_id");
+  const [sortDir, setSortDir] = useState(0);
 
   async function getUserDetails() {
     setLoading(true);
-
     await UserAPI.getUserProfile(queryParams)
       .then((res) => {
-        console.log(res.user)
         setUserInfo(res.user);
       })
       .catch(() => {
@@ -32,15 +34,44 @@ export default function ProfilePage(props) {
         }, 200);
       });
 
-    await UserAPI.getUserSolutions(queryParams).then((res) => {
-      console.log(res)
-      setSolutions(res);
-    });
-
     setTimeout(() => {
       setLoading(false);
     }, 500);
   }
+
+  async function getSolutions() {
+    setTableLoading(true);
+    await UserAPI.getUserSolutions(queryParams).then((res) => {
+      setSolutions(res);
+    });
+
+    setTimeout(() => {
+      setTableLoading(false);
+    }, 500);
+  }
+
+  function addFilter(queryParam) {
+    setQueryParams({
+      ...queryParams,
+      ...queryParam,
+    });
+  }
+
+  const directionMapping = {
+    0: null,
+    1: "desc",
+    2: "asc",
+  };
+
+  const handleSortDirChange = (sortBy) => {
+    const currDirection = (sortDir + 1) % 3;
+    addFilter({
+      sortBy: sortBy,
+      sortDir: directionMapping[currDirection],
+    });
+    setSortBy(sortBy);
+    setSortDir(currDirection);
+  };
 
   const handleOpenSolutionModel = (problem, solutions) => {
     setProblemBlock(problem);
@@ -55,8 +86,12 @@ export default function ProfilePage(props) {
   };
 
   useEffect(() => {
-    getUserDetails('Devin');
+    getUserDetails();
   }, []);
+
+  useEffect(() => {
+    getSolutions();
+  }, [queryParams]);
 
   return (
     <div
@@ -77,6 +112,7 @@ export default function ProfilePage(props) {
           />
         </div>
       )}
+
       {userInfo && !isLoading && (
         <>
           <div className="profile-page-container">
@@ -84,12 +120,18 @@ export default function ProfilePage(props) {
               <UserProfile userInfo={userInfo} borderColor="#FF66EB" />
               <SkillBox solved={userInfo.solved} />
             </div>
-            <SolutionTable
-              solutions={solutions.rows}
-              handleOpenSolutionModel={handleOpenSolutionModel}
-              headerColor={props.color}
-              backgroundColor={"#382E37"}
-            />
+            <div>
+              <SolutionTable
+                solutions={solutions.rows}
+                handleOpenSolutionModel={handleOpenSolutionModel}
+                headerColor={props.color}
+                backgroundColor={"#382E37"}
+                handleSortDirChange={handleSortDirChange}
+                loading={tableLoading}
+                sortBy={sortBy}
+                sortDir={sortDir}
+              />
+            </div>
             <SolutionModal
               open={solutionDisplay}
               handleClose={handleCloseSolutionModel}
@@ -110,7 +152,7 @@ export default function ProfilePage(props) {
             color: "white",
           }}
         >
-          "{'sdfsf'}" is not a valid user
+          "{"sdfsf"}" is not a valid user
         </div>
       )}
     </div>
