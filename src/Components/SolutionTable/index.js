@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { map } from "lodash";
 import {
   Table,
   TableBody,
@@ -6,14 +8,13 @@ import {
   TableCell,
   IconButton,
   CircularProgress,
+  Menu,
+  MenuItem,
 } from "@mui/material";
-import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
+import SortIcon from "@mui/icons-material/Sort";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import FileOpenIcon from "@mui/icons-material/FileOpen";
-import { keys, map } from "lodash";
-import { PROBLEM_DIFFICULTY } from "../../Constants/colors";
-import { LANGUAGE_LOGOS } from "../../Constants/language";
+import SolutionRow from "./SolutionRow.js";
 import "./styles.css";
 
 /**
@@ -49,6 +50,7 @@ export default function SolutionTable(props) {
     tableHeader: {
       color: props.headerColor,
       fontSize: "1.4rem",
+      padding: "0.5rem",
     },
     tableCell: {
       textAlign: "left",
@@ -57,10 +59,6 @@ export default function SolutionTable(props) {
       margin: 0,
       padding: 0,
       paddingInline: "1rem",
-    },
-    fileOpen: { fontSize: "2rem", color: "white" },
-    languageLogo: {
-      width: "2.5rem",
     },
     link: {
       textDecoration: "none",
@@ -73,122 +71,102 @@ export default function SolutionTable(props) {
       color: "white",
       fontSize: "2rem",
     },
+    sortIcon: {
+      color: "white",
+      fontSize: "3rem",
+    },
   };
 
-  const isCurrentSort = (sortDir) => {
-    return props.sortBy === sortDir && props.sortDir !== 0;
+  const [anchorElement, setAnchorElement] = useState(null);
+
+  const sortDirStatus = (sortKey) => {
+    if (props.sortBy === sortKey) {
+      if (props.queryParams.sortDir === "asc")
+        return <KeyboardArrowDownIcon style={classes.arrowIcon} />;
+
+      if (props.queryParams.sortDir === "desc")
+        return <KeyboardArrowUpIcon style={classes.arrowIcon} />;
+    }
+    return <></>;
   };
+
+  const sortKeys = [
+    { label: "Problem", value: "problem_id" },
+    { label: "Solved At", value: "last_solved_at" },
+  ];
 
   return (
-    <div style={{ overflow: "auto", width: 'min(800px, 100vw)' }}>
       <Table className="solution-table">
         <TableHead>
           <TableRow className="header">
-            <TableCell style={classes.tableHeader} colSpan={3}>
-              Problem
+            <TableCell style={classes.tableHeader}>
               <IconButton
                 style={classes.iconButton}
-                onClick={() => {
-                  props.handleSortDirChange("problem_id");
+                onClick={(e) => {
+                  setAnchorElement(e.currentTarget);
                 }}
               >
-                {isCurrentSort("problem_id") && props.sortDir === 1 && (
-                  <KeyboardArrowUpIcon style={classes.arrowIcon} />
-                )}
-                {isCurrentSort("problem_id") && props.sortDir === 2 && (
-                  <KeyboardArrowDownIcon style={classes.arrowIcon} />
-                )}
-                {!isCurrentSort("problem_id") && (
-                  <HorizontalRuleIcon style={classes.arrowIcon} />
-                )}
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <SortIcon style={classes.sortIcon} />
+                </div>
               </IconButton>
+              <Menu
+                anchorEl={anchorElement}
+                open={!!anchorElement}
+                onClose={() => setAnchorElement(null)}
+                style={{ marginLeft: "-1rem", opacity: 0.75 }}
+              >
+                {map(sortKeys, (key, idx) => {
+                  return (
+                    <MenuItem
+                      key={idx}
+                      style={{
+                        width: "100px",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        padding: "0.5rem",
+                        fontSize: "1.15rem",
+                      }}
+                      onClick={() => {
+                        props.handleSortDirChange(key.value);
+                      }}
+                    >
+                      <div>{key.label}</div>
+                      {sortDirStatus(key.value)}
+                    </MenuItem>
+                  );
+                })}
+              </Menu>
+            </TableCell>
+
+            <TableCell style={classes.tableHeader} colSpan={3}>
+              Problem
             </TableCell>
             <TableCell style={classes.tableHeader}>Language</TableCell>
             <TableCell style={classes.tableHeader}>Solution</TableCell>
-            <TableCell style={classes.tableHeader}>
-              Solved At
-              <IconButton
-                style={classes.iconButton}
-                onClick={() => {
-                  props.handleSortDirChange("last_solved_at");
-                }}
-              >
-                {isCurrentSort("last_solved_at") && props.sortDir === 1 && (
-                  <KeyboardArrowUpIcon style={classes.arrowIcon} />
-                )}
-                {isCurrentSort("last_solved_at") && props.sortDir === 2 && (
-                  <KeyboardArrowDownIcon style={classes.arrowIcon} />
-                )}
-                {!isCurrentSort("last_solved_at") && (
-                  <HorizontalRuleIcon style={classes.arrowIcon} />
-                )}
-              </IconButton>
-            </TableCell>
+            <TableCell style={classes.tableHeader}>Solved At</TableCell>
           </TableRow>
         </TableHead>
-
         {!props.loading && (
           <TableBody
             className="solution-table-body"
             style={{ backgroundColor: props.backgroundColor }}
           >
             {map(props.solutions, (details, idx) => {
+              const problemTags = details.problem.tags;
               return (
-                <TableRow key={idx}>
-                  <TableCell
-                    style={{
-                      ...classes.tableCell,
-                    }}
-                    colSpan={3}
-                  >
-                    <a
-                      href={details.problem.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      style={{
-                        color: PROBLEM_DIFFICULTY[details.problem.difficulty],
-                        ...classes.link,
-                      }}
-                    >
-                      {details.problem.id}. {details.problem.title}
-                    </a>
-                  </TableCell>
-                  <TableCell style={classes.tableCell}>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "flex-start",
-                        alignItems: "center",
-                      }}
-                    >
-                      {map(keys(details.solutions), (language, idx) => {
-                        return (
-                          <img
-                            key={idx}
-                            src={LANGUAGE_LOGOS[language]}
-                            alt={language}
-                            style={classes.languageLogo}
-                          />
-                        );
-                      })}
-                    </div>
-                  </TableCell>
-                  <TableCell style={classes.tableCell}>
-                    <IconButton
-                      onClick={() => {
-                        props.handleOpenSolutionModel(
-                          details.problem,
-                          details.solutions
-                        );
-                      }}
-                    >
-                      <FileOpenIcon style={classes.fileOpen} />
-                    </IconButton>
-                  </TableCell>
-                  <TableCell style={classes.tableCell}>
-                    {details.last_solved_at.substring(0, 10)}
-                  </TableCell>
-                </TableRow>
+                <SolutionRow
+                  details={details}
+                  handleOpenSolutionModel={props.handleOpenSolutionModel}
+                  problemTags={problemTags}
+                  key={idx}
+                />
               );
             })}
           </TableBody>
@@ -197,7 +175,7 @@ export default function SolutionTable(props) {
           <TableBody>
             <TableRow></TableRow>
             <TableRow>
-              <TableCell colSpan={6}>
+              <TableCell colSpan={7}>
                 <div
                   style={{
                     display: "flex",
@@ -219,6 +197,5 @@ export default function SolutionTable(props) {
           </TableBody>
         )}
       </Table>
-    </div>
   );
 }

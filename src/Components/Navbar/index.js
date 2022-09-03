@@ -1,14 +1,16 @@
 import { get, map, omit } from "lodash";
 import { Link, useLocation } from "react-router-dom";
 import { IconButton, Menu, MenuItem } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
+import { useScrollYPosition } from "react-use-scroll-position";
 import { useEffect, useState } from "react";
 import { routeColors } from "../../Constants/routes";
 import { MENU_LINKS } from "../../Constants/navbar";
+import MenuIcon from "@mui/icons-material/Menu";
 import "./styles.css";
 
 export default function Navbar(props) {
   const location = useLocation();
+  const scrollY = useScrollYPosition();
   const [logoColor, setLogoColor] = useState(null);
   const [anchorElement, setAnchorElement] = useState(null);
 
@@ -28,23 +30,24 @@ export default function Navbar(props) {
     props.changeTheme(get(routeColors, pathname));
   }, [location, props]);
 
-  //navbar transition on scroll
-  document.onreadystatechange = function () {
-    let lastScrollPosition = 0;
+  useEffect(() => {
     const navbar = document.querySelector(".navbar-container");
     const katsudonLogo = document.querySelector(".katsudon-logo");
-    window.addEventListener("scroll", function (e) {
-      lastScrollPosition = window.scrollY;
 
-      if (lastScrollPosition >= 20) {
-        navbar.classList.add("navbar-container-condensed");
-        katsudonLogo.classList.add("katsudon-logo-condensed");
-      } else {
-        navbar.classList.remove("navbar-container-condensed");
-        katsudonLogo.classList.remove("katsudon-logo-condensed");
-      }
-    });
-  };
+    if (scrollY > 20) {
+      navbar.classList.add("navbar-container-condensed");
+      navbar.style.backgroundColor = get(
+        routeColors,
+        `${location.pathname}.navbar`
+      );
+      katsudonLogo.classList.add("katsudon-logo-condensed");
+      return;
+    } else {
+      navbar.classList.remove("navbar-container-condensed");
+      katsudonLogo.classList.remove("katsudon-logo-condensed");
+      navbar.style.backgroundColor = "";
+    }
+  }, [scrollY]);
 
   return (
     <>

@@ -2,26 +2,13 @@
   position: relative;
   margin-top: 5vh;
   display: flex;
-  justify-content: space-between;
-  background-color: #a0a0a0;
+  justify-content: space-around;
+  background-color: #18171c;
+  padding: 1rem;
   color: white;
-  width: 95vw;
+  width: 90vw;
   height: 80vh;
   font-size: 1.25rem;
-  border-radius: 8px;
-}
-
-.solution-container-exit {
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 3rem;
-  width: 4rem;
-  background-color: rgb(237, 123, 57);
-  z-index: 10;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .leetcode-title {
@@ -32,9 +19,7 @@
   background-color: #2a2a2a;
   box-sizing: border-box;
   width: 40vw;
-  border-radius: 8px;
   overflow-y: scroll;
-  margin: 1rem;
 }
 
 pre {
@@ -46,12 +31,10 @@ pre {
 
 .solution-block {
   background-color: #2a2a2a;
-  width: 55vw;
+  width: 50vw;
   position: sticky;
   top: 0;
-  border-radius: 8px;
   overflow-y: auto;
-  margin: 1rem;
 }
 
 .modal-content {

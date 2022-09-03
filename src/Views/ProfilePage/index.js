@@ -8,10 +8,10 @@ import SolutionTable from "../../Components/SolutionTable";
 import SolutionModal from "../../Components/SolutionModal";
 import "./styles.css";
 import SkillBox from "../../Components/User/Skillbox";
+import banner from "../../Assets/banner.jpg";
 
 export default function ProfilePage(props) {
   const location = useLocation();
-  const [queryParams, setQueryParams] = useState(getSearchParams(location));
   const [userInfo, setUserInfo] = useState(null);
   const [solutions, setSolutions] = useState({});
   const [isLoading, setLoading] = useState(true);
@@ -19,6 +19,7 @@ export default function ProfilePage(props) {
   const [solutionDisplay, setSolutionDisplay] = useState(false);
   const [problemBlock, setProblemBlock] = useState({});
   const [solutionsBlock, setSolutionsBlock] = useState({});
+  const [queryParams, setQueryParams] = useState(getSearchParams(location));
   const [sortBy, setSortBy] = useState("problem_id");
   const [sortDir, setSortDir] = useState(0);
 
@@ -98,6 +99,7 @@ export default function ProfilePage(props) {
       className="content-container"
       style={{ backgroundColor: props.backgroundColor }}
     >
+      <img src={banner} style={{ width: "100%" }} alt="elaina eating" />
       {isLoading && (
         <div
           style={{
@@ -121,16 +123,20 @@ export default function ProfilePage(props) {
               <SkillBox solved={userInfo.solved} />
             </div>
             <div>
-              <SolutionTable
-                solutions={solutions.rows}
-                handleOpenSolutionModel={handleOpenSolutionModel}
-                headerColor={props.color}
-                backgroundColor={"#382E37"}
-                handleSortDirChange={handleSortDirChange}
-                loading={tableLoading}
-                sortBy={sortBy}
-                sortDir={sortDir}
-              />
+              <div>
+                <SolutionTable
+                  solutions={solutions.rows}
+                  handleOpenSolutionModel={handleOpenSolutionModel}
+                  headerColor={props.color}
+                  backgroundColor={"#382E37"}
+                  handleSortDirChange={handleSortDirChange}
+                  loading={tableLoading}
+                  addFilter={addFilter}
+                  queryParams={queryParams}
+                  sortBy={sortBy}
+                  sortDir={sortDir}
+                />
+              </div>
             </div>
             <SolutionModal
               open={solutionDisplay}
