@@ -122,21 +122,19 @@ export default function ProfilePage(props) {
               <UserProfile userInfo={userInfo} borderColor="#FF66EB" />
               <SkillBox solved={userInfo.solved} />
             </div>
-            <div>
-              <div>
-                <SolutionTable
-                  solutions={solutions.rows}
-                  handleOpenSolutionModel={handleOpenSolutionModel}
-                  headerColor={props.color}
-                  backgroundColor={"#382E37"}
-                  handleSortDirChange={handleSortDirChange}
-                  loading={tableLoading}
-                  addFilter={addFilter}
-                  queryParams={queryParams}
-                  sortBy={sortBy}
-                  sortDir={sortDir}
-                />
-              </div>
+            <div style={{ overflow: "auto" }}>
+              <SolutionTable
+                solutions={solutions.rows}
+                handleOpenSolutionModel={handleOpenSolutionModel}
+                headerColor={props.color}
+                backgroundColor={"#382E37"}
+                handleSortDirChange={handleSortDirChange}
+                loading={tableLoading}
+                addFilter={addFilter}
+                queryParams={queryParams}
+                sortBy={sortBy}
+                sortDir={sortDir}
+              />
             </div>
             <SolutionModal
               open={solutionDisplay}

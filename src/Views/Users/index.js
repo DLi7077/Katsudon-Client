@@ -16,13 +16,18 @@ export default function Users(props) {
   const [userProfileLoading, setUserProfileLoading] = useState(false);
 
   async function getAllUsers() {
+    setLoading(true);
     await UserAPI.getAllUsers().then((res) => {
       const allUsers = res.users.map((userDetails) => {
-        return pick(userDetails, ['_id', "username", "profile_picture_url"]);
+        return pick(userDetails, ["_id", "username", "profile_picture_url"]);
       });
 
       setUsers(allUsers);
     });
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
   }
 
   async function getSelectedUserDetails(user_id) {
@@ -33,13 +38,7 @@ export default function Users(props) {
 
   // Runs on page load, fetches all users
   useEffect(() => {
-    setLoading(true);
-
     getAllUsers();
-
-    setTimeout(() => {
-      setLoading(false);
-    }, 500);
   }, []);
 
   // Runs on User Selection, loads user profile card
