@@ -19,9 +19,13 @@ export default function ProfilePage(props) {
   const [solutionDisplay, setSolutionDisplay] = useState(false);
   const [problemBlock, setProblemBlock] = useState({});
   const [solutionsBlock, setSolutionsBlock] = useState({});
-  const [queryParams, setQueryParams] = useState(getSearchParams(location));
-  const [sortBy, setSortBy] = useState("problem_id");
-  const [sortDir, setSortDir] = useState(0);
+  const [sortBy, setSortBy] = useState("last_solved_at");
+  const [sortDir, setSortDir] = useState(1);
+  const [queryParams, setQueryParams] = useState({
+    ...getSearchParams(location),
+    sortBy: sortBy,
+    sortDir: "desc",
+  });
 
   async function getUserDetails() {
     setLoading(true);
@@ -88,10 +92,12 @@ export default function ProfilePage(props) {
 
   useEffect(() => {
     getUserDetails();
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
     getSolutions();
+    // eslint-disable-next-line
   }, [queryParams]);
 
   return (

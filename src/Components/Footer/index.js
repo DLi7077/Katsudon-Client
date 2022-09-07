@@ -16,10 +16,14 @@ export default function Footer() {
     <div className="footer-container">
       <div className="footer-content">
         <IconButton>
-          <GitHubIcon style={classes.icon} />
+          <a href="https://github.com/DLi7077">
+            <GitHubIcon style={classes.icon} />
+          </a>
         </IconButton>
         <IconButton>
-          <LinkedInIcon style={classes.icon} />
+          <a href="https://www.linkedin.com/in/devin-li7077/">
+            <LinkedInIcon style={classes.icon} />
+          </a>
         </IconButton>
       </div>
       please hire me

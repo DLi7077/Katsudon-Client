@@ -47,6 +47,7 @@ export default function Navbar(props) {
       katsudonLogo.classList.remove("katsudon-logo-condensed");
       navbar.style.backgroundColor = "";
     }
+    // eslint-disable-next-line
   }, [scrollY]);
 
   return (
@@ -104,7 +105,7 @@ export default function Navbar(props) {
           </Link>
         </div>
       </div>
-      <div className="navbar-bottom-padding"></div>
+      <div className="navbar-bottom-padding" />
     </>
   );
 }
