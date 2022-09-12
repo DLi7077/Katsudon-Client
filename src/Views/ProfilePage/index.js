@@ -26,6 +26,7 @@ export default function ProfilePage(props) {
     ...getSearchParams(location),
     sortBy: sortBy,
     sortDir: "desc",
+    tags: ["String"],
   });
 
   async function getUserDetails() {
