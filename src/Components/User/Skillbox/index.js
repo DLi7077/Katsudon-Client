@@ -1,29 +1,72 @@
-import { get, map, orderBy, reduce } from "lodash";
+import { filter, get, map, omit, orderBy, pick, reduce } from "lodash";
+import SkillTag from "./SkillTag";
 import "./styles.css";
 import "../user.css";
+import { useEffect, useState } from "react";
 
 export default function SkillBox(props) {
-  const tags = orderBy(
-    map(
-      reduce(
-        props.solved,
-        (accumulator, problem) => {
-          const problemTags = get(problem, "tags");
-          problemTags.forEach((tag) => {
-            accumulator[tag] = 1 + (accumulator[tag] || 0);
-          });
+  const [tagReference, setTagReference] = useState(
+    reduce(
+      props.solved,
+      (accumulator, problem) => {
+        const problemTags = get(problem, "tags");
+        problemTags.forEach((tag) => {
+          accumulator[tag] = {
+            label: tag,
+            frequency: 1 + (get(accumulator, `${tag}.frequency`) || 0),
+            selected: false,
+          };
+        });
 
-          return accumulator;
-        },
-        {}
-      ),
-      (frequency, tag_name) => {
-        return { tag: tag_name, frequency: frequency };
-      }
-    ),
-    ["frequency", "tag"],
-    ["desc", "asc"]
+        return accumulator;
+      },
+      {}
+    )
   );
+  const [selectedTags, setSelectedTags] = useState({});
+  const [nonSelectedTags, setNonSelectedTags] = useState({});
+
+  function tagsToSelect(tags) {
+    return map(
+      filter(tags, (tag) => get(tag, "selected")),
+      (tag) => get(tag, "label")
+    );
+  }
+
+  const handleAddTags = (tag) => {
+    setTagReference({
+      ...tagReference,
+      [tag]: {
+        ...get(tagReference, tag),
+        selected: !get(tagReference, `${tag}.selected`),
+      },
+    });
+  };
+
+  useEffect(() => {
+    const toSelect = tagsToSelect(tagReference);
+    props.updateSkillQuery(toSelect);
+
+    setSelectedTags(
+      orderBy(
+        map(pick(tagReference, toSelect), (details, tag) => {
+          return details;
+        }),
+        ["frequency", "tag"],
+        ["desc", "asc"]
+      )
+    );
+
+    setNonSelectedTags(
+      orderBy(
+        map(omit(tagReference, toSelect), (details, tag) => {
+          return details;
+        }),
+        ["frequency", "tag"],
+        ["desc", "asc"]
+      )
+    );
+  }, [tagReference]);
 
   return (
     <div>
@@ -33,11 +76,26 @@ export default function SkillBox(props) {
         style={{ backgroundColor: props.backgroundColor ?? "#382E37" }}
       >
         <div className="skill-tag-container">
-          {map(tags, (tag, idx) => {
+          {map(selectedTags, (details, idx) => {
             return (
-              <div key={idx} className="skill-tag">
-                {tag.tag}: {tag.frequency}
-              </div>
+              <SkillTag
+                key={idx}
+                tag={details.label}
+                frequency={details.frequency}
+                selected={details.selected}
+                addTags={handleAddTags}
+              />
+            );
+          })}
+          {map(nonSelectedTags, (details, idx) => {
+            return (
+              <SkillTag
+                key={idx}
+                tag={details.label}
+                frequency={details.frequency}
+                selected={details.selected}
+                addTags={handleAddTags}
+              />
             );
           })}
         </div>

@@ -53,15 +53,15 @@ export default function Users(props) {
   return (
     <div
       className="content-container"
-      style={{ backgroundColor: props.backgroundColor }}
+      style={{ backgroundColor: props.backgroundColor, position: "relative" }}
     >
       {isLoading && (
         <div
           style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100%",
+            position: "absolute",
+            left: "50%",
+            top: "50%",
+            translate: "-50% -50%",
           }}
         >
           <CircularProgress
@@ -79,18 +79,25 @@ export default function Users(props) {
             />
           )}
         </div>
-        <div className="user-page-user-profile-container">
-          {userProfileLoading && (
+        <div
+          className="user-page-user-profile-container"
+          style={{ position: "relative" }}
+        >
+          {!isLoading && userProfileLoading && (
             <div
               style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100%",
+                position: "absolute",
+                left: "50%",
+                top: "50%",
+                translate: "-50% -50%",
               }}
             >
               <CircularProgress
-                style={{ color: props.color, width: "4rem", height: "4rem" }}
+                style={{
+                  color: props.color,
+                  width: "4rem",
+                  height: "4rem",
+                }}
               />
             </div>
           )}
