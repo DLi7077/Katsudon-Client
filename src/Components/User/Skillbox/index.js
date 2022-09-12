@@ -1,4 +1,4 @@
-import { filter, get, map, omit, orderBy, pick, reduce } from "lodash";
+import { filter, get, map, omit, orderBy, pick, reduce, values } from "lodash";
 import SkillTag from "./SkillTag";
 import "./styles.css";
 import "../user.css";
@@ -33,7 +33,11 @@ export default function SkillBox(props) {
     );
   }
 
-  const handleAddTags = (tag) => {
+  function generateTags(tags) {
+    return orderBy(values(tags), ["frequency", "tag"], ["desc", "asc"]);
+  }
+
+  function handleAddTags(tag) {
     setTagReference({
       ...tagReference,
       [tag]: {
@@ -41,31 +45,14 @@ export default function SkillBox(props) {
         selected: !get(tagReference, `${tag}.selected`),
       },
     });
-  };
+  }
 
   useEffect(() => {
     const toSelect = tagsToSelect(tagReference);
     props.updateSkillQuery(toSelect);
 
-    setSelectedTags(
-      orderBy(
-        map(pick(tagReference, toSelect), (details, tag) => {
-          return details;
-        }),
-        ["frequency", "tag"],
-        ["desc", "asc"]
-      )
-    );
-
-    setNonSelectedTags(
-      orderBy(
-        map(omit(tagReference, toSelect), (details, tag) => {
-          return details;
-        }),
-        ["frequency", "tag"],
-        ["desc", "asc"]
-      )
-    );
+    setSelectedTags(generateTags(pick(tagReference, toSelect)));
+    setNonSelectedTags(generateTags(omit(tagReference, toSelect)));
   }, [tagReference]);
 
   return (

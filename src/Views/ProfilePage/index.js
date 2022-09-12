@@ -63,7 +63,7 @@ export default function ProfilePage(props) {
     2: "asc",
   };
 
-  const handleSortDirChange = (sortBy) => {
+  function handleSortDirChange(sortBy) {
     const currDirection = (sortDir + 1) % 3;
     setQueryParams({
       ...queryParams,
@@ -72,27 +72,27 @@ export default function ProfilePage(props) {
     });
     setSortBy(sortBy);
     setSortDir(currDirection);
-  };
+  }
 
-  const updateSkillQuery = (tagList) => {
+  function updateSkillQuery(tagList) {
     setQueryParams(
       tagList.length
         ? { ...queryParams, tags: tagList }
         : omit(queryParams, "tags")
     );
-  };
+  }
 
-  const handleOpenSolutionModel = (problem, solutions) => {
+  function handleOpenSolutionModel(problem, solutions) {
     setProblemBlock(problem);
     setSolutionsBlock(solutions);
     setSolutionDisplay(true);
-  };
+  }
 
-  const handleCloseSolutionModel = () => {
+  function handleCloseSolutionModel() {
     setProblemBlock({});
     setSolutionsBlock({});
     setSolutionDisplay(false);
-  };
+  }
 
   useEffect(() => {
     getUserDetails();
