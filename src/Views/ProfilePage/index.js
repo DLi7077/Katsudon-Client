@@ -9,6 +9,7 @@ import SolutionModal from "../../Components/SolutionModal";
 import "./styles.css";
 import SkillBox from "../../Components/User/Skillbox";
 import banner from "../../Assets/banner.jpg";
+import { omit } from "lodash";
 
 export default function ProfilePage(props) {
   const location = useLocation();
@@ -25,6 +26,7 @@ export default function ProfilePage(props) {
     ...getSearchParams(location),
     sortBy: sortBy,
     sortDir: "desc",
+    tags: ["String"],
   });
 
   async function getUserDetails() {
@@ -55,40 +57,42 @@ export default function ProfilePage(props) {
     }, 500);
   }
 
-  function addFilter(queryParam) {
-    setQueryParams({
-      ...queryParams,
-      ...queryParam,
-    });
-  }
-
   const directionMapping = {
     0: null,
     1: "desc",
     2: "asc",
   };
 
-  const handleSortDirChange = (sortBy) => {
+  function handleSortDirChange(sortBy) {
     const currDirection = (sortDir + 1) % 3;
-    addFilter({
+    setQueryParams({
+      ...queryParams,
       sortBy: sortBy,
       sortDir: directionMapping[currDirection],
     });
     setSortBy(sortBy);
     setSortDir(currDirection);
-  };
+  }
 
-  const handleOpenSolutionModel = (problem, solutions) => {
+  function updateSkillQuery(tagList) {
+    setQueryParams(
+      tagList.length
+        ? { ...queryParams, tags: tagList }
+        : omit(queryParams, "tags")
+    );
+  }
+
+  function handleOpenSolutionModel(problem, solutions) {
     setProblemBlock(problem);
     setSolutionsBlock(solutions);
     setSolutionDisplay(true);
-  };
+  }
 
-  const handleCloseSolutionModel = () => {
+  function handleCloseSolutionModel() {
     setProblemBlock({});
     setSolutionsBlock({});
     setSolutionDisplay(false);
-  };
+  }
 
   useEffect(() => {
     getUserDetails();
@@ -126,7 +130,10 @@ export default function ProfilePage(props) {
           <div className="profile-page-container">
             <div className="user-profile-wrapper">
               <UserProfile userInfo={userInfo} borderColor="#FF66EB" />
-              <SkillBox solved={userInfo.solved} />
+              <SkillBox
+                solved={userInfo.solved}
+                updateSkillQuery={updateSkillQuery}
+              />
             </div>
             <div style={{ overflow: "auto" }}>
               <SolutionTable
@@ -136,7 +143,6 @@ export default function ProfilePage(props) {
                 backgroundColor={"#382E37"}
                 handleSortDirChange={handleSortDirChange}
                 loading={tableLoading}
-                addFilter={addFilter}
                 queryParams={queryParams}
                 sortBy={sortBy}
                 sortDir={sortDir}
