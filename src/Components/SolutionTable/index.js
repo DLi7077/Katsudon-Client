@@ -14,7 +14,7 @@ import {
 import SortIcon from "@mui/icons-material/Sort";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import SolutionRow from "./SolutionRow.jsx";
+import SolutionRow from "./SolutionRow.js";
 import "./styles.css";
 
 /**
