@@ -1,5 +1,5 @@
 import Api from "./Api";
-import qs from 'qs'
+import qs from "qs";
 
 async function getAllUsers() {
   return Api({
@@ -28,10 +28,19 @@ async function getUserProfile(queryParams) {
   });
 }
 
+async function createAccount(body) {
+  return Api({
+    method: "post",
+    endpoint: `api/user/create`,
+    body: body,
+  });
+}
+
 const UserAPI = {
   getAllUsers,
   getUserSolutions,
   getUserProfile,
+  createAccount,
 };
 
 export default UserAPI;

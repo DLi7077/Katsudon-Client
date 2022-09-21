@@ -97,11 +97,11 @@ export default function Navbar(props) {
           </div>
 
           <Link
-            to="/profile"
+            to="/register"
             className="navbar-redirect-link"
             style={{ textDecoration: "none" }}
           >
-            Sign In
+            Register
           </Link>
         </div>
       </div>
