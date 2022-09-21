@@ -9,6 +9,11 @@ const selectStyles = {
     width: "200px",
     flexGrow: 1,
   }),
+  input: (provided, state) => ({
+    ...provided,
+    color: "white",
+    fontSize: "1.25rem",
+  }),
   control: (provided, state) => ({
     borderRadius: 0,
     backgroundColor: "#3d3d3d",
@@ -47,6 +52,7 @@ const classes = {
     alignItems: "center",
     gap: "1rem",
     color: "white",
+    fontSize: "1.25rem",
   },
   avatarIcon: {
     width: "2.5rem",
@@ -69,6 +75,8 @@ export default function UserSearchBar(props) {
         value={props.selectedUser}
         onChange={props.setSelectedUser}
         options={props.allUsers}
+        getOptionLabel={(option) => option.username}
+        getOptionValue={(option) => option.username}
         formatOptionLabel={(user) => {
           return (
             <div style={classes.nameLabel}>
