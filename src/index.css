@@ -33,6 +33,7 @@ code {
   background-color: #292929;
   margin-top: 80px;
   padding-bottom: 2rem;
+  padding: 2rem;
 }
 
 .content-block {
@@ -53,6 +54,13 @@ code {
   font-size: 1.25rem;
   line-height: 1.5;
   margin-left: 1rem;
+}
+
+.login-register-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
 }
 
 @media only screen and (max-width: 1216px) {

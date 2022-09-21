@@ -7,7 +7,7 @@
   width: 1200px;
   max-width: 1200px;
 
-  background-color: #2A4F64;
+  background-color: #2a4f64;
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
 }
@@ -53,6 +53,9 @@
   padding: 0.5rem;
   padding-inline: 1.5rem;
   transition: background-color 200ms;
+}
+.landingpage-get-started:hover {
+  cursor: pointer;
 }
 
 .landingpage-get-started:hover {

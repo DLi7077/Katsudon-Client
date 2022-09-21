@@ -1,11 +1,13 @@
 import LeetcodeLogo from "../../Assets/Leetcode.png";
+import { useNavigate } from "react-router-dom";
 import "./styles.css";
 
 export default function LandingPage(props) {
+  const navigate = useNavigate();
   return (
     <div
       className="content-container"
-      style={{ backgroundColor: props.backgroundColor }}
+      style={{ backgroundColor: props.backgroundColor, padding: 0 }}
     >
       <div className="landingpage-heading" style={{ color: "white" }}>
         <div className="landingpage-title">
@@ -15,7 +17,15 @@ export default function LandingPage(props) {
         </div>
         <div className="landingpage-details">
           <div className="landingpage-user-count"> 10 Registered Users</div>
-          <button className="landingpage-get-started"> Get Started</button>
+          <button
+            className="landingpage-get-started"
+            onClick={() => {
+              navigate("/get-started");
+            }}
+          >
+            {" "}
+            Get Started
+          </button>
         </div>
       </div>
       <div className="content-block">
