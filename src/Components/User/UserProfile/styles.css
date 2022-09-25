@@ -43,7 +43,24 @@
   font-size: 1.25rem;
 }
 .follow-text {
-  font-size: 0.85rem;
+  font-size: 1rem;
+}
+
+.follow-text:hover {
+  text-decoration: underline 2px white;
+  cursor: pointer;
+}
+
+.follow-list {
+  width: min(300px, 70vw);
+  height: 50vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  overflow: auto;
 }
 
 .profile-username {

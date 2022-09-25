@@ -1,22 +1,11 @@
 import React from "react";
-
-const tagStyle = {
-  width: "fit-content",
-  backgroundColor: "#e9ecef",
-  color: "black",
-  fontSize: "1.15rem",
-  textTransform: "none",
-  padding: "0.25rem",
-  paddingInline: "1rem",
-  border: 0,
-  borderRadius: "16px",
-};
+import "./styles.css";
 
 export default function SkillTag(props) {
   return (
     <button
+      className="skill-tag"
       style={{
-        ...tagStyle,
         ...(props.selected && {
           color: "white",
           backgroundColor: "#18171C",
