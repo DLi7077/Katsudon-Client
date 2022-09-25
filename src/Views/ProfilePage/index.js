@@ -1,21 +1,36 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import UserProfile from "../../Components/User/UserProfile";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, IconButton } from "@mui/material";
 import getSearchParams from "../../Utils/getSearchParams";
 import UserAPI from "../../Api/UserAPI";
 import SolutionTable from "../../Components/SolutionTable";
 import SolutionModal from "../../Components/SolutionModal";
 import "./styles.css";
 import SkillBox from "../../Components/User/Skillbox";
+import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
+import PersonRemoveAlt1Icon from "@mui/icons-material/PersonRemoveAlt1";
 import banner from "../../Assets/banner.jpg";
-import { omit } from "lodash";
+import { get, omit, pick } from "lodash";
+import currentUser from "../../Utils/UserTools";
+
+import { currentUserS } from "../../Utils/UserTools";
+
+const classes = {
+  follow: {
+    position: "absolute",
+    top: "4px",
+    right: "5px",
+    color: "white",
+  },
+};
 
 export default function ProfilePage(props) {
   const location = useLocation();
   const [userInfo, setUserInfo] = useState(null);
   const [solutions, setSolutions] = useState({});
   const [isLoading, setLoading] = useState(true);
+  const [awaitFollow, setAwaitFollow] = useState(false);
   const [tableLoading, setTableLoading] = useState(true);
   const [solutionDisplay, setSolutionDisplay] = useState(false);
   const [problemBlock, setProblemBlock] = useState({});
@@ -23,26 +38,29 @@ export default function ProfilePage(props) {
   const [sortBy, setSortBy] = useState("last_solved_at");
   const [sortDir, setSortDir] = useState(1);
   const [queryParams, setQueryParams] = useState({
-    ...getSearchParams(location),
+    user_id: get(getSearchParams(location), "user_id") ?? currentUser("_id"),
     sortBy: sortBy,
     sortDir: "desc",
   });
 
   async function getUserDetails() {
     setLoading(true);
+    if (!queryParams.user_id) {
+      setLoading(false);
+      return;
+    }
     await UserAPI.getUserProfile(queryParams)
       .then((res) => {
         setUserInfo(res.user);
       })
       .catch(() => {
+        setUserInfo(null);
+      })
+      .finally(
         setTimeout(() => {
           setLoading(false);
-        }, 200);
-      });
-
-    setTimeout(() => {
-      setLoading(false);
-    }, 500);
+        }, 200)
+      );
   }
 
   async function getSolutions() {
@@ -93,10 +111,53 @@ export default function ProfilePage(props) {
     setSolutionDisplay(false);
   }
 
+  async function handleFollowClick() {
+    setAwaitFollow(true);
+
+    const followFunction = (currentUser("following") ?? []).includes(
+      userInfo._id
+    )
+      ? UserAPI.unfollowUser
+      : UserAPI.followUser;
+
+    await followFunction(userInfo._id, currentUser("auth_token"))
+      .then((res) => {
+        localStorage.setItem(
+          "katsudon-lc-following",
+          JSON.stringify(get(res.users[0], "following"))
+        );
+      })
+      .then(async () => {
+        await UserAPI.getUserProfile(queryParams)
+          .then((res) => {
+            setUserInfo(res.user);
+          })
+          .catch(() => {
+            setUserInfo(null);
+          })
+          .finally(setLoading(false));
+      })
+      .catch((e) => {
+        console.log("error trying to follow/unfollow user");
+      });
+
+    setAwaitFollow(false);
+  }
+
   useEffect(() => {
+    setQueryParams({
+      ...queryParams,
+      ...pick(getSearchParams(location), "user_id"),
+    });
+    if (!queryParams.user_id) {
+      setQueryParams({
+        ...queryParams,
+        user_id: currentUser("_id"),
+      });
+    }
     getUserDetails();
     // eslint-disable-next-line
-  }, []);
+  }, [location]);
 
   useEffect(() => {
     getSolutions();
@@ -106,7 +167,7 @@ export default function ProfilePage(props) {
   return (
     <div
       className="content-container"
-      style={{ backgroundColor: props.backgroundColor }}
+      style={{ backgroundColor: props.backgroundColor, padding: 0 }}
     >
       <img src={banner} style={{ width: "100%" }} alt="elaina eating" />
       {isLoading && (
@@ -128,7 +189,53 @@ export default function ProfilePage(props) {
         <>
           <div className="profile-page-container">
             <div className="user-profile-wrapper">
-              <UserProfile userInfo={userInfo} borderColor="#FF66EB" />
+              {awaitFollow && (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+
+                    height: "350px",
+                    minWidth: "250px",
+                    backgroundColor: "black",
+                    border: "2px solid #FF66EB",
+                    borderRadius: "8px",
+                  }}
+                >
+                  <CircularProgress
+                    style={{
+                      color: props.color,
+                      width: "4rem",
+                      height: "4rem",
+                    }}
+                  />
+                </div>
+              )}
+              {!awaitFollow && (
+                <>
+                  {currentUser("_id") !== userInfo._id && (
+                    <IconButton
+                      style={classes.follow}
+                      onClick={handleFollowClick}
+                    >
+                      {(currentUser("following") ?? []).includes(
+                        userInfo._id
+                      ) ? (
+                        <PersonRemoveAlt1Icon
+                          style={{ fontSize: "2rem", color: "#FF7A7A" }}
+                        />
+                      ) : (
+                        <PersonAddAlt1Icon
+                          style={{ fontSize: "2rem", color: "#7AFF87" }}
+                        />
+                      )}
+                    </IconButton>
+                  )}
+                  <UserProfile userInfo={userInfo} borderColor="#FF66EB" />
+                </>
+              )}
+
               <SkillBox
                 solved={userInfo.solved}
                 updateSkillQuery={updateSkillQuery}
@@ -156,18 +263,17 @@ export default function ProfilePage(props) {
           </div>
         </>
       )}
-      {!userInfo && (
+      {!isLoading && !userInfo && (
         <div
           style={{
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            height: "100%",
             fontSize: "2rem",
             color: "white",
           }}
         >
-          "{"sdfsf"}" is not a valid user
+          Invalid User
         </div>
       )}
     </div>

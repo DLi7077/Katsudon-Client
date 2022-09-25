@@ -23,7 +23,6 @@ export default function Register(props) {
     await UserAPI.createAccount(userDetails)
       .then(setCreateSuccess(true))
       .catch((e) => {
-        console.log(e);
         setCreateSuccess(false);
       })
       .finally(setCreated(true));
@@ -35,8 +34,8 @@ export default function Register(props) {
   const validation = yup.object().shape({
     email: yup
       .string()
-      .matches(emailRegex, "invalid email")
-      .required("email required"),
+      .matches(emailRegex, "Invalid email")
+      .required("Email required"),
     username: yup
       .string()
       .min(4, "must be at least 4 characters")

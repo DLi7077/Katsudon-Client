@@ -1,6 +1,8 @@
 export const MENU_LINKS = {
-  "Sign In": "/profile",
   Welcome: "/welcome",
   Users: "/users",
   Problems: "/problems",
+  Profile: "/profile",
+  Register: "/register",
+  Login: "/login",
 };

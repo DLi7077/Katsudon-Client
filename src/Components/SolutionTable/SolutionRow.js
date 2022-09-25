@@ -21,12 +21,14 @@ export default function SolutionRow(props) {
     },
     fileOpen: { fontSize: "2rem", color: "white" },
     languageLogo: {
-      width: "2.5rem",
+      width: "2rem",
     },
     link: {
       textDecoration: "none",
     },
   };
+
+  const SHOWN_LANGUAGES = 2;
 
   return (
     <TableRow>
@@ -57,31 +59,34 @@ export default function SolutionRow(props) {
           {props.details.problem.title}
         </a>
       </TableCell>
-      <TableCell style={classes.tableCell}>
+      <TableCell style={{ ...classes.tableCell, paddingInline: 0 }}>
         <div
           style={{
             display: "flex",
-            justifyContent: "flex-start",
+            justifyContent: "center",
             alignItems: "center",
           }}
         >
-          {map(take(keys(props.details.solutions), 4), (language, idx) => {
-            return (
-              <img
-                key={idx}
-                src={LANGUAGE_LOGOS[language]}
-                alt={language}
-                style={classes.languageLogo}
-              />
-            );
-          })}
+          {map(
+            take(keys(props.details.solutions), SHOWN_LANGUAGES),
+            (language, idx) => {
+              return (
+                <img
+                  key={idx}
+                  src={LANGUAGE_LOGOS[language]}
+                  alt={language}
+                  style={classes.languageLogo}
+                />
+              );
+            }
+          )}
 
-          {keys(props.details.solutions).length > 4 && (
-            <div>+{keys(props.details.solutions).length - 4}</div>
+          {keys(props.details.solutions).length > SHOWN_LANGUAGES && (
+            <div>+{keys(props.details.solutions).length - SHOWN_LANGUAGES}</div>
           )}
         </div>
       </TableCell>
-      <TableCell style={classes.tableCell}>
+      <TableCell style={{ ...classes.tableCell, paddingInline: 0 }}>
         <IconButton
           onClick={() => {
             props.handleOpenSolutionModel(

@@ -96,106 +96,106 @@ export default function SolutionTable(props) {
   ];
 
   return (
-      <Table className="solution-table">
-        <TableHead>
-          <TableRow className="header">
-            <TableCell style={classes.tableHeader}>
-              <IconButton
-                style={classes.iconButton}
-                onClick={(e) => {
-                  setAnchorElement(e.currentTarget);
+    <Table className="solution-table">
+      <TableHead>
+        <TableRow className="header">
+          <TableCell style={classes.tableHeader}>
+            <IconButton
+              style={classes.iconButton}
+              onClick={(e) => {
+                setAnchorElement(e.currentTarget);
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
                 }}
               >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <SortIcon style={classes.sortIcon} />
-                </div>
-              </IconButton>
-              <Menu
-                anchorEl={anchorElement}
-                open={!!anchorElement}
-                onClose={() => setAnchorElement(null)}
-                style={{ marginLeft: "-1rem", opacity: 0.75 }}
-              >
-                {map(sortKeys, (key, idx) => {
-                  return (
-                    <MenuItem
-                      key={idx}
-                      style={{
-                        width: "100px",
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        padding: "0.5rem",
-                        fontSize: "1.15rem",
-                      }}
-                      onClick={() => {
-                        props.handleSortDirChange(key.value);
-                      }}
-                    >
-                      <div>{key.label}</div>
-                      {sortDirStatus(key.value)}
-                    </MenuItem>
-                  );
-                })}
-              </Menu>
-            </TableCell>
-
-            <TableCell style={classes.tableHeader} colSpan={3}>
-              Problem
-            </TableCell>
-            <TableCell style={classes.tableHeader}>Language</TableCell>
-            <TableCell style={classes.tableHeader}>Solution</TableCell>
-            <TableCell style={classes.tableHeader}>Solved At</TableCell>
-          </TableRow>
-        </TableHead>
-        {!props.loading && (
-          <TableBody
-            className="solution-table-body"
-            style={{ backgroundColor: props.backgroundColor }}
-          >
-            {map(props.solutions, (details, idx) => {
-              const problemTags = details.problem.tags;
-              return (
-                <SolutionRow
-                  details={details}
-                  handleOpenSolutionModel={props.handleOpenSolutionModel}
-                  problemTags={problemTags}
-                  key={idx}
-                />
-              );
-            })}
-          </TableBody>
-        )}
-        {props.loading && (
-          <TableBody>
-            <TableRow></TableRow>
-            <TableRow>
-              <TableCell colSpan={7}>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    height: "100%",
-                  }}
-                >
-                  <CircularProgress
+                <SortIcon style={classes.sortIcon} />
+              </div>
+            </IconButton>
+            <Menu
+              anchorEl={anchorElement}
+              open={!!anchorElement}
+              onClose={() => setAnchorElement(null)}
+              style={{ marginLeft: "-1rem", opacity: 0.75 }}
+            >
+              {map(sortKeys, (key, idx) => {
+                return (
+                  <MenuItem
+                    key={idx}
                     style={{
-                      color: "white",
-                      width: "3rem",
-                      height: "3rem",
+                      width: "100px",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "0.5rem",
+                      fontSize: "1.15rem",
                     }}
-                  />
-                </div>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        )}
-      </Table>
+                    onClick={() => {
+                      props.handleSortDirChange(key.value);
+                    }}
+                  >
+                    <div>{key.label}</div>
+                    {sortDirStatus(key.value)}
+                  </MenuItem>
+                );
+              })}
+            </Menu>
+          </TableCell>
+
+          <TableCell style={classes.tableHeader} colSpan={3}>
+            Problem
+          </TableCell>
+          <TableCell style={classes.tableHeader}>Language</TableCell>
+          <TableCell style={classes.tableHeader}>Solution</TableCell>
+          <TableCell style={classes.tableHeader}>Solved</TableCell>
+        </TableRow>
+      </TableHead>
+      {!props.loading && (
+        <TableBody
+          className="solution-table-body"
+          style={{ backgroundColor: props.backgroundColor }}
+        >
+          {map(props.solutions, (details, idx) => {
+            const problemTags = details.problem.tags;
+            return (
+              <SolutionRow
+                details={details}
+                handleOpenSolutionModel={props.handleOpenSolutionModel}
+                problemTags={problemTags}
+                key={idx}
+              />
+            );
+          })}
+        </TableBody>
+      )}
+      {props.loading && (
+        <TableBody>
+          <TableRow></TableRow>
+          <TableRow>
+            <TableCell colSpan={7}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "100%",
+                }}
+              >
+                <CircularProgress
+                  style={{
+                    color: "white",
+                    width: "3rem",
+                    height: "3rem",
+                  }}
+                />
+              </div>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      )}
+    </Table>
   );
 }
