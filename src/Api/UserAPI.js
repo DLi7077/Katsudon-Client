@@ -36,11 +36,44 @@ async function createAccount(body) {
   });
 }
 
+async function login(body) {
+  return Api({
+    method: "post",
+    endpoint: "api/user/login",
+    body: body,
+  });
+}
+
+async function followUser(user_id, token) {
+  return Api({
+    method: "post",
+    endpoint: "api/user/follow",
+    body: { follow: user_id },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+async function unfollowUser(user_id, token) {
+  return Api({
+    method: "post",
+    endpoint: "api/user/unfollow",
+    body: { unfollow: user_id },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
 const UserAPI = {
   getAllUsers,
   getUserSolutions,
   getUserProfile,
   createAccount,
+  login,
+  followUser,
+  unfollowUser,
 };
 
 export default UserAPI;

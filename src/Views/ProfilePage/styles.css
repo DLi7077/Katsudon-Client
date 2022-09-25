@@ -12,12 +12,17 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  position: relative;
   gap: 3rem;
 }
 
-@media only screen and (max-width: 1100px) {
+@media only screen and (max-width: 1150px) {
   .user-profile-wrapper {
     flex-direction: row;
+    justify-content: center;
+  }
+  .profile-page-container {
+    justify-content: center;
   }
 }
 

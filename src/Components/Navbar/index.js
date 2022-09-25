@@ -1,10 +1,12 @@
 import { get, map, omit } from "lodash";
 import { Link, useLocation } from "react-router-dom";
-import { IconButton, Menu, MenuItem } from "@mui/material";
+import { Avatar, IconButton, Menu, MenuItem } from "@mui/material";
+import LogoutIcon from "@mui/icons-material/Logout";
 import { useScrollYPosition } from "react-use-scroll-position";
 import { useEffect, useState } from "react";
 import { routeColors } from "../../Constants/routes";
 import { MENU_LINKS } from "../../Constants/navbar";
+import currentUser, { handleLogout } from "../../Utils/UserTools";
 import MenuIcon from "@mui/icons-material/Menu";
 import "./styles.css";
 
@@ -50,6 +52,59 @@ export default function Navbar(props) {
     // eslint-disable-next-line
   }, [scrollY]);
 
+  // display sections depending on if the user is logged in
+  const userSection = () => {
+    const loggedOutContent = (
+      <>
+        <Link
+          to="/register"
+          className="navbar-redirect-link"
+          style={{ textDecoration: "none" }}
+        >
+          Register
+        </Link>
+
+        <Link
+          to="/login"
+          className="navbar-redirect-link"
+          style={{ textDecoration: "none" }}
+        >
+          Login
+        </Link>
+      </>
+    );
+
+    const loggedInContent = (
+      <div style={{ display: "flex", gap: "1.5rem" }}>
+        <Link
+          to={`/profile?user_id=${currentUser("_id")}`}
+          className="navbar-redirect-link"
+          style={{ textDecoration: "none", gap: "1rem" }}
+        >
+          <Avatar src={currentUser("profile_picture")} />
+          {currentUser("username")}
+        </Link>
+        <IconButton
+          style={{ color: "white" }}
+          onClick={() => {
+            handleLogout();
+          }}
+        >
+          <LogoutIcon style={{ color: "white", fontSize: "2rem" }} />
+        </IconButton>
+      </div>
+    );
+
+    return currentUser("logged_in") ? loggedInContent : loggedOutContent;
+  };
+
+  const visibleRedirects = omit(
+    MENU_LINKS,
+    currentUser("logged_in")
+      ? ["Welcome", "Register", "Login"]
+      : ["Problems", "Profile"]
+  );
+
   return (
     <>
       <div className="navbar-container">
@@ -67,7 +122,7 @@ export default function Navbar(props) {
             open={!!anchorElement}
             onClose={() => setAnchorElement(null)}
           >
-            {map(MENU_LINKS, (path, label) => {
+            {map(visibleRedirects, (path, label) => {
               return (
                 <Link key={label} to={path} style={classes.link}>
                   <MenuItem sx={classes.MenuItem}>{label}</MenuItem>
@@ -81,28 +136,24 @@ export default function Navbar(props) {
             <div className="katsudon-logo" style={{ color: logoColor }}>
               カツドン
             </div>
-            {map(omit(MENU_LINKS, "Sign In"), (path, label) => {
-              return (
-                <div key={label} className="redirect-links">
-                  <Link
-                    to={path}
-                    className="navbar-redirect-link"
-                    style={{ textDecoration: "none" }}
-                  >
-                    {label}
-                  </Link>
-                </div>
-              );
-            })}
+            {map(
+              omit(visibleRedirects, ["Register", "Login", "Profile"]),
+              (path, label) => {
+                return (
+                  <div key={label} className="redirect-links">
+                    <Link
+                      to={path}
+                      className="navbar-redirect-link"
+                      style={{ textDecoration: "none" }}
+                    >
+                      {label}
+                    </Link>
+                  </div>
+                );
+              }
+            )}
           </div>
-
-          <Link
-            to="/register"
-            className="navbar-redirect-link"
-            style={{ textDecoration: "none" }}
-          >
-            Register
-          </Link>
+          <div className="navbar-redirect-link">{userSection()}</div>
         </div>
       </div>
       <div className="navbar-bottom-padding" />

@@ -50,12 +50,15 @@
 
 .navbar-link-wrapper {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   gap: 4rem;
 }
 
 .navbar-redirect-link {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
   font-size: 1.5rem;
   color: white;
   width: fit-content;
