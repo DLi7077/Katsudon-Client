@@ -14,8 +14,6 @@ import banner from "../../Assets/banner.jpg";
 import { get, omit, pick } from "lodash";
 import currentUser from "../../Utils/UserTools";
 
-import { currentUserS } from "../../Utils/UserTools";
-
 const classes = {
   follow: {
     position: "absolute",
@@ -49,7 +47,13 @@ export default function ProfilePage(props) {
       setLoading(false);
       return;
     }
-    await UserAPI.getUserProfile(queryParams)
+
+    const compliedQuery = {
+      ...queryParams,
+      user_id: get(getSearchParams(location), "user_id") ?? currentUser("_id"),
+    };
+
+    await UserAPI.getUserProfile(compliedQuery)
       .then((res) => {
         setUserInfo(res.user);
       })
@@ -65,7 +69,11 @@ export default function ProfilePage(props) {
 
   async function getSolutions() {
     setTableLoading(true);
-    await UserAPI.getUserSolutions(queryParams).then((res) => {
+    const compliedQuery = {
+      ...queryParams,
+      user_id: get(getSearchParams(location), "user_id") ?? currentUser("_id"),
+    };
+    await UserAPI.getUserSolutions(compliedQuery).then((res) => {
       setSolutions(res);
     });
 
@@ -162,7 +170,7 @@ export default function ProfilePage(props) {
   useEffect(() => {
     getSolutions();
     // eslint-disable-next-line
-  }, [queryParams]);
+  }, [queryParams, location]);
 
   return (
     <div
@@ -189,52 +197,54 @@ export default function ProfilePage(props) {
         <>
           <div className="profile-page-container">
             <div className="user-profile-wrapper">
-              {awaitFollow && (
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-
-                    height: "350px",
-                    minWidth: "250px",
-                    backgroundColor: "black",
-                    border: "2px solid #FF66EB",
-                    borderRadius: "8px",
-                  }}
-                >
-                  <CircularProgress
+              <div style={{ position: "relative" }}>
+                {awaitFollow && (
+                  <div
                     style={{
-                      color: props.color,
-                      width: "4rem",
-                      height: "4rem",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+
+                      height: "350px",
+                      minWidth: "250px",
+                      backgroundColor: "black",
+                      border: "2px solid #FF66EB",
+                      borderRadius: "8px",
                     }}
-                  />
-                </div>
-              )}
-              {!awaitFollow && (
-                <>
-                  {currentUser("_id") !== userInfo._id && (
-                    <IconButton
-                      style={classes.follow}
-                      onClick={handleFollowClick}
-                    >
-                      {(currentUser("following") ?? []).includes(
-                        userInfo._id
-                      ) ? (
-                        <PersonRemoveAlt1Icon
-                          style={{ fontSize: "2rem", color: "#FF7A7A" }}
-                        />
-                      ) : (
-                        <PersonAddAlt1Icon
-                          style={{ fontSize: "2rem", color: "#7AFF87" }}
-                        />
-                      )}
-                    </IconButton>
-                  )}
-                  <UserProfile userInfo={userInfo} borderColor="#FF66EB" />
-                </>
-              )}
+                  >
+                    <CircularProgress
+                      style={{
+                        color: props.color,
+                        width: "4rem",
+                        height: "4rem",
+                      }}
+                    />
+                  </div>
+                )}
+                {!awaitFollow && (
+                  <>
+                    {currentUser("_id") !== userInfo._id && (
+                      <IconButton
+                        style={classes.follow}
+                        onClick={handleFollowClick}
+                      >
+                        {(currentUser("following") ?? []).includes(
+                          userInfo._id
+                        ) ? (
+                          <PersonRemoveAlt1Icon
+                            style={{ fontSize: "2rem", color: "#FF7A7A" }}
+                          />
+                        ) : (
+                          <PersonAddAlt1Icon
+                            style={{ fontSize: "2rem", color: "#7AFF87" }}
+                          />
+                        )}
+                      </IconButton>
+                    )}
+                    <UserProfile userInfo={userInfo} borderColor="#FF66EB" />
+                  </>
+                )}
+              </div>
 
               <SkillBox
                 solved={userInfo.solved}
