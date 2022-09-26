@@ -1,18 +1,20 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { get, omit, pick } from "lodash";
 import UserProfile from "../../Components/User/UserProfile";
 import { CircularProgress, IconButton } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
 import getSearchParams from "../../Utils/getSearchParams";
 import UserAPI from "../../Api/UserAPI";
 import SolutionTable from "../../Components/SolutionTable";
 import SolutionModal from "../../Components/SolutionModal";
-import "./styles.css";
 import SkillBox from "../../Components/User/Skillbox";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import PersonRemoveAlt1Icon from "@mui/icons-material/PersonRemoveAlt1";
 import banner from "../../Assets/banner.jpg";
-import { get, omit, pick } from "lodash";
 import currentUser from "../../Utils/UserTools";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import "./styles.css";
 
 const classes = {
   follow: {
@@ -24,10 +26,18 @@ const classes = {
 };
 
 export default function ProfilePage(props) {
+  const theme = createTheme({
+    palette: {
+      primary: { main: props.color ?? "##FF66EB" },
+      secondary: { main: "#ffffff" },
+    },
+  });
+
   const location = useLocation();
   const [userInfo, setUserInfo] = useState(null);
   const [solutions, setSolutions] = useState({});
   const [isLoading, setLoading] = useState(true);
+  const [bannerHover, setBannerHover] = useState(false);
   const [awaitFollow, setAwaitFollow] = useState(false);
   const [tableLoading, setTableLoading] = useState(true);
   const [solutionDisplay, setSolutionDisplay] = useState(false);
@@ -63,7 +73,7 @@ export default function ProfilePage(props) {
       .finally(
         setTimeout(() => {
           setLoading(false);
-        }, 200)
+        }, 300)
       );
   }
 
@@ -79,7 +89,7 @@ export default function ProfilePage(props) {
 
     setTimeout(() => {
       setTableLoading(false);
-    }, 500);
+    }, 100);
   }
 
   const directionMapping = {
@@ -152,6 +162,86 @@ export default function ProfilePage(props) {
     setAwaitFollow(false);
   }
 
+  async function handleUploadProfileBanner(event) {
+    if (!event.target.files) return;
+
+    setLoading(true);
+    const bannerPicture = event.target.files[0];
+    const formData = new FormData();
+    formData.append("imgfile", bannerPicture);
+
+    await UserAPI.uploadProfileBanner(formData, currentUser("auth_token"))
+      .then(() => {
+        window.location.reload(false);
+      })
+      .catch(() => {
+        console.log("couldnt upload");
+      });
+
+    setLoading(false);
+  }
+
+  async function handleUploadProfilePicture(event) {
+    if (!event.target.files) return;
+
+    setLoading(true);
+    const bannerPicture = event.target.files[0];
+    const formData = new FormData();
+    formData.append("imgfile", bannerPicture);
+
+    await UserAPI.uploadProfilePicture(formData, currentUser("auth_token"))
+      .then(() => {
+        window.location.reload(false);
+      })
+      .catch(() => {
+        console.log("couldnt upload");
+      });
+
+    setLoading(false);
+  }
+
+  const EditButton = (handleClick) => {
+    return (
+      <>
+        <input
+          type="file"
+          name="imgfile"
+          accept="image/*"
+          id="upload-banner"
+          onChange={handleClick}
+          hidden
+        />
+        <label htmlFor="upload-banner">
+          <IconButton
+            onMouseEnter={() => {
+              setBannerHover(true);
+            }}
+            onMouseLeave={() => {
+              setTimeout(() => {
+                setBannerHover(false);
+              }, 100);
+            }}
+            style={{
+              position: "absolute",
+              backgroundColor: "rgba(0,0,0,0.6)",
+              color: "white",
+              top: "8px",
+              right: "8px",
+              padding: "0.5rem",
+              zIndex: 3,
+            }}
+            component="span"
+          >
+            <EditIcon style={{ fontSize: "1.75rem" }} />
+          </IconButton>
+        </label>
+        {bannerHover && (
+          <div className="profile-banner-upload">Upload Profile Banner</div>
+        )}
+      </>
+    );
+  };
+
   useEffect(() => {
     setQueryParams({
       ...queryParams,
@@ -177,7 +267,6 @@ export default function ProfilePage(props) {
       className="content-container"
       style={{ backgroundColor: props.backgroundColor, padding: 0 }}
     >
-      <img src={banner} style={{ width: "100%" }} alt="elaina eating" />
       {isLoading && (
         <div
           style={{
@@ -195,6 +284,16 @@ export default function ProfilePage(props) {
 
       {userInfo && !isLoading && (
         <>
+          <div className="user-profile-banner" style={{ position: "relative" }}>
+            {currentUser("logged_in") &&
+              currentUser("_id") === userInfo._id &&
+              EditButton(handleUploadProfileBanner)}
+            <img
+              src={get(userInfo, "profile_banner_url") ?? banner}
+              style={{ objectFit: "cover", width: "100%" }}
+              alt="user banner image"
+            />
+          </div>
           <div className="profile-page-container">
             <div className="user-profile-wrapper">
               <div style={{ position: "relative" }}>
@@ -223,25 +322,32 @@ export default function ProfilePage(props) {
                 )}
                 {!awaitFollow && (
                   <>
-                    {currentUser("_id") !== userInfo._id && (
-                      <IconButton
-                        style={classes.follow}
-                        onClick={handleFollowClick}
-                      >
-                        {(currentUser("following") ?? []).includes(
-                          userInfo._id
-                        ) ? (
-                          <PersonRemoveAlt1Icon
-                            style={{ fontSize: "2rem", color: "#FF7A7A" }}
-                          />
-                        ) : (
-                          <PersonAddAlt1Icon
-                            style={{ fontSize: "2rem", color: "#7AFF87" }}
-                          />
-                        )}
-                      </IconButton>
-                    )}
-                    <UserProfile userInfo={userInfo} borderColor="#FF66EB" />
+                    <ThemeProvider theme={theme}>
+                      <UserProfile
+                        userInfo={userInfo}
+                        borderColor="#FF66EB"
+                        changeProfilePicture={handleUploadProfilePicture}
+                      />
+                    </ThemeProvider>
+                    {currentUser("logged_in") &&
+                      currentUser("_id") !== userInfo._id && (
+                        <IconButton
+                          style={classes.follow}
+                          onClick={handleFollowClick}
+                        >
+                          {(currentUser("following") ?? []).includes(
+                            userInfo._id
+                          ) ? (
+                            <PersonRemoveAlt1Icon
+                              style={{ fontSize: "2rem", color: "#FF7A7A" }}
+                            />
+                          ) : (
+                            <PersonAddAlt1Icon
+                              style={{ fontSize: "2rem", color: "#7AFF87" }}
+                            />
+                          )}
+                        </IconButton>
+                      )}
                   </>
                 )}
               </div>
@@ -273,7 +379,7 @@ export default function ProfilePage(props) {
           </div>
         </>
       )}
-      {!isLoading && !userInfo && (
+      {!isLoading && userInfo == null && (
         <div
           style={{
             display: "flex",

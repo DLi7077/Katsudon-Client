@@ -22,7 +22,7 @@ export default function FollowList(props) {
       <div
         className="follow-list"
         style={{
-          backgroundColor: "#4d4d4d",
+          backgroundColor: "#18171C",
         }}
       >
         <div style={{ fontSize: "2rem" }}>
@@ -36,6 +36,7 @@ export default function FollowList(props) {
                 display: "flex",
                 justifyContent: "flex-start",
                 alignItems: "center",
+                width: "100%",
                 gap: "1rem",
               }}
             >

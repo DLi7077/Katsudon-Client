@@ -16,6 +16,27 @@
   gap: 3rem;
 }
 
+.user-profile-banner {
+  max-width: 100%;
+  width: 100%;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+}
+
+.profile-banner-upload {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+}
+
 @media only screen and (max-width: 1150px) {
   .user-profile-wrapper {
     flex-direction: row;

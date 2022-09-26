@@ -1,8 +1,14 @@
-import { Avatar, Tooltip } from "@mui/material";
+import { Avatar, IconButton, TextField, Tooltip } from "@mui/material";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
+import CheckIcon from "@mui/icons-material/Check";
+import CloseIcon from "@mui/icons-material/Close";
 import { get, reduce } from "lodash";
 import { useState } from "react";
 import FollowList from "./FollowList";
 import "./styles.css";
+import currentUser from "../../../Utils/UserTools";
+import EditIcon from "@mui/icons-material/Edit";
+import UserAPI from "../../../Api/UserAPI";
 
 const fractionToPercent = (fraction) => {
   return `${fraction * 100}%`;
@@ -44,6 +50,8 @@ const difficultyGenerator = (solved, total, difficulty) => {
 export default function UserProfile(props) {
   const [showFollowers, setShowFollowers] = useState(false);
   const [showFollowing, setShowFollowing] = useState(false);
+  const [editingBio, setEditingBio] = useState(false);
+  const [updatedBio, setUpdatedBio] = useState("");
   function handleCloseFollowers() {
     setShowFollowers(false);
   }
@@ -73,11 +81,33 @@ export default function UserProfile(props) {
   );
   const totalSolved = Easy + Medium + Hard;
 
+  function startEditBiography() {
+    setEditingBio(true);
+    setUpdatedBio(biography);
+  }
+
+  function cancelUpdatedBiography() {
+    setEditingBio(false);
+  }
+
+  async function submitUpdatedBiography() {
+    if (biography == updatedBio) {
+      setEditingBio(false);
+      return;
+    }
+    await UserAPI.updateBiography(updatedBio, currentUser("auth_token"));
+    setEditingBio(false);
+    window.location.reload(false);
+  }
+
   return (
     <>
       <div
         className="profile-container"
-        style={{ border: `2px solid ${props.borderColor ?? "white"}` }}
+        style={{
+          border: `2px solid ${props.borderColor ?? "white"}`,
+          position: "relative",
+        }}
       >
         <div className="profile-user-info">
           <div className="profile-top-wrapper">
@@ -92,15 +122,40 @@ export default function UserProfile(props) {
                 Followers
               </div>
             </div>
-            <div className="profile-picture">
+            <div className="profile-picture" style={{ position: "relative" }}>
               <Avatar
                 src={profile_picture_url}
                 style={{
-                  width: "100%",
-                  height: "100%",
+                  width: "100px",
+                  height: "100px",
                   border: "2px solid white",
                 }}
               />
+              {currentUser("logged_in") && currentUser("_id") === userInfo._id && (
+                <>
+                  <input
+                    type="file"
+                    name="imgfile"
+                    accept="image/*"
+                    id="upload-profile-picture"
+                    onChange={props.changeProfilePicture}
+                    hidden
+                  />
+                  <label htmlFor="upload-profile-picture">
+                    <div
+                      className={
+                        currentUser("logged_in") &&
+                        currentUser("_id") === userInfo._id
+                          ? "profile-picture-upload"
+                          : ""
+                      }
+                    >
+                      <UploadFileIcon style={{ fontSize: "2.5rem" }} />
+                      Upload Profile Picture
+                    </div>
+                  </label>
+                </>
+              )}
             </div>
             <div className="follow-stat">
               <div className="follow-value">{following.length}</div>
@@ -115,7 +170,75 @@ export default function UserProfile(props) {
             </div>
           </div>
           <div className="profile-username">{username}</div>
-          <div className="profile-biography">{biography ?? ""}</div>
+          <div className="profile-biography" style={{ position: "relative" }}>
+            {!editingBio && <>{biography ?? ""}</>}
+            {currentUser("logged_in") &&
+              currentUser("_id") === userInfo._id &&
+              !editingBio && (
+                <IconButton
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    color: "white",
+                    padding: "0.25rem",
+                  }}
+                  onClick={() => {
+                    startEditBiography();
+                  }}
+                >
+                  <EditIcon />
+                </IconButton>
+              )}
+            {editingBio && (
+              <TextField
+                variant="standard"
+                value={updatedBio}
+                multiline
+                rows={4}
+                color="primary"
+                inputProps={{
+                  style: {
+                    fontSize: "1.35rem",
+                    color: "white",
+                    textAlign: "center",
+                  },
+                }}
+                onChange={(e) => {
+                  setUpdatedBio(e.target.value);
+                }}
+              />
+            )}
+            {editingBio && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  right: 0,
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "flex-start",
+                }}
+              >
+                <IconButton
+                  style={{ color: "#FFAC7D", padding: "0.25rem" }}
+                  onClick={() => {
+                    cancelUpdatedBiography();
+                  }}
+                >
+                  <CloseIcon />
+                </IconButton>
+                <IconButton
+                  style={{ color: "#7AFF87", padding: "0.25rem" }}
+                  onClick={() => {
+                    submitUpdatedBiography();
+                  }}
+                >
+                  <CheckIcon />
+                </IconButton>
+              </div>
+            )}
+          </div>
         </div>
         <div className="profile-solved-section">
           <div className="profile-solved-count">Solved: {totalSolved}</div>
