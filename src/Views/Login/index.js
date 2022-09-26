@@ -5,7 +5,7 @@ import { useFormik } from "formik";
 import { Button, TextField, Snackbar, Alert } from "@mui/material";
 import * as yup from "yup";
 import UserAPI from "../../Api/UserAPI";
-import { handleLogin } from "../../Utils/UserTools";
+import currentUser, { handleLogin } from "../../Utils/UserTools";
 
 const classes = {
   root: { borderBottom: "1px solid white" },
@@ -48,7 +48,7 @@ export default function Login(props) {
 
           handleLogin(loginDetails);
 
-          navigate("/profile");
+          navigate(`/profile?user_id=${currentUser("_id")}`);
 
           window.location.reload(false);
         })

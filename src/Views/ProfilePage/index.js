@@ -255,12 +255,13 @@ export default function ProfilePage(props) {
     }
     getUserDetails();
     // eslint-disable-next-line
+    getSolutions();
   }, [location]);
 
   useEffect(() => {
     getSolutions();
     // eslint-disable-next-line
-  }, [queryParams, location]);
+  }, [queryParams]);
 
   return (
     <div

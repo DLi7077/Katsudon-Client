@@ -32,11 +32,3 @@
   color: white;
 }
 
-@media only screen and (max-width: 1150px) {
-  .skill-tag-container {
-    flex-direction: row;
-    flex-wrap: wrap;
-
-    max-width: none;
-  }
-}

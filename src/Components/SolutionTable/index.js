@@ -148,7 +148,6 @@ export default function SolutionTable(props) {
           <TableCell style={classes.tableHeader} colSpan={3}>
             Problem
           </TableCell>
-          <TableCell style={classes.tableHeader}>Language</TableCell>
           <TableCell style={classes.tableHeader}>Solution</TableCell>
           <TableCell style={classes.tableHeader}>Solved</TableCell>
         </TableRow>

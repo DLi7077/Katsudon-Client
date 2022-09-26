@@ -21,7 +21,7 @@ export default function SolutionRow(props) {
     },
     fileOpen: { fontSize: "2rem", color: "white" },
     languageLogo: {
-      width: "2rem",
+      height: "2rem",
     },
     link: {
       textDecoration: "none",
@@ -63,40 +63,44 @@ export default function SolutionRow(props) {
         <div
           style={{
             display: "flex",
-            justifyContent: "center",
+            justifyContent: "flex-start",
             alignItems: "center",
+            gap: "4px",
+            width: "100%",
           }}
         >
-          {map(
-            take(keys(props.details.solutions), SHOWN_LANGUAGES),
-            (language, idx) => {
-              return (
-                <img
-                  key={idx}
-                  src={LANGUAGE_LOGOS[language]}
-                  alt={language}
-                  style={classes.languageLogo}
-                />
+          <IconButton
+            onClick={() => {
+              props.handleOpenSolutionModel(
+                props.details.problem,
+                props.details.solutions
               );
-            }
-          )}
+            }}
+          >
+            <FileOpenIcon style={classes.fileOpen} />
+          </IconButton>
+          <div style={{ display: "flex", gap: "2px" }}>
+            {map(
+              take(keys(props.details.solutions), SHOWN_LANGUAGES),
+              (language, idx) => {
+                return (
+                  <img
+                    key={idx}
+                    src={LANGUAGE_LOGOS[language]}
+                    alt={language}
+                    style={classes.languageLogo}
+                  />
+                );
+              }
+            )}
 
-          {keys(props.details.solutions).length > SHOWN_LANGUAGES && (
-            <div>+{keys(props.details.solutions).length - SHOWN_LANGUAGES}</div>
-          )}
+            {keys(props.details.solutions).length > SHOWN_LANGUAGES && (
+              <div>
+                +{keys(props.details.solutions).length - SHOWN_LANGUAGES}
+              </div>
+            )}
+          </div>
         </div>
-      </TableCell>
-      <TableCell style={{ ...classes.tableCell, paddingInline: 0 }}>
-        <IconButton
-          onClick={() => {
-            props.handleOpenSolutionModel(
-              props.details.problem,
-              props.details.solutions
-            );
-          }}
-        >
-          <FileOpenIcon style={classes.fileOpen} />
-        </IconButton>
       </TableCell>
       <TableCell style={classes.tableCell}>
         {props.details.last_solved_at.substring(0, 10)}
