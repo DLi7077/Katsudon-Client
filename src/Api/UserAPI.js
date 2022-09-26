@@ -66,6 +66,39 @@ async function unfollowUser(user_id, token) {
   });
 }
 
+async function updateBiography(biography, token) {
+  return Api({
+    method: "post",
+    endpoint: "api/user/edit-bio",
+    body: { biography: biography },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+async function uploadProfileBanner(formData, token) {
+  return Api({
+    method: "post",
+    endpoint: "api/user/upload-banner",
+    body: formData,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+async function uploadProfilePicture(formData, token) {
+  return Api({
+    method: "post",
+    endpoint: "api/user/upload-pfp",
+    body: formData,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
 const UserAPI = {
   getAllUsers,
   getUserSolutions,
@@ -74,6 +107,9 @@ const UserAPI = {
   login,
   followUser,
   unfollowUser,
+  updateBiography,
+  uploadProfileBanner,
+  uploadProfilePicture,
 };
 
 export default UserAPI;

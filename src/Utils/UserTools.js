@@ -23,6 +23,8 @@ export function handleLogout() {
     "logged-in",
     "auth-token",
     "user-id",
+    "username",
+    "following",
     "user-profile-picture",
   ];
 
@@ -47,15 +49,5 @@ function currentUser(key) {
   return get(userDetails, key);
 }
 
-// const currentUser = {
-//   logged_in: JSON.parse(
-//     localStorage.getItem("katsudon-lc-logged-in") === "true"
-//   ),
-//   auth_token: localStorage.getItem("katsudon-lc-auth-token"),
-//   _id: localStorage.getItem("katsudon-lc-user-id"),
-//   username: localStorage.getItem("katsudon-lc-username"),
-//   profile_picture: localStorage.getItem("katsudon-lc-user-profile-picture"),
-//   following: JSON.parse(localStorage.getItem("katsudon-lc-following")),
-// };
 
 export default currentUser;
