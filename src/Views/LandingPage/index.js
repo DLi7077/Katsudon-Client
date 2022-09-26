@@ -1,9 +1,22 @@
-import LeetcodeLogo from "../../Assets/Leetcode.png";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import LeetcodeLogo from "../../Assets/Leetcode.png";
+import UserAPI from "../../Api/UserAPI";
 import "./styles.css";
+import { useEffect } from "react";
 
 export default function LandingPage(props) {
+  const [currentUsers, setCurrentUsers] = useState(null);
   const navigate = useNavigate();
+
+  async function getTotalUsers() {
+    await UserAPI.getAllUsers().then((res) => {
+      setCurrentUsers(res.count);
+    });
+  }
+  useEffect(() => {
+    getTotalUsers();
+  }, []);
   return (
     <div
       className="content-container"
@@ -16,7 +29,9 @@ export default function LandingPage(props) {
           <div>Leaderboard</div>
         </div>
         <div className="landingpage-details">
-          <div className="landingpage-user-count"> 10 Registered Users</div>
+          <div className="landingpage-user-count">
+            {currentUsers} Registered Users
+          </div>
           <button
             className="landingpage-get-started"
             onClick={() => {
