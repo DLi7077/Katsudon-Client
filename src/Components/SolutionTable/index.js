@@ -42,7 +42,8 @@ solutions:{
     solution_code: "public class Solution \n{\n    public int[] TwoSum(int[] nums, int target) \n    {\n        var idx = new Dictionary<int, int>();\n        \n        for (int i = 0; i < nums.Length; ++i)\n            if (!idx.ContainsKey(target - nums[i]))\n                idx[nums[i]] = i;\n            else\n                return new [] {idx[target - nums[i]], i};\n        \n        return new int[0];\n    }\n}"
     solution_language: "C#"
     user_id: "63081fe50cc2604b938631e1"
-  }
+  },
+  failed:true
 }
 */
 export default function SolutionTable(props) {

@@ -1,5 +1,5 @@
 import { TableRow, TableCell, IconButton } from "@mui/material";
-import { keys, map, take } from "lodash";
+import { get, keys, map, omit, take } from "lodash";
 import { PROBLEM_DIFFICULTY } from "../../Constants/colors";
 import { LANGUAGE_LOGOS } from "../../Constants/language";
 import FileOpenIcon from "@mui/icons-material/FileOpen";
@@ -25,6 +25,16 @@ export default function SolutionRow(props) {
     },
     link: {
       textDecoration: "none",
+    },
+    crossOut: {
+      position: "absolute",
+      width: "2rem",
+      height: "3px",
+      backgroundColor: "#FF4500",
+      top: "45%",
+      left: "50%",
+      translate: "-50% -50%",
+      rotate: "-45deg",
     },
   };
 
@@ -77,11 +87,19 @@ export default function SolutionRow(props) {
               );
             }}
           >
-            <FileOpenIcon style={classes.fileOpen} />
+            <div style={{ position: "relative" }}>
+              <FileOpenIcon style={classes.fileOpen} />
+              {get(props.details.solutions, "failed") && (
+                <div style={classes.crossOut} />
+              )}
+            </div>
           </IconButton>
           <div style={{ display: "flex", gap: "2px" }}>
             {map(
-              take(keys(props.details.solutions), SHOWN_LANGUAGES),
+              take(
+                keys(omit(props.details.solutions, "failed")),
+                SHOWN_LANGUAGES
+              ),
               (language, idx) => {
                 return (
                   <img

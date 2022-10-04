@@ -1,12 +1,12 @@
 import { get, map, omit } from "lodash";
 import { Link, useLocation } from "react-router-dom";
 import { Avatar, IconButton, Menu, MenuItem } from "@mui/material";
-import LogoutIcon from "@mui/icons-material/Logout";
 import { useScrollYPosition } from "react-use-scroll-position";
 import { useEffect, useState } from "react";
 import { routeColors } from "../../Constants/routes";
 import { MENU_LINKS } from "../../Constants/navbar";
 import currentUser, { handleLogout } from "../../Utils/UserTools";
+import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import "./styles.css";
 
