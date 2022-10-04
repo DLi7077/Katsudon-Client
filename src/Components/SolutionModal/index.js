@@ -1,6 +1,6 @@
 import { Modal } from "@mui/material";
 import { Markup } from "react-render-markup";
-import { get, keys, without } from "lodash";
+import { get, keys, omit, without } from "lodash";
 import CodeBlock from "../Codeblock";
 import TabGroup from "../TabGroup";
 import { LANGUAGE_COMPILE_MAPPING } from "../../Constants/language";
@@ -9,7 +9,8 @@ import "./styles.css";
 
 export default function SolutionModal(props) {
   const { problem, solutions } = props;
-  const solutionLanguages = without(keys(solutions), "recent");
+  const solutionLanguages = without(keys(solutions), "failed");
+
   const solutionTabs = solutionLanguages.map((language) => {
     const solutionDetails = get(solutions, language);
     const runtime = get(solutionDetails, "runtime_ms");
@@ -20,8 +21,15 @@ export default function SolutionModal(props) {
       content: (
         <div className="solution-code">
           <div style={{ padding: "1rem" }}>
-            Runtime: {runtime} ms <br />
-            Memory Usage: {memory} MB
+            {runtime && memory && (
+              <>
+                Runtime: {runtime} ms <br />
+                Memory Usage: {memory} MB
+              </>
+            )}
+            {(!runtime || !memory) && (
+              <div style={{ color: "#FF4500" }}>{get(solutionDetails,'error')}</div>
+            )}
           </div>
           <CodeBlock
             code={get(solutions, `${language}.solution_code`)}

@@ -91,7 +91,7 @@ export default function UserProfile(props) {
   }
 
   async function submitUpdatedBiography() {
-    if (biography == updatedBio) {
+    if (biography === updatedBio) {
       setEditingBio(false);
       return;
     }
