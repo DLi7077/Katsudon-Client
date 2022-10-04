@@ -1,13 +1,14 @@
-import { get, map, omit } from "lodash";
 import { Link, useLocation } from "react-router-dom";
-import { Avatar, IconButton, Menu, MenuItem } from "@mui/material";
 import { useScrollYPosition } from "react-use-scroll-position";
 import { useEffect, useState } from "react";
+import { get, map, omit } from "lodash";
+import { Avatar, IconButton, Menu, MenuItem } from "@mui/material";
+import LogoutIcon from "@mui/icons-material/Logout";
+import MenuIcon from "@mui/icons-material/Menu";
+import katsudonLogo from "../../Assets/katsudon.svg";
 import { routeColors } from "../../Constants/routes";
 import { MENU_LINKS } from "../../Constants/navbar";
 import currentUser, { handleLogout } from "../../Utils/UserTools";
-import LogoutIcon from "@mui/icons-material/Logout";
-import MenuIcon from "@mui/icons-material/Menu";
 import "./styles.css";
 
 export default function Navbar(props) {
@@ -133,9 +134,8 @@ export default function Navbar(props) {
         </div>
         <div className="navbar-redirect-section">
           <div className="navbar-link-wrapper">
-            <div className="katsudon-logo" style={{ color: logoColor }}>
-              カツドン
-            </div>
+            <img src={katsudonLogo} className="katsudon-logo" />
+
             {map(
               omit(visibleRedirects, ["Register", "Login", "Profile"]),
               (path, label) => {

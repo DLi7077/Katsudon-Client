@@ -6,7 +6,7 @@ import "./styles.css";
 const selectStyles = {
   container: (provided, state) => ({
     padding: 0,
-    width: "200px",
+    width: "min(70vw,400px)",
     flexGrow: 1,
   }),
   input: (provided, state) => ({

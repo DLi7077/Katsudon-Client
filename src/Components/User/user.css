@@ -16,5 +16,7 @@
     height: 290px;
     flex-wrap: wrap;
     overflow: auto;
+    max-width: none;
+    min-width: 300px;
   }
 }

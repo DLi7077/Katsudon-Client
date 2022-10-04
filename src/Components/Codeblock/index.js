@@ -5,7 +5,7 @@ export default function CodeBlock(props) {
   return (
     <SyntaxHighlighter
       language={props.language}
-      style={atomDark}
+      style={{...atomDark}}
       showLineNumbers
       lineNumberStyle={{ minWidth: 0 }}
       showInlineLineNumbers
