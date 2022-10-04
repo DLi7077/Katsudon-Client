@@ -304,7 +304,6 @@ export default function ProfilePage(props) {
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
-
                       height: "350px",
                       minWidth: "250px",
                       backgroundColor: "black",

@@ -19,17 +19,18 @@
 }
 
 .katsudon-logo {
-  font-size: 4rem;
+  height: 3.25rem;
   color: white;
+  padding: 2px;
 
-  transition-property: font-size;
+  transition-property: height;
   transition-duration: 0.3s;
   transition-timing-function: ease;
   transition-delay: 0s;
 }
 
 .katsudon-logo-condensed {
-  font-size: 3rem;
+  height: 2.25rem;
 }
 
 .navbar-menu {

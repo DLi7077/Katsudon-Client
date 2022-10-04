@@ -13,6 +13,7 @@
   flex-wrap: wrap;
   justify-content: flex-start;
   gap: 1rem;
+  font-family: "robotoReg";
 }
 
 .skill-tag {
@@ -24,6 +25,7 @@
   padding-inline: 1rem;
   border-radius: 12px;
   border: 0;
+  font-family: "robotoReg";
 }
 
 .skill-tag:hover {
@@ -31,4 +33,3 @@
   background-color: rgba(163, 48, 163, 0.5);
   color: white;
 }
-

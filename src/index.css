@@ -2,20 +2,18 @@
   font-family: robotoReg;
   src: url(Roboto-Regular.ttf);
 }
-@font-face {
-  font-family: robotoThin;
-  src: url(Roboto-Thin.ttf);
-}
+
 html {
   min-height: 100vh;
   position: relative;
+  font-family: "robotoReg";
   font-size: 12px;
   color: white;
 }
+
 body {
   margin: 0;
   background-color: #18171c;
-  font-family: "robotoReg";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
