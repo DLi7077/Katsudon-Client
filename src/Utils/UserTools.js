@@ -31,7 +31,6 @@ export function handleLogout() {
   userItems.forEach((item) => {
     localStorage.removeItem(`${keyBase}-${item}`);
   });
-  window.location.reload(false);
 }
 
 function currentUser(key) {

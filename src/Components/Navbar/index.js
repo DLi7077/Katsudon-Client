@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useScrollYPosition } from "react-use-scroll-position";
 import { useEffect, useState } from "react";
 import { get, map, omit } from "lodash";
@@ -13,6 +13,7 @@ import "./styles.css";
 
 export default function Navbar(props) {
   const location = useLocation();
+  const navigate = useNavigate();
   const scrollY = useScrollYPosition();
   const [logoColor, setLogoColor] = useState(null);
   const [anchorElement, setAnchorElement] = useState(null);
@@ -89,6 +90,7 @@ export default function Navbar(props) {
           style={{ color: "white" }}
           onClick={() => {
             handleLogout();
+            navigate("/welcome");
           }}
         >
           <LogoutIcon style={{ color: "white", fontSize: "2rem" }} />
@@ -103,7 +105,7 @@ export default function Navbar(props) {
     MENU_LINKS,
     currentUser("logged_in")
       ? ["Welcome", "Register", "Login"]
-      : ["Problems", "Profile"]
+      : ["Progress", "Profile"]
   );
 
   return (
