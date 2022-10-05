@@ -48,7 +48,7 @@ export default function Login(props) {
 
           handleLogin(loginDetails);
 
-          navigate(`/profile?user_id=${currentUser("_id")}`);
+          navigate(`/profile?user_id=${currentUser("user-id")}`);
 
           window.location.reload(false);
         })

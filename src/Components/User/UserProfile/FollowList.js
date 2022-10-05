@@ -49,7 +49,7 @@ export default function FollowList(props) {
                   textDecoration: "none",
                 }}
               >
-                {get(user, "username")}
+                <span className="hover-link">{get(user, "username")}</span>
               </Link>
             </div>
           );

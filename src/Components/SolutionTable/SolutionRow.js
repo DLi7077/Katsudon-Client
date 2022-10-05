@@ -23,9 +23,6 @@ export default function SolutionRow(props) {
     languageLogo: {
       height: "2rem",
     },
-    link: {
-      textDecoration: "none",
-    },
     crossOut: {
       position: "absolute",
       width: "2rem",
@@ -61,9 +58,9 @@ export default function SolutionRow(props) {
           href={props.details.problem.url}
           target="_blank"
           rel="noreferrer"
+          className="hover-link"
           style={{
             color: PROBLEM_DIFFICULTY[props.details.problem.difficulty],
-            ...classes.link,
           }}
         >
           {props.details.problem.title}
@@ -89,7 +86,7 @@ export default function SolutionRow(props) {
           >
             <div style={{ position: "relative" }}>
               <FileOpenIcon style={classes.fileOpen} />
-              {get(props.details.solutions, "failed") && (
+              {!!get(props.details.solutions, "failed") && (
                 <div style={classes.crossOut} />
               )}
             </div>

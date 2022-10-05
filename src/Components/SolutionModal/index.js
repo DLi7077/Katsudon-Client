@@ -1,6 +1,6 @@
 import { Modal } from "@mui/material";
 import { Markup } from "react-render-markup";
-import { get, keys, omit, without } from "lodash";
+import { get, keys, without } from "lodash";
 import CodeBlock from "../Codeblock";
 import TabGroup from "../TabGroup";
 import { LANGUAGE_COMPILE_MAPPING } from "../../Constants/language";
@@ -28,7 +28,9 @@ export default function SolutionModal(props) {
               </>
             )}
             {(!runtime || !memory) && (
-              <div style={{ color: "#FF4500" }}>{get(solutionDetails,'error')}</div>
+              <div style={{ color: "#FF4500" }}>
+                {get(solutionDetails, "error") ?? "Wrong Answer"}
+              </div>
             )}
           </div>
           <CodeBlock

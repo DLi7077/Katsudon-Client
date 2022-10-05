@@ -19,6 +19,17 @@ async function getUserSolutions(queryParams) {
   });
 }
 
+async function getWeeklySolutions(token) {
+  return Api({
+    method: "get",
+    endpoint: `api/solution/weekly-progress`,
+    params: {},
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
 async function getUserProfile(queryParams) {
   return Api({
     method: "get",
@@ -102,6 +113,7 @@ async function uploadProfilePicture(formData, token) {
 const UserAPI = {
   getAllUsers,
   getUserSolutions,
+  getWeeklySolutions,
   getUserProfile,
   createAccount,
   login,

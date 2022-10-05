@@ -37,18 +37,18 @@ export default function Navbar(props) {
     const navbar = document.querySelector(".navbar-container");
     const katsudonLogo = document.querySelector(".katsudon-logo");
 
-    if (scrollY > 20) {
+    if (scrollY > 50) {
       navbar.classList.add("navbar-container-condensed");
-      navbar.style.backgroundColor = get(
+      navbar.style.backgroundColor = `${get(
         routeColors,
         `${location.pathname}.navbar`
-      );
+      )}dd`;
       katsudonLogo.classList.add("katsudon-logo-condensed");
       return;
     } else {
       navbar.classList.remove("navbar-container-condensed");
       katsudonLogo.classList.remove("katsudon-logo-condensed");
-      navbar.style.backgroundColor = "";
+      navbar.style.backgroundColor = "black";
     }
     // eslint-disable-next-line
   }, [scrollY]);
@@ -78,7 +78,7 @@ export default function Navbar(props) {
     const loggedInContent = (
       <div style={{ display: "flex", gap: "1.5rem" }}>
         <Link
-          to={`/profile?user_id=${currentUser("_id")}`}
+          to={`/profile?user_id=${currentUser("user-id")}`}
           className="navbar-redirect-link"
           style={{ textDecoration: "none", gap: "1rem" }}
         >
@@ -134,7 +134,11 @@ export default function Navbar(props) {
         </div>
         <div className="navbar-redirect-section">
           <div className="navbar-link-wrapper">
-            <img src={katsudonLogo} className="katsudon-logo" />
+            <img
+              src={katsudonLogo}
+              className="katsudon-logo"
+              alt="katsudon-logo"
+            />
 
             {map(
               omit(visibleRedirects, ["Register", "Login", "Profile"]),

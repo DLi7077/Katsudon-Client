@@ -1,0 +1,23 @@
+.progress-post {
+  width: min(90vw, 640px);
+  padding: 1.25rem;
+  gap: 1.25rem;
+}
+
+.user-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.75rem;
+  font-size: 1.5rem;
+  width: fit-content;
+}
+
+.problem-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.1rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 4px;
+}
