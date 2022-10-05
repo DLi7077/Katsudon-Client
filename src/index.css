@@ -23,14 +23,23 @@ code {
     monospace;
 }
 
+.align-down {
+  display: flex;
+  flex-direction: column;
+  gap: "1rem";
+}
+
 .content-container {
   box-sizing: border-box;
-  width: 1200px;
-  max-width: 1200px;
+  width: min(80vw, 1200px);
   min-height: 80vh;
   background-color: #292929;
   margin-top: 80px;
+  padding-top: 2rem;
   padding-bottom: 2rem;
+}
+.container {
+  box-sizing: border-box;
   padding: 2rem;
 }
 
@@ -54,6 +63,13 @@ code {
   margin-left: 1rem;
 }
 
+.hover-link {
+  text-decoration: none;
+}
+.hover-link:hover {
+  text-decoration: underline;
+}
+
 .login-register-form {
   display: flex;
   flex-direction: column;
@@ -61,7 +77,7 @@ code {
   gap: 1rem;
 }
 
-@media only screen and (max-width: 1216px) {
+@media only screen and (max-width: 1270px) {
   .content-container {
     width: 100vw;
     border: 0;

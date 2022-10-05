@@ -30,7 +30,7 @@
 }
 
 .katsudon-logo-condensed {
-  height: 2.25rem;
+  height: 2.5rem;
 }
 
 .navbar-menu {
@@ -87,7 +87,7 @@
   }
   .katsudon-logo {
     margin-left: -10vw;
-    font-size: 3rem;
+    height: 2.5rem;
   }
 }
 

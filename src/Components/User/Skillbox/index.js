@@ -53,6 +53,7 @@ export default function SkillBox(props) {
 
     setSelectedTags(generateTags(pick(tagReference, toSelect)));
     setNonSelectedTags(generateTags(omit(tagReference, toSelect)));
+    // eslint-disable-next-line
   }, [tagReference]);
 
   return (

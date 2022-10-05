@@ -106,6 +106,7 @@ export default function Users(props) {
               <UserProfile userInfo={currrentUserDetails} />
               <Link
                 to={`/profile?user_id=${get(selectedUser, "_id")}`}
+                className='problem-link'
                 style={{ textDecoration: "none" }}
               >
                 <Button style={{ color: "white", fontSize: "1.25rem" }}>

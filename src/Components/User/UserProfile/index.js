@@ -131,31 +131,32 @@ export default function UserProfile(props) {
                   border: "2px solid white",
                 }}
               />
-              {currentUser("logged_in") && currentUser("_id") === userInfo._id && (
-                <>
-                  <input
-                    type="file"
-                    name="imgfile"
-                    accept="image/*"
-                    id="upload-profile-picture"
-                    onChange={props.changeProfilePicture}
-                    hidden
-                  />
-                  <label htmlFor="upload-profile-picture">
-                    <div
-                      className={
-                        currentUser("logged_in") &&
-                        currentUser("_id") === userInfo._id
-                          ? "profile-picture-upload"
-                          : ""
-                      }
-                    >
-                      <UploadFileIcon style={{ fontSize: "2.5rem" }} />
-                      Upload Profile Picture
-                    </div>
-                  </label>
-                </>
-              )}
+              {currentUser("logged_in") &&
+                currentUser("user-id") === userInfo._id && (
+                  <>
+                    <input
+                      type="file"
+                      name="imgfile"
+                      accept="image/*"
+                      id="upload-profile-picture"
+                      onChange={props.changeProfilePicture}
+                      hidden
+                    />
+                    <label htmlFor="upload-profile-picture">
+                      <div
+                        className={
+                          currentUser("logged_in") &&
+                          currentUser("user-id") === userInfo._id
+                            ? "profile-picture-upload"
+                            : ""
+                        }
+                      >
+                        <UploadFileIcon style={{ fontSize: "2.5rem" }} />
+                        Upload Profile Picture
+                      </div>
+                    </label>
+                  </>
+                )}
             </div>
             <div className="follow-stat">
               <div className="follow-value">{following.length}</div>
@@ -173,7 +174,7 @@ export default function UserProfile(props) {
           <div className="profile-biography" style={{ position: "relative" }}>
             {!editingBio && <>{biography ?? ""}</>}
             {currentUser("logged_in") &&
-              currentUser("_id") === userInfo._id &&
+              currentUser("user-id") === userInfo._id &&
               !editingBio && (
                 <IconButton
                   style={{

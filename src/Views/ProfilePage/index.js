@@ -46,7 +46,8 @@ export default function ProfilePage(props) {
   const [sortBy, setSortBy] = useState("last_solved_at");
   const [sortDir, setSortDir] = useState(1);
   const [queryParams, setQueryParams] = useState({
-    user_id: get(getSearchParams(location), "user_id") ?? currentUser("_id"),
+    user_id:
+      get(getSearchParams(location), "user_id") ?? currentUser("user-id"),
     sortBy: sortBy,
     sortDir: "desc",
   });
@@ -60,7 +61,8 @@ export default function ProfilePage(props) {
 
     const compliedQuery = {
       ...queryParams,
-      user_id: get(getSearchParams(location), "user_id") ?? currentUser("_id"),
+      user_id:
+        get(getSearchParams(location), "user_id") ?? currentUser("user-id"),
     };
 
     await UserAPI.getUserProfile(compliedQuery)
@@ -81,7 +83,8 @@ export default function ProfilePage(props) {
     setTableLoading(true);
     const compliedQuery = {
       ...queryParams,
-      user_id: get(getSearchParams(location), "user_id") ?? currentUser("_id"),
+      user_id:
+        get(getSearchParams(location), "user_id") ?? currentUser("user-id"),
     };
     await UserAPI.getUserSolutions(compliedQuery).then((res) => {
       setSolutions(res);
@@ -250,12 +253,13 @@ export default function ProfilePage(props) {
     if (!queryParams.user_id) {
       setQueryParams({
         ...queryParams,
-        user_id: currentUser("_id"),
+        user_id: currentUser("user-id"),
       });
     }
     getUserDetails();
     // eslint-disable-next-line
     getSolutions();
+    // eslint-disable-next-line
   }, [location]);
 
   useEffect(() => {
@@ -266,7 +270,7 @@ export default function ProfilePage(props) {
   return (
     <div
       className="content-container"
-      style={{ backgroundColor: props.backgroundColor, padding: 0 }}
+      style={{ backgroundColor: props.backgroundColor, paddingTop: 0 }}
     >
       {isLoading && (
         <div
@@ -287,12 +291,12 @@ export default function ProfilePage(props) {
         <>
           <div className="user-profile-banner" style={{ position: "relative" }}>
             {currentUser("logged_in") &&
-              currentUser("_id") === userInfo._id &&
+              currentUser("user-id") === userInfo._id &&
               EditButton(handleUploadProfileBanner)}
             <img
               src={get(userInfo, "profile_banner_url") ?? banner}
               style={{ objectFit: "cover", width: "100%" }}
-              alt="user banner image"
+              alt="user banner"
             />
           </div>
           <div className="profile-page-container">
@@ -330,7 +334,7 @@ export default function ProfilePage(props) {
                       />
                     </ThemeProvider>
                     {currentUser("logged_in") &&
-                      currentUser("_id") !== userInfo._id && (
+                      currentUser("user-id") !== userInfo._id && (
                         <IconButton
                           style={classes.follow}
                           onClick={handleFollowClick}

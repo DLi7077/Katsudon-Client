@@ -1,7 +1,6 @@
 import { HashRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./Components/Navbar";
 import Footer from "./Components/Footer";
-import { get } from "lodash";
 import { routes } from "./Constants/routes";
 import { cloneElement, useState } from "react";
 
@@ -10,10 +9,7 @@ function App() {
   const [pageTheme, setPageTheme] = useState(null);
 
   const COMPONENT_ROUTES = routes.map((component, idx) => {
-    const componentWithColor = cloneElement(component.element, {
-      color: get(pageTheme, "color"),
-      backgroundColor: get(pageTheme, "background"),
-    });
+    const componentWithColor = cloneElement(component.element, pageTheme);
 
     return (
       <Route key={idx} path={component.path} element={componentWithColor} />

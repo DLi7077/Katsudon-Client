@@ -1,7 +1,7 @@
 import LandingPage from "../Views/LandingPage";
 import Profile from "../Views/ProfilePage";
 import Users from "../Views/Users";
-import LeetcodeProblems from "../Views/LeetcodeProblems";
+import Progress from "../Views/Progress";
 import Register from "../Views/Register";
 import GetStarted from "../Views/Get Started";
 import { PAGETHEME } from "./colors";
@@ -14,7 +14,7 @@ export const routes = [
   { path: "/login", element: <Login /> },
   { path: "/profile", element: <Profile /> },
   { path: "/users", element: <Users /> },
-  { path: "/problems", element: <LeetcodeProblems /> },
+  { path: "/weekly-progress", element: <Progress /> },
 ];
 
 export const routeColors = {
@@ -24,5 +24,5 @@ export const routeColors = {
   "/login": PAGETHEME.Blue,
   "/profile": PAGETHEME.Purple,
   "/users": PAGETHEME.LightBlue,
-  "/problems": PAGETHEME.Orange,
+  "/weekly-progress": PAGETHEME.Orange,
 };
