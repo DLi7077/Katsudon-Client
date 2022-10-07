@@ -75,7 +75,7 @@ export default function ProfilePage(props) {
       .finally(
         setTimeout(() => {
           setLoading(false);
-        }, 300)
+        }, 100)
       );
   }
 
@@ -246,19 +246,13 @@ export default function ProfilePage(props) {
   };
 
   useEffect(() => {
-    setQueryParams({
-      ...queryParams,
-      ...pick(getSearchParams(location), "user_id"),
-    });
+    setQueryParams(pick(getSearchParams(location), "user_id"));
     if (!queryParams.user_id) {
       setQueryParams({
-        ...queryParams,
         user_id: currentUser("user-id"),
       });
     }
     getUserDetails();
-    // eslint-disable-next-line
-    getSolutions();
     // eslint-disable-next-line
   }, [location]);
 

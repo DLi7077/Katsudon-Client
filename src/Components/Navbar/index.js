@@ -38,6 +38,8 @@ export default function Navbar(props) {
     const navbar = document.querySelector(".navbar-container");
     const katsudonLogo = document.querySelector(".katsudon-logo");
 
+    console.log(routeColors)
+
     if (scrollY > 50) {
       navbar.classList.add("navbar-container-condensed");
       navbar.style.backgroundColor = `${get(

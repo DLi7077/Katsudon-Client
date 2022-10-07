@@ -1,7 +1,7 @@
 export const PAGETHEME = {
   Orange: {
     color: "#FFAA7A",
-    navbar: "#8a5b41",
+    navbar: "#ac6a39",
     backgroundColor: "#2A2522",
     text: "#d9bca6",
     section: "#38322e",
@@ -14,8 +14,8 @@ export const PAGETHEME = {
     backgroundColor: "#22292A",
   },
   Purple: {
-    color: "#ff66eb",
-    navbar: "#3c0b3c",
+    color: "#ff66db",
+    navbar: "#ac3991",
     backgroundColor: "#2a2228",
     section: "#382e36",
     text: "#d9a6d3",

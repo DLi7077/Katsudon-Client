@@ -38,7 +38,7 @@ export default function Activity(props) {
       className="align-down"
       style={{
         textAlign: "center",
-        justifyContent: "flex-start",
+        alignItems: "center",
         width: "100%",
         marginBottom: "1.5rem",
         color: props.text,
@@ -57,7 +57,7 @@ export default function Activity(props) {
             fontSize: "1.5rem",
             color: "#7AFF87",
             marginRight: ".25rem",
-            verticalAlign:'-0.25rem'
+            verticalAlign: "-0.25rem",
           }}
         />
         Follow others to see how they're progressing this week, and try out

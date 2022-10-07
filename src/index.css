@@ -34,7 +34,6 @@ code {
   width: min(80vw, 1200px);
   min-height: 80vh;
   background-color: #292929;
-  margin-top: 80px;
   padding-top: 2rem;
   padding-bottom: 2rem;
 }
