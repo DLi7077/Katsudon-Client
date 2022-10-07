@@ -4,6 +4,7 @@ import UserAPI from "../../Api/UserAPI";
 import { PROBLEM_DIFFICULTY } from "../../Constants/colors";
 import { Avatar, CircularProgress } from "@mui/material";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import PanoramaFishEyeIcon from "@mui/icons-material/PanoramaFishEye";
 import currentUser from "../../Utils/UserTools";
 import postGenerator from "./postGenerator";
@@ -37,7 +38,6 @@ export default function Activity(props) {
       className="align-down"
       style={{
         textAlign: "center",
-        alignItems: "center",
         justifyContent: "flex-start",
         width: "100%",
         marginBottom: "1.5rem",
@@ -46,9 +46,22 @@ export default function Activity(props) {
       }}
     >
       <span style={{ fontSize: "2.5rem" }}>Weekly Progress</span>
-      <span style={{ fontSize: "1.25rem", color: props.color }}>
-        See how others are progressing this week, and try out problems they've
-        solved!
+      <span
+        style={{
+          fontSize: "1.25rem",
+          color: props.color,
+        }}
+      >
+        <PersonAddAlt1Icon
+          style={{
+            fontSize: "1.5rem",
+            color: "#7AFF87",
+            marginRight: ".25rem",
+            verticalAlign:'-0.25rem'
+          }}
+        />
+        Follow others to see how they're progressing this week, and try out
+        problems they've solved!
       </span>
       <div
         style={{
