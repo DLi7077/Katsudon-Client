@@ -48,7 +48,7 @@ export default function ProfilePage(props) {
   const [queryParams, setQueryParams] = useState({
     user_id:
       get(getSearchParams(location), "user_id") ?? currentUser("user-id"),
-    sortBy: sortBy,
+    sortBy: "last_solved_at",
     sortDir: "desc",
   });
 
@@ -248,7 +248,10 @@ export default function ProfilePage(props) {
   };
 
   useEffect(() => {
-    setQueryParams(pick(getSearchParams(location), "user_id"));
+    setQueryParams({
+      ...queryParams,
+      ...pick(getSearchParams(location), "user_id"),
+    });
     if (!queryParams.user_id) {
       setQueryParams({
         user_id: currentUser("user-id"),
