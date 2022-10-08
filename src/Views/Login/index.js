@@ -59,7 +59,9 @@ export default function Login(props) {
             severity: "error",
           });
         })
-        .finally(setShowSnackbar(true));
+        .finally(() => {
+          setShowSnackbar(true);
+        });
     }, 300);
   }
 

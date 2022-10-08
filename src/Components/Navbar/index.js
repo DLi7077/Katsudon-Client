@@ -1,8 +1,15 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useScrollYPosition } from "react-use-scroll-position";
 import { useEffect, useState } from "react";
-import { get, map, omit } from "lodash";
-import { Avatar, IconButton, Menu, MenuItem } from "@mui/material";
+import { get, map, omit, pick } from "lodash";
+import {
+  Avatar,
+  createTheme,
+  IconButton,
+  Menu,
+  MenuItem,
+  ThemeProvider,
+} from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import katsudonLogo from "../../Assets/katsudon.svg";
@@ -26,6 +33,14 @@ export default function Navbar(props) {
       },
     },
     link: { textDecoration: "none", color: "white" },
+    underline: {
+      width: "100%",
+      height: "3px",
+      marginTop: "5px",
+      backgroundColor: logoColor,
+      borderRadius: "10px",
+      position: "absolute",
+    },
   };
 
   useEffect(() => {
@@ -37,8 +52,6 @@ export default function Navbar(props) {
   useEffect(() => {
     const navbar = document.querySelector(".navbar-container");
     const katsudonLogo = document.querySelector(".katsudon-logo");
-
-    console.log(routeColors)
 
     if (scrollY > 50) {
       navbar.classList.add("navbar-container-condensed");
@@ -58,25 +71,20 @@ export default function Navbar(props) {
 
   // display sections depending on if the user is logged in
   const userSection = () => {
-    const loggedOutContent = (
-      <>
-        <Link
-          to="/register"
-          className="navbar-redirect-link"
-          style={{ textDecoration: "none" }}
-        >
-          Register
-        </Link>
-
-        <Link
-          to="/login"
-          className="navbar-redirect-link"
-          style={{ textDecoration: "none" }}
-        >
-          Login
-        </Link>
-      </>
-    );
+    const signedOutLinks = pick(visibleRedirects, ["Register", "Login"]);
+    const loggedOutContent = map(signedOutLinks, (path, label) => (
+      <Link
+        key={path}
+        to={path}
+        className="navbar-redirect-link"
+        style={{ textDecoration: "none" }}
+      >
+        <div>
+          {label}
+          {path === location.pathname && <div style={classes.underline} />}
+        </div>
+      </Link>
+    ));
 
     const loggedInContent = (
       <div style={{ display: "flex", gap: "1.5rem" }}>
@@ -110,6 +118,25 @@ export default function Navbar(props) {
       : ["Progress", "Profile"]
   );
 
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: "#000000",
+      },
+      secondary: {
+        main: "#000000",
+      },
+    },
+    components: {
+      // Name of the component
+      MuiMenu: {
+        paper: {
+          backgroundColor: "#000000",
+        },
+      },
+    },
+  });
+
   return (
     <>
       <div className="navbar-container">
@@ -121,20 +148,22 @@ export default function Navbar(props) {
           >
             <MenuIcon style={{ color: "white", fontSize: "4rem" }} />
           </IconButton>
-          <Menu
-            style={{ marginLeft: "-1.5rem" }}
-            anchorEl={anchorElement}
-            open={!!anchorElement}
-            onClose={() => setAnchorElement(null)}
-          >
-            {map(visibleRedirects, (path, label) => {
-              return (
-                <Link key={label} to={path} style={classes.link}>
-                  <MenuItem sx={classes.MenuItem}>{label}</MenuItem>
-                </Link>
-              );
-            })}
-          </Menu>
+          <ThemeProvider theme={theme}>
+            <Menu
+              style={{ marginLeft: "-1.5rem" }}
+              anchorEl={anchorElement}
+              open={!!anchorElement}
+              onClose={() => setAnchorElement(null)}
+            >
+              {map(visibleRedirects, (path, label) => {
+                return (
+                  <Link key={label} to={path} style={classes.link}>
+                    <MenuItem sx={classes.MenuItem}>{label}</MenuItem>
+                  </Link>
+                );
+              })}
+            </Menu>
+          </ThemeProvider>
         </div>
         <div className="navbar-redirect-section">
           <div className="navbar-link-wrapper">
@@ -152,9 +181,14 @@ export default function Navbar(props) {
                     <Link
                       to={path}
                       className="navbar-redirect-link"
-                      style={{ textDecoration: "none" }}
+                      style={{ textDecoration: "none", position: "relative" }}
                     >
-                      {label}
+                      <div>
+                        {label}
+                        {path === location.pathname && (
+                          <div style={classes.underline}></div>
+                        )}
+                      </div>
                     </Link>
                   </div>
                 );

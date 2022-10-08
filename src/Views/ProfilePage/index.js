@@ -70,13 +70,13 @@ export default function ProfilePage(props) {
         setUserInfo(res.user);
       })
       .catch(() => {
-        setUserInfo(null);
+        setUserInfo(undefined);
       })
-      .finally(
+      .finally(() => {
         setTimeout(() => {
           setLoading(false);
-        }, 100)
-      );
+        }, 100);
+      });
   }
 
   async function getSolutions() {
@@ -156,7 +156,9 @@ export default function ProfilePage(props) {
           .catch(() => {
             setUserInfo(null);
           })
-          .finally(setLoading(false));
+          .finally(() => {
+            setLoading(false);
+          });
       })
       .catch((e) => {
         console.log("error trying to follow/unfollow user");
@@ -377,7 +379,7 @@ export default function ProfilePage(props) {
           </div>
         </>
       )}
-      {!isLoading && userInfo == null && (
+      {userInfo === null && !isLoading && (
         <div
           style={{
             display: "flex",

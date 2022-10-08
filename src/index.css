@@ -16,6 +16,7 @@ body {
   background-color: #18171c;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 code {
@@ -31,7 +32,7 @@ code {
 
 .content-container {
   box-sizing: border-box;
-  width: min(80vw, 1200px);
+  width: min(100vw, 1200px);
   min-height: 80vh;
   background-color: #292929;
   padding-top: 2rem;
@@ -74,13 +75,6 @@ code {
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-}
-
-@media only screen and (max-width: 1270px) {
-  .content-container {
-    width: 100vw;
-    border: 0;
-  }
 }
 
 @media only screen and (max-width: 700px) {

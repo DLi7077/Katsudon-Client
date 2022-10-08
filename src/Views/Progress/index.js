@@ -22,11 +22,11 @@ export default function Activity(props) {
         setWeeklySolutions(postGenerator(solutions.rows));
       })
       .catch(console.error)
-      .finally(
+      .finally(() => {
         setTimeout(() => {
           setLoading(false);
-        }, 200)
-      );
+        }, 200);
+      });
   }
 
   useEffect(() => {
