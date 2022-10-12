@@ -41,6 +41,13 @@ export default function postGenerator(weeklySolutions) {
       .map((solutionDetails) => get(solutionDetails, "solution"))
       .value();
 
+    const ISODateToFormat = (date) => {
+      if (!date || date.length < 10) return "";
+      const DATE_LENGTH = 10;
+
+      return date.substring(0, DATE_LENGTH).replaceAll("-", "/");
+    };
+    postDetails.date = ISODateToFormat(user.date);
     return postDetails;
   });
 

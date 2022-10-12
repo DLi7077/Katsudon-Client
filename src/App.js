@@ -5,6 +5,7 @@ import { routes } from "./Constants/routes";
 import { cloneElement, useState } from "react";
 
 const FOOTER_HEIGHT = "75px";
+const NAVBAR_HEIGHT_AND_GAP = `${80 + 20}px`;
 function App() {
   const [pageTheme, setPageTheme] = useState(null);
 
@@ -24,6 +25,7 @@ function App() {
           style={{
             display: "flex",
             justifyContent: "center",
+            marginTop: NAVBAR_HEIGHT_AND_GAP,
             paddingBottom: FOOTER_HEIGHT,
           }}
         >

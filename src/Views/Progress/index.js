@@ -73,27 +73,29 @@ export default function Activity(props) {
       />
     </div>
   );
-  const legend = (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        gap: "2rem",
-        marginBottom: "1.5rem",
-      }}
-    >
-      <div style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
-        <TaskAltIcon style={{ fontSize: "1.5rem" }} />
-        Complete
+  function Legend() {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          gap: "2rem",
+          marginBottom: "1.5rem",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
+          <TaskAltIcon style={{ fontSize: "1.5rem" }} />
+          Solved
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
+          <PanoramaFishEyeIcon
+            style={{ fontSize: "1.5rem", color: "rgba(255,255,255,0.3)" }}
+          />
+          Not Solved
+        </div>
       </div>
-      <div style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
-        <PanoramaFishEyeIcon
-          style={{ fontSize: "1.5rem", color: "rgba(255,255,255,0.3)" }}
-        />
-        Incomplete
-      </div>
-    </div>
-  );
+    );
+  }
 
   const solvedStatusIcon = (completed) => {
     const iconStyle = {
@@ -109,13 +111,32 @@ export default function Activity(props) {
     );
   };
 
+  function UserHeader({ userId, username, profileURL, date }) {
+    return (
+      <span style={{ display: "flex", justifyContent: "space-between" }}>
+        <Link
+          className="user-wrapper hover-link"
+          style={{ color: "white" }}
+          to={`/profile?user_id=${userId}`}
+        >
+          <Avatar
+            src={profileURL ?? null}
+            style={{ height: "2.5rem", width: "2.5rem" }}
+          />
+          <span className="hover-link">{username}</span>
+        </Link>
+        <span style={{ fontSize: "1.25rem" }}>{date}</span>
+      </span>
+    );
+  }
+
   return (
     <div
       className="content-container"
       style={{ backgroundColor: props.backgroundColor }}
     >
       {header}
-      {legend}
+      <Legend />
       {isLoading && (
         <div
           style={{
@@ -147,7 +168,7 @@ export default function Activity(props) {
                   className="align-down progress-post container"
                   style={{ backgroundColor: props.section }}
                 >
-                  <Link
+                  {/* <Link
                     className="user-wrapper hover-link"
                     style={{ color: "white" }}
                     to={`/profile?user_id=${post.user_id}`}
@@ -157,7 +178,13 @@ export default function Activity(props) {
                       style={{ height: "2.5rem", width: "2.5rem" }}
                     />
                     <span className="hover-link">{post.username}</span>
-                  </Link>
+                  </Link> */}
+                  <UserHeader
+                    userId={post.user_id}
+                    username={post.username}
+                    profileURL={post.profile_picture_url}
+                    date={post.date}
+                  />
                   <div
                     className="align-down"
                     style={{ justifyContent: "flex-start", gap: ".25rem" }}
