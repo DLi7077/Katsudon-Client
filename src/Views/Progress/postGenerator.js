@@ -1,4 +1,4 @@
-import { chain, get, map } from "lodash";
+import { chain, get, map, keys, groupBy } from "lodash";
 
 // const SAMPLE_OUTPUT = {
 //   user: "Devin",
@@ -44,12 +44,17 @@ export default function postGenerator(weeklySolutions) {
     const ISODateToFormat = (date) => {
       if (!date || date.length < 10) return "";
       const DATE_LENGTH = 10;
+      const simpleDate = date.substring(0, DATE_LENGTH);
+      const [year, month, day] = simpleDate.split("-");
 
-      return date.substring(0, DATE_LENGTH).replaceAll("-", "/");
+      return [month, day, year].join("-");
     };
     postDetails.date = ISODateToFormat(user.date);
+
     return postDetails;
   });
 
-  return posts;
+  const solutionsGroupedByDate = groupBy(posts, "date");
+
+  return solutionsGroupedByDate;
 }

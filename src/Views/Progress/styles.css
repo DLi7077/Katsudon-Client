@@ -1,6 +1,6 @@
 .progress-post {
   width: min(90vw, 640px);
-  padding: 1.25rem;
+  padding: 1rem;
   gap: 1.25rem;
 }
 
