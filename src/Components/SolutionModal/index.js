@@ -27,7 +27,13 @@ export default function SolutionModal(props) {
                 Memory Usage: {memory} MB
               </>
             )}
-            {(!runtime || !memory) && (
+            {runtime && !memory && (
+              <>
+                Runtime: {runtime} ms <br />
+                Memory Usage: {0}B
+              </>
+            )}
+            {!runtime && !memory && (
               <div style={{ color: "#FF4500" }}>
                 {get(solutionDetails, "error") ?? "Wrong Answer"}
               </div>
