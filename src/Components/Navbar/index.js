@@ -172,7 +172,6 @@ export default function Navbar(props) {
               className="katsudon-logo"
               alt="katsudon-logo"
             />
-
             {map(
               omit(visibleRedirects, ["Register", "Login", "Profile"]),
               (path, label) => {

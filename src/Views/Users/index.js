@@ -27,7 +27,7 @@ export default function Users(props) {
 
     setTimeout(() => {
       setLoading(false);
-    }, 500);
+    }, 300);
   }
 
   async function getSelectedUserDetails(user_id) {

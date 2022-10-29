@@ -40,9 +40,6 @@ export default function ProfilePage(props) {
   const [bannerHover, setBannerHover] = useState(false);
   const [awaitFollow, setAwaitFollow] = useState(false);
   const [tableLoading, setTableLoading] = useState(true);
-  const [solutionDisplay, setSolutionDisplay] = useState(false);
-  const [problemBlock, setProblemBlock] = useState({});
-  const [solutionsBlock, setSolutionsBlock] = useState({});
   const [sortBy, setSortBy] = useState("last_solved_at");
   const [sortDir, setSortDir] = useState(1);
   const [queryParams, setQueryParams] = useState({
@@ -51,6 +48,10 @@ export default function ProfilePage(props) {
     sortBy: "last_solved_at",
     sortDir: "desc",
   });
+
+  const [solutionDisplay, setSolutionDisplay] = useState(false);
+  const [problemBlock, setProblemBlock] = useState({});
+  const [solutionsBlock, setSolutionsBlock] = useState({});
 
   async function getUserDetails() {
     setLoading(true);

@@ -27,7 +27,13 @@ code {
 .align-down {
   display: flex;
   flex-direction: column;
-  gap: "1rem";
+  gap: 1rem;
+}
+
+.justify-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .content-container {
@@ -38,6 +44,7 @@ code {
   padding-top: 2rem;
   padding-bottom: 2rem;
 }
+
 .container {
   box-sizing: border-box;
   padding: 2rem;
