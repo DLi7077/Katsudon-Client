@@ -1,5 +1,5 @@
 import React from "react";
-import { get, omit } from "lodash";
+import { get } from "lodash";
 import { IconButton } from "@mui/material";
 import { PROBLEM_DIFFICULTY } from "../../Constants/colors";
 import currentUser from "../../Utils/UserTools";
