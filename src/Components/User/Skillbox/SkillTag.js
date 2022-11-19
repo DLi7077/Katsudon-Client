@@ -3,7 +3,7 @@ import "./styles.css";
 
 export default function SkillTag(props) {
   return (
-    <button
+    <div
       className="skill-tag"
       style={{
         ...(props.selected && {
@@ -16,6 +16,6 @@ export default function SkillTag(props) {
       }}
     >
       {props.tag}: {props.frequency}
-    </button>
+    </div>
   );
 }
