@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "/katsudon-client/static/css/main.6dd86619.chunk.css",
-    "main.js": "/katsudon-client/static/js/main.faeaee8f.chunk.js",
-    "main.js.map": "/katsudon-client/static/js/main.faeaee8f.chunk.js.map",
+    "main.css": "/katsudon-client/static/css/main.4f978a73.chunk.css",
+    "main.js": "/katsudon-client/static/js/main.246e946b.chunk.js",
+    "main.js.map": "/katsudon-client/static/js/main.246e946b.chunk.js.map",
     "runtime-main.js": "/katsudon-client/static/js/runtime-main.c3140415.js",
     "runtime-main.js.map": "/katsudon-client/static/js/runtime-main.c3140415.js.map",
     "static/js/2.27d8a16c.chunk.js": "/katsudon-client/static/js/2.27d8a16c.chunk.js",
     "static/js/2.27d8a16c.chunk.js.map": "/katsudon-client/static/js/2.27d8a16c.chunk.js.map",
     "index.html": "/katsudon-client/index.html",
-    "static/css/main.6dd86619.chunk.css.map": "/katsudon-client/static/css/main.6dd86619.chunk.css.map",
+    "static/css/main.4f978a73.chunk.css.map": "/katsudon-client/static/css/main.4f978a73.chunk.css.map",
     "static/js/2.27d8a16c.chunk.js.LICENSE.txt": "/katsudon-client/static/js/2.27d8a16c.chunk.js.LICENSE.txt",
     "static/media/C++.157c521f.svg": "/katsudon-client/static/media/C++.157c521f.svg",
     "static/media/C.cac16519.svg": "/katsudon-client/static/media/C.cac16519.svg",
@@ -37,7 +37,7 @@
   "entrypoints": [
     "static/js/runtime-main.c3140415.js",
     "static/js/2.27d8a16c.chunk.js",
-    "static/css/main.6dd86619.chunk.css",
-    "static/js/main.faeaee8f.chunk.js"
+    "static/css/main.4f978a73.chunk.css",
+    "static/js/main.246e946b.chunk.js"
   ]
 }
