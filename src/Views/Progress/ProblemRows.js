@@ -35,18 +35,13 @@ const solvedStatusIcon = (completed) => {
   );
 };
 
-export default function RowGenerator(props) {
+export default function ProblemRows(props) {
   return (
     <>
       {props.solutions.map((solution, idx) => {
         return (
           <div className="problem-item" key={idx}>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
+            <div style={{ display: "flex", alignItems: "center" }}>
               {solvedStatusIcon(
                 get(solution, "problem.solved_by").includes(
                   currentUser("user-id")
@@ -66,7 +61,7 @@ export default function RowGenerator(props) {
                 {solution.problem.title}
               </a>
             </div>
-            <span>
+            <span style={{ whiteSpace: "nowrap" }}>
               {solution.solution_language}
               <IconButton
                 style={{ padding: 0 }}
@@ -76,12 +71,7 @@ export default function RowGenerator(props) {
                   });
                 }}
               >
-                <div
-                  style={{
-                    position: "relative",
-                    height: "1.5rem",
-                  }}
-                >
+                <div style={{ position: "relative", height: "1.5rem" }}>
                   <FileOpenIcon style={classes.fileOpen} />
                   {!!get(solution, "failed") && (
                     <div style={classes.crossOut} />
