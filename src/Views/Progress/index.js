@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { map } from "lodash";
 import UserAPI from "../../Api/UserAPI";
-import { Avatar, CircularProgress } from "@mui/material";
-import SolutionModal from "../../Components/SolutionModal";
-import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
-import TaskAltIcon from "@mui/icons-material/TaskAlt";
-import PanoramaFishEyeIcon from "@mui/icons-material/PanoramaFishEye";
 import currentUser from "../../Utils/UserTools";
-import postGenerator from "./postGenerator";
-import RowGenerator from "./RowGenerator";
+import { postGenerator } from "./util";
 import "./styles.css";
-import { Link } from "react-router-dom";
+import Header from "./Header";
+import { CircularProgress } from "@mui/material";
+import SolutionModal from "../../Components/SolutionModal";
+import ActivityPost from "./ActivityPost";
 
 export default function Activity(props) {
   const [weeklySolutions, setWeeklySolutions] = useState([]);
@@ -50,92 +47,6 @@ export default function Activity(props) {
   useEffect(() => {
     setPosts();
   }, []);
-
-  function Header() {
-    return (
-      <div
-        className="align-down"
-        style={{
-          textAlign: "center",
-          alignItems: "center",
-          width: "100%",
-          marginBottom: "1.5rem",
-          color: props.text,
-          gap: "0.5rem",
-        }}
-      >
-        <span style={{ fontSize: "2.5rem" }}>Weekly Progress</span>
-        <span
-          style={{
-            fontSize: "1.25rem",
-            color: props.color,
-          }}
-        >
-          <PersonAddAlt1Icon
-            style={{
-              fontSize: "1.5rem",
-              color: "#7AFF87",
-              marginRight: ".25rem",
-              verticalAlign: "-0.25rem",
-            }}
-          />
-          Follow others to see how they're progressing this week, and try out
-          problems they've solved!
-        </span>
-        <div
-          style={{
-            backgroundColor: props.color,
-            marginTop: "1rem",
-            height: "2px",
-            width: "90%",
-          }}
-        />
-      </div>
-    );
-  }
-
-  function Legend() {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          gap: "2rem",
-          marginBottom: "1rem",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
-          <TaskAltIcon style={{ fontSize: "1.5rem" }} />
-          Solved
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
-          <PanoramaFishEyeIcon
-            style={{ fontSize: "1.5rem", color: "rgba(255,255,255,0.3)" }}
-          />
-          Not Solved
-        </div>
-      </div>
-    );
-  }
-
-  function UserHeader({ userId, username, profileURL, date }) {
-    return (
-      <span style={{ display: "flex", justifyContent: "space-between" }}>
-        <Link
-          className="user-wrapper hover-link"
-          style={{ color: "white" }}
-          to={`/profile?user_id=${userId}`}
-        >
-          <Avatar
-            src={profileURL ?? null}
-            style={{ height: "2.5rem", width: "2.5rem" }}
-          />
-          <span className="hover-link">{username}</span>
-        </Link>
-        <span style={{ fontSize: "1.25rem" }}>{date}</span>
-      </span>
-    );
-  }
 
   function DateDivider({ date }) {
     const whiteBarStyle = {
@@ -182,8 +93,7 @@ export default function Activity(props) {
         problem={problemBlock}
         solutions={solutionsBlock}
       />
-      <Header />
-      <Legend />
+      <Header text={props.text} color={props.color} />
       {isLoading && (
         <div
           style={{
@@ -194,11 +104,7 @@ export default function Activity(props) {
           }}
         >
           <CircularProgress
-            style={{
-              color: props.color,
-              width: "4rem",
-              height: "4rem",
-            }}
+            style={{ color: props.color, width: "4rem", height: "4rem" }}
           />
         </div>
       )}
@@ -217,56 +123,16 @@ export default function Activity(props) {
                 <DateDivider key={date} date={date} />
                 {dailySolutions.map((post, idx) => {
                   return (
-                    <div
+                    <ActivityPost
                       key={idx}
-                      className="align-down progress-post container"
-                      style={{ backgroundColor: props.section }}
-                    >
-                      <UserHeader
-                        userId={post.user_id}
-                        username={post.username}
-                        profileURL={post.profile_picture_url}
-                      />
-                      {!!post.solved.length && (
-                        <div
-                          className="align-down"
-                          style={{
-                            justifyContent: "flex-start",
-                            gap: ".25rem",
-                          }}
-                        >
-                          <span style={{ fontSize: "1.25rem" }}>
-                            Solved {post.solved.length} problem
-                            {post.solved.length > 1 ? "s" : ""}
-                          </span>
-                          <RowGenerator
-                            solutions={post.solved}
-                            handleOpenSolutionModel={handleOpenSolutionModel}
-                          />
-                        </div>
-                      )}
-
-                      {!!post.attempted.length && (
-                        <div
-                          className="align-down"
-                          style={{
-                            justifyContent: "flex-start",
-                            gap: ".25rem",
-                          }}
-                        >
-                          <span
-                            style={{ fontSize: "1.25rem", color: "#FFC185" }}
-                          >
-                            Attempted {post.attempted.length} problem
-                            {post.solved.length > 1 ? "s" : ""}
-                          </span>
-                          <RowGenerator
-                            solutions={post.attempted}
-                            handleOpenSolutionModel={handleOpenSolutionModel}
-                          />
-                        </div>
-                      )}
-                    </div>
+                      userId={post.user_id}
+                      username={post.username}
+                      profileURL={post.profile_picture_url}
+                      solved={post.solved}
+                      attempted={post.attempted}
+                      handleOpenSolutionModel={handleOpenSolutionModel}
+                      backgroundColor={props.section}
+                    />
                   );
                 })}
               </div>

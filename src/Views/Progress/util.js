@@ -23,7 +23,7 @@ import { chain, get, map, groupBy } from "lodash";
  * separates attempted and solved problems
  * @returns A generated list of weekly progress posts
  */
-export default function postGenerator(weeklySolutions) {
+export function postGenerator(weeklySolutions) {
   const posts = map(weeklySolutions, (user) => {
     const postDetails = {
       user_id: user.user_id,
