@@ -3,10 +3,10 @@ import UploadFileIcon from "@mui/icons-material/UploadFile";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import { get, reduce } from "lodash";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FollowList from "./FollowList";
 import "./styles.css";
-import currentUser from "../../../Utils/UserTools";
+import { useDispatch, useSelector } from "react-redux";
 import EditIcon from "@mui/icons-material/Edit";
 import UserAPI from "../../../Api/UserAPI";
 
@@ -52,6 +52,12 @@ export default function UserProfile(props) {
   const [showFollowing, setShowFollowing] = useState(false);
   const [editingBio, setEditingBio] = useState(false);
   const [updatedBio, setUpdatedBio] = useState("");
+
+  const testUser = useSelector((state) => state.user);
+  useEffect(() => {
+    console.log(testUser);
+  }, [testUser]);
+
   function handleCloseFollowers() {
     setShowFollowers(false);
   }
@@ -95,7 +101,7 @@ export default function UserProfile(props) {
       setEditingBio(false);
       return;
     }
-    await UserAPI.updateBiography(updatedBio, currentUser("auth_token"));
+    await UserAPI.updateBiography(updatedBio, get(testUser, "auth_token"));
     setEditingBio(false);
     window.location.reload(false);
   }
@@ -124,15 +130,19 @@ export default function UserProfile(props) {
             </div>
             <div className="profile-picture" style={{ position: "relative" }}>
               <Avatar
-                src={profile_picture_url}
+                src={
+                  get(testUser, "user_id") === userInfo._id
+                    ? testUser.profile_picture_url
+                    : profile_picture_url
+                }
                 style={{
                   width: "100px",
                   height: "100px",
                   border: "2px solid white",
                 }}
               />
-              {currentUser("logged_in") &&
-                currentUser("user-id") === userInfo._id && (
+              {get(testUser, "logged_in") &&
+                get(testUser, "user_id") === userInfo._id && (
                   <>
                     <input
                       type="file"
@@ -145,8 +155,8 @@ export default function UserProfile(props) {
                     <label htmlFor="upload-profile-picture">
                       <div
                         className={
-                          currentUser("logged_in") &&
-                          currentUser("user-id") === userInfo._id
+                          get(testUser, "logged_in") &&
+                          get(testUser, "user_id") === userInfo._id
                             ? "profile-picture-upload"
                             : ""
                         }
@@ -173,8 +183,8 @@ export default function UserProfile(props) {
           <div className="profile-username">{username}</div>
           <div className="profile-biography" style={{ position: "relative" }}>
             {!editingBio && <>{biography ?? ""}</>}
-            {currentUser("logged_in") &&
-              currentUser("user-id") === userInfo._id &&
+            {get(testUser, "logged_in") &&
+              get(testUser, "user_id") === userInfo._id &&
               !editingBio && (
                 <IconButton
                   style={{

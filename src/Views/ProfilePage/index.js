@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { get, omit, pick } from "lodash";
 import UserProfile from "../../Components/User/UserProfile";
-import { CircularProgress, IconButton } from "@mui/material";
+import { Avatar, CircularProgress, IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import getSearchParams from "../../Utils/getSearchParams";
 import UserAPI from "../../Api/UserAPI";
@@ -15,6 +15,11 @@ import banner from "../../Assets/banner.jpg";
 import currentUser from "../../Utils/UserTools";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "./styles.css";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  updateProfilePicture,
+  updateFollowing,
+} from "../../Store/Reducers/user";
 
 const classes = {
   follow: {
@@ -33,6 +38,10 @@ export default function ProfilePage(props) {
     },
   });
 
+  const testUser = useSelector((state) => state.user);
+
+  const dispatch = useDispatch();
+
   const location = useLocation();
   const [userInfo, setUserInfo] = useState(null);
   const [solutions, setSolutions] = useState({});
@@ -44,7 +53,7 @@ export default function ProfilePage(props) {
   const [sortDir, setSortDir] = useState(1);
   const [queryParams, setQueryParams] = useState({
     user_id:
-      get(getSearchParams(location), "user_id") ?? currentUser("user-id"),
+      get(getSearchParams(location), "user_id") ?? get(testUser, "user_id"),
     sortBy: "last_solved_at",
     sortDir: "desc",
   });
@@ -63,7 +72,7 @@ export default function ProfilePage(props) {
     const compliedQuery = {
       ...queryParams,
       user_id:
-        get(getSearchParams(location), "user_id") ?? currentUser("user-id"),
+        get(getSearchParams(location), "user_id") ?? get(testUser, "user_id"),
     };
 
     await UserAPI.getUserProfile(compliedQuery)
@@ -85,7 +94,7 @@ export default function ProfilePage(props) {
     const compliedQuery = {
       ...queryParams,
       user_id:
-        get(getSearchParams(location), "user_id") ?? currentUser("user-id"),
+        get(getSearchParams(location), "user_id") ?? get(testUser, "user_id"),
     };
     await UserAPI.getUserSolutions(compliedQuery).then((res) => {
       setSolutions(res);
@@ -136,17 +145,21 @@ export default function ProfilePage(props) {
   async function handleFollowClick() {
     setAwaitFollow(true);
 
-    const followFunction = (currentUser("following") ?? []).includes(
+    const currentUserisFollowing = (testUser.following ?? []).includes(
       userInfo._id
-    )
+    );
+
+    const followFunction = currentUserisFollowing
       ? UserAPI.unfollowUser
       : UserAPI.followUser;
 
-    await followFunction(userInfo._id, currentUser("auth_token"))
+    await followFunction(userInfo._id, get(testUser, "auth_token"))
       .then((res) => {
-        localStorage.setItem(
-          "katsudon-lc-following",
-          JSON.stringify(get(res.users[0], "following"))
+        console.log(res.users[0].following);
+        dispatch(
+          updateFollowing({
+            following: get(res.users[0], "following"),
+          })
         );
       })
       .then(async () => {
@@ -176,9 +189,9 @@ export default function ProfilePage(props) {
     const formData = new FormData();
     formData.append("imgfile", bannerPicture);
 
-    await UserAPI.uploadProfileBanner(formData, currentUser("auth_token"))
-      .then(() => {
-        window.location.reload(false);
+    await UserAPI.uploadProfileBanner(formData, get(testUser, "auth_token"))
+      .then((res) => {
+        console.log(res);
       })
       .catch(() => {
         console.log("couldnt upload");
@@ -195,9 +208,15 @@ export default function ProfilePage(props) {
     const formData = new FormData();
     formData.append("imgfile", bannerPicture);
 
-    await UserAPI.uploadProfilePicture(formData, currentUser("auth_token"))
-      .then(() => {
-        window.location.reload(false);
+    await UserAPI.uploadProfilePicture(formData, get(testUser, "auth_token"))
+      .then((res) => {
+        dispatch(
+          updateProfilePicture({
+            profile_picture_url: `${
+              res.user.profile_picture_url
+            }?${global.Date.now()}`, // force rerender
+          })
+        );
       })
       .catch(() => {
         console.log("couldnt upload");
@@ -255,7 +274,7 @@ export default function ProfilePage(props) {
     });
     if (!queryParams.user_id) {
       setQueryParams({
-        user_id: currentUser("user-id"),
+        user_id: get(testUser, "user_id"),
       });
     }
     getUserDetails();
@@ -272,6 +291,7 @@ export default function ProfilePage(props) {
       className="content-container"
       style={{ backgroundColor: props.backgroundColor, paddingTop: 0 }}
     >
+      <Avatar src={testUser.profile_picture_url} />
       {isLoading && (
         <div
           style={{
@@ -290,8 +310,8 @@ export default function ProfilePage(props) {
       {userInfo && !isLoading && (
         <>
           <div className="user-profile-banner" style={{ position: "relative" }}>
-            {currentUser("logged_in") &&
-              currentUser("user-id") === userInfo._id &&
+            {get(testUser, "logged_in") &&
+              get(testUser, "user_id") === userInfo._id &&
               EditButton(handleUploadProfileBanner)}
             <img
               src={get(userInfo, "profile_banner_url") ?? banner}
@@ -333,25 +353,22 @@ export default function ProfilePage(props) {
                         changeProfilePicture={handleUploadProfilePicture}
                       />
                     </ThemeProvider>
-                    {currentUser("logged_in") &&
-                      currentUser("user-id") !== userInfo._id && (
-                        <IconButton
-                          style={classes.follow}
-                          onClick={handleFollowClick}
-                        >
-                          {(currentUser("following") ?? []).includes(
-                            userInfo._id
-                          ) ? (
-                            <PersonRemoveAlt1Icon
-                              style={{ fontSize: "2rem", color: "#FF7A7A" }}
-                            />
-                          ) : (
-                            <PersonAddAlt1Icon
-                              style={{ fontSize: "2rem", color: "#7AFF87" }}
-                            />
-                          )}
-                        </IconButton>
-                      )}
+                    {get(testUser, "user_id") !== userInfo._id && (
+                      <IconButton
+                        style={classes.follow}
+                        onClick={handleFollowClick}
+                      >
+                        {(testUser.following ?? []).includes(userInfo._id) ? (
+                          <PersonRemoveAlt1Icon
+                            style={{ fontSize: "2rem", color: "#FF7A7A" }}
+                          />
+                        ) : (
+                          <PersonAddAlt1Icon
+                            style={{ fontSize: "2rem", color: "#7AFF87" }}
+                          />
+                        )}
+                      </IconButton>
+                    )}
                   </>
                 )}
               </div>
