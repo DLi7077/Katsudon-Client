@@ -17,10 +17,16 @@ import { routeColors } from "../../Constants/routes";
 import { MENU_LINKS } from "../../Constants/navbar";
 import currentUser, { handleLogout } from "../../Utils/UserTools";
 import "./styles.css";
+import { useDispatch, useSelector } from "react-redux";
+import { userLogout } from "../../Store/Reducers/user";
 
 export default function Navbar(props) {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch;
+
+  const testUser = useSelector((state) => state.user);
+
   const scrollY = useScrollYPosition();
   const [logoColor, setLogoColor] = useState(null);
   const [anchorElement, setAnchorElement] = useState(null);
@@ -93,8 +99,8 @@ export default function Navbar(props) {
           className="navbar-redirect-link"
           style={{ textDecoration: "none", gap: "1rem" }}
         >
-          <Avatar src={currentUser("profile_picture")} />
-          {currentUser("username")}
+          <Avatar src={get(testUser, "profile_picture_url")} />
+          {get(testUser, "username")}
         </Link>
         <IconButton
           style={{ color: "white" }}

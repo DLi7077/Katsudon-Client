@@ -5,7 +5,8 @@ import { useFormik } from "formik";
 import { Button, TextField, Snackbar, Alert } from "@mui/material";
 import * as yup from "yup";
 import UserAPI from "../../Api/UserAPI";
-import currentUser, { handleLogin } from "../../Utils/UserTools";
+import { useDispatch } from "react-redux";
+import { userLogin } from "../../Store/Reducers/user";
 
 const classes = {
   root: { borderBottom: "1px solid white" },
@@ -18,6 +19,7 @@ const classes = {
 export default function Login(props) {
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarContent, setSnackbarContent] = useState(null);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   async function login(userDetails) {
@@ -42,15 +44,14 @@ export default function Login(props) {
             auth_token: accessToken,
             user_id: get(res, "currentUser._id"),
             username: get(res, "currentUser.username"),
-            profile_picture: get(res, "currentUser.profile_picture_url"),
+            profile_picture_url: get(res, "currentUser.profile_picture_url"),
             following: get(res, "currentUser.following"),
+            followers: get(res, "currentUser.followers"),
           };
 
-          handleLogin(loginDetails);
+          dispatch(userLogin(loginDetails));
 
-          navigate(`/profile?user_id=${currentUser("user-id")}`);
-
-          window.location.reload(false);
+          navigate(`/profile`);
         })
         .catch((e) => {
           console.error(e);
