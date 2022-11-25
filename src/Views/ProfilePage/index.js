@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateFollowing } from "../../Store/Reducers/user";
 import "./styles.css";
 import Banner from "./Banner";
+import { setSnackbarSuccess } from "../../Store/Reducers/snackbar";
 
 const classes = {
   follow: {
@@ -140,21 +141,25 @@ export default function ProfilePage(props) {
   async function handleFollowClick() {
     setAwaitFollow(true);
 
-    const currentUserisFollowing = (currentUser.following ?? []).includes(
-      userInfo._id
-    );
+    const willUnfollow = (currentUser.following ?? []).includes(userInfo._id);
 
-    const followFunction = currentUserisFollowing
+    const followFunction = willUnfollow
       ? UserAPI.unfollowUser
       : UserAPI.followUser;
 
     await followFunction(userInfo._id, get(currentUser, "auth_token"))
       .then((res) => {
-        dispatch(
-          updateFollowing({
-            following: get(res.users[0], "following"),
-          })
-        );
+        const updatedFollowingList = {
+          following: get(res.users[0], "following"),
+        };
+        const otherUser = get(res.users[1], "username");
+        dispatch(updateFollowing(updatedFollowingList));
+
+        const followStatusMessage = `${
+          willUnfollow ? "Unfollowed" : "Following"
+        } ${otherUser}`;
+
+        dispatch(setSnackbarSuccess(followStatusMessage));
       })
       .then(async () => {
         await UserAPI.getUserProfile(queryParams)

@@ -6,6 +6,10 @@ import fallbackBanner from "../../Assets/banner.jpg";
 import { get } from "lodash";
 import { updateProfileBanner } from "../../Store/Reducers/user";
 import { IconButton } from "@mui/material";
+import {
+  setSnackbarSuccess,
+  setSnackbarWarning,
+} from "../../Store/Reducers/snackbar";
 
 export default function Banner({ userId, bannerUrl }) {
   const dispatch = useDispatch();
@@ -29,9 +33,11 @@ export default function Banner({ userId, bannerUrl }) {
             }?${global.Date.now()}`, // force rerender
           })
         );
+
+        dispatch(setSnackbarSuccess("Uploaded banner"));
       })
       .catch(() => {
-        console.error("couldnt upload");
+        dispatch(setSnackbarWarning("File size must be < 5MB"));
       });
   }
 
