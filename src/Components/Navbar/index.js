@@ -15,7 +15,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import katsudonLogo from "../../Assets/katsudon.svg";
 import { routeColors } from "../../Constants/routes";
 import { MENU_LINKS } from "../../Constants/navbar";
-import currentUser, { handleLogout } from "../../Utils/UserTools";
 import "./styles.css";
 import { useDispatch, useSelector } from "react-redux";
 import { userLogout } from "../../Store/Reducers/user";
@@ -23,7 +22,7 @@ import { userLogout } from "../../Store/Reducers/user";
 export default function Navbar(props) {
   const location = useLocation();
   const navigate = useNavigate();
-  const dispatch = useDispatch;
+  const dispatch = useDispatch();
 
   const testUser = useSelector((state) => state.user);
 
@@ -48,6 +47,13 @@ export default function Navbar(props) {
       position: "absolute",
     },
   };
+
+  function handleLogout() {
+    console.log("logging out");
+    dispatch(userLogout());
+    navigate("/welcome");
+    console.log(testUser);
+  }
 
   useEffect(() => {
     const { pathname } = location;
@@ -95,31 +101,25 @@ export default function Navbar(props) {
     const loggedInContent = (
       <div style={{ display: "flex", gap: "1.5rem" }}>
         <Link
-          to={`/profile?user_id=${currentUser("user-id")}`}
+          to={`/profile?user_id=${get(testUser, "user_id")}`}
           className="navbar-redirect-link"
           style={{ textDecoration: "none", gap: "1rem" }}
         >
           <Avatar src={get(testUser, "profile_picture_url")} />
           {get(testUser, "username")}
         </Link>
-        <IconButton
-          style={{ color: "white" }}
-          onClick={() => {
-            handleLogout();
-            navigate("/welcome");
-          }}
-        >
+        <IconButton style={{ color: "white" }} onClick={handleLogout}>
           <LogoutIcon style={{ color: "white", fontSize: "2rem" }} />
         </IconButton>
       </div>
     );
 
-    return currentUser("logged_in") ? loggedInContent : loggedOutContent;
+    return !!testUser.logged_in ? loggedInContent : loggedOutContent;
   };
 
   const visibleRedirects = omit(
     MENU_LINKS,
-    currentUser("logged_in")
+    testUser.logged_in
       ? ["Welcome", "Register", "Login"]
       : ["Progress", "Profile"]
   );
@@ -178,6 +178,7 @@ export default function Navbar(props) {
               className="katsudon-logo"
               alt="katsudon-logo"
             />
+            {testUser.logged_in ? "true" : "false"}
             {map(
               omit(visibleRedirects, ["Register", "Login", "Profile"]),
               (path, label) => {

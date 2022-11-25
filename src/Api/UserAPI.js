@@ -6,7 +6,6 @@ async function getAllUsers() {
     method: "get",
     endpoint: "api/user/all",
     params: {},
-    headers: {},
   });
 }
 
@@ -15,18 +14,14 @@ async function getUserSolutions(queryParams) {
     method: "get",
     endpoint: `api/solution/all?${qs.stringify(queryParams)}`,
     params: {},
-    headers: {},
   });
 }
 
-async function getWeeklySolutions(token) {
+async function getWeeklySolutions() {
   return Api({
     method: "get",
     endpoint: `api/solution/weekly-progress`,
     params: {},
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
   });
 }
 
@@ -35,7 +30,6 @@ async function getUserProfile(queryParams) {
     method: "get",
     endpoint: `api/user/profile?${qs.stringify(queryParams)}`,
     params: {},
-    headers: {},
   });
 }
 
@@ -55,14 +49,18 @@ async function login(body) {
   });
 }
 
+async function restoreSession() {
+  return Api({
+    method: "get",
+    endpoint: "api/user/jwt-retrieve",
+  });
+}
+
 async function followUser(user_id, token) {
   return Api({
     method: "post",
     endpoint: "api/user/follow",
     body: { follow: user_id },
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
   });
 }
 
@@ -71,9 +69,6 @@ async function unfollowUser(user_id, token) {
     method: "post",
     endpoint: "api/user/unfollow",
     body: { unfollow: user_id },
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
   });
 }
 
@@ -82,9 +77,6 @@ async function updateBiography(biography, token) {
     method: "post",
     endpoint: "api/user/edit-bio",
     body: { biography: biography },
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
   });
 }
 
@@ -116,6 +108,7 @@ const UserAPI = {
   getWeeklySolutions,
   getUserProfile,
   createAccount,
+  restoreSession,
   login,
   followUser,
   unfollowUser,

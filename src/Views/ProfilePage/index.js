@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   updateProfilePicture,
   updateFollowing,
+  updateProfileBanner,
 } from "../../Store/Reducers/user";
 
 const classes = {
@@ -68,6 +69,7 @@ export default function ProfilePage(props) {
       setLoading(false);
       return;
     }
+
 
     const compliedQuery = {
       ...queryParams,
@@ -184,7 +186,6 @@ export default function ProfilePage(props) {
   async function handleUploadProfileBanner(event) {
     if (!event.target.files) return;
 
-    setLoading(true);
     const bannerPicture = event.target.files[0];
     const formData = new FormData();
     formData.append("imgfile", bannerPicture);
@@ -192,18 +193,22 @@ export default function ProfilePage(props) {
     await UserAPI.uploadProfileBanner(formData, get(testUser, "auth_token"))
       .then((res) => {
         console.log(res);
+        dispatch(
+          updateProfileBanner({
+            profile_banner_url: `${
+              res.user.profile_banner_url
+            }?${global.Date.now()}`, // force rerender
+          })
+        );
       })
       .catch(() => {
         console.log("couldnt upload");
       });
-
-    setLoading(false);
   }
 
   async function handleUploadProfilePicture(event) {
     if (!event.target.files) return;
 
-    setLoading(true);
     const bannerPicture = event.target.files[0];
     const formData = new FormData();
     formData.append("imgfile", bannerPicture);
@@ -221,8 +226,6 @@ export default function ProfilePage(props) {
       .catch(() => {
         console.log("couldnt upload");
       });
-
-    setLoading(false);
   }
 
   const EditButton = (handleClick) => {
@@ -268,6 +271,7 @@ export default function ProfilePage(props) {
   };
 
   useEffect(() => {
+    console.log("current user", get(testUser, "user_id"));
     setQueryParams({
       ...queryParams,
       ...pick(getSearchParams(location), "user_id"),
@@ -314,7 +318,11 @@ export default function ProfilePage(props) {
               get(testUser, "user_id") === userInfo._id &&
               EditButton(handleUploadProfileBanner)}
             <img
-              src={get(userInfo, "profile_banner_url") ?? banner}
+              src={
+                get(testUser, "user_id") === userInfo._id
+                  ? get(testUser, "profile_banner_url") ?? banner
+                  : get(userInfo, "profile_banner_url") ?? banner
+              }
               style={{ objectFit: "cover", width: "100%" }}
               alt="user banner"
             />

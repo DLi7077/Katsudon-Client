@@ -12,9 +12,16 @@ export default async function Api(props) {
     method: method,
     url: `${TARGET_URL}${endpoint}`,
     params: params,
-    headers: headers,
     data: body,
   };
 
-  return axios(request).then((res) => res.data);
+  const api = axios.create({
+    baseURL: TARGET_URL,
+  });
+
+  api.defaults.headers.common.Authorization = `Bearer ${localStorage.getItem(
+    "katsudon-lc-auth-token"
+  )}`;
+
+  return api(request).then((res) => res.data);
 }
