@@ -42,11 +42,7 @@ export default function Login(props) {
 
           const loginDetails = {
             auth_token: accessToken,
-            user_id: get(res, "currentUser._id"),
-            username: get(res, "currentUser.username"),
-            profile_picture_url: get(res, "currentUser.profile_picture_url"),
-            following: get(res, "currentUser.following"),
-            followers: get(res, "currentUser.followers"),
+            ...get(res, "currentUser"),
           };
 
           dispatch(userLogin(loginDetails));
