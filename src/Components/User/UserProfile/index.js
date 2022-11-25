@@ -1,41 +1,17 @@
-import { Avatar, IconButton, TextField, Tooltip } from "@mui/material";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { updateProfileBiography } from "../../../Store/Reducers/user";
+import { Avatar, IconButton, TextField } from "@mui/material";
+import { get } from "lodash";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
-import { get, reduce } from "lodash";
-import { useState } from "react";
-import FollowList from "./FollowList";
-import "./styles.css";
-import { useDispatch, useSelector } from "react-redux";
-import { updateProfileBiography } from "../../../Store/Reducers/user";
 import EditIcon from "@mui/icons-material/Edit";
+import FollowList from "./FollowList";
 import UserAPI from "../../../Api/UserAPI";
-
-const fractionToPercent = (fraction) => {
-  return `${fraction * 100}%`;
-};
-
-const difficultyGenerator = (solved, total, difficulty) => {
-  const difficultyTitle = difficulty[0].toUpperCase() + difficulty.slice(1);
-  return (
-    !!solved && (
-      <Tooltip
-        title={
-          <div style={{ fontSize: "1rem" }}>
-            {difficultyTitle}: {solved}
-          </div>
-        }
-      >
-        <div
-          className={`profile-solved-${difficulty}`}
-          style={{
-            width: fractionToPercent(total ? solved / total : 0),
-          }}
-        />
-      </Tooltip>
-    )
-  );
-};
+import DifficultyBar from "./DifficultyBar";
+import { updateProfilePicture } from "../../../Store/Reducers/user";
+import "./styles.css";
 
 /**
  * @param {string} username
@@ -49,20 +25,12 @@ const difficultyGenerator = (solved, total, difficulty) => {
  * @returns A profile component
  */
 export default function UserProfile(props) {
+  const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.user);
   const [showFollowers, setShowFollowers] = useState(false);
   const [showFollowing, setShowFollowing] = useState(false);
   const [editingBio, setEditingBio] = useState(false);
   const [updatedBio, setUpdatedBio] = useState(currentUser.biography);
-
-  const dispatch = useDispatch();
-
-  function handleCloseFollowers() {
-    setShowFollowers(false);
-  }
-  function handleCloseFollowing() {
-    setShowFollowing(false);
-  }
 
   const { userInfo } = props;
   const {
@@ -74,17 +42,18 @@ export default function UserProfile(props) {
     solved,
   } = userInfo;
 
-  const { Easy, Medium, Hard } = reduce(
-    solved,
-    (accumulator, problem) => {
-      const currDifficulty = get(problem, "difficulty");
-      accumulator[currDifficulty] += 1;
-
-      return accumulator;
-    },
-    { Easy: 0, Medium: 0, Hard: 0 }
-  );
-  const totalSolved = Easy + Medium + Hard;
+  function handleCloseFollowers() {
+    setShowFollowers(false);
+  }
+  function handleCloseFollowing() {
+    setShowFollowing(false);
+  }
+  function handleShowFollowers() {
+    setShowFollowers(true);
+  }
+  function handleShowFollowing() {
+    setShowFollowing(true);
+  }
 
   function startEditBiography() {
     setEditingBio(true);
@@ -92,6 +61,28 @@ export default function UserProfile(props) {
 
   function cancelUpdatedBiography() {
     setEditingBio(false);
+  }
+
+  async function handleUploadProfilePicture(event) {
+    if (!event.target.files) return;
+
+    const bannerPicture = event.target.files[0];
+    const formData = new FormData();
+    formData.append("imgfile", bannerPicture);
+
+    await UserAPI.uploadProfilePicture(formData, get(currentUser, "auth_token"))
+      .then((res) => {
+        dispatch(
+          updateProfilePicture({
+            profile_picture_url: `${
+              res.user.profile_picture_url
+            }?${global.Date.now()}`, // force rerender
+          })
+        );
+      })
+      .catch(() => {
+        console.error("couldnt upload");
+      });
   }
 
   async function submitUpdatedBiography() {
@@ -112,6 +103,94 @@ export default function UserProfile(props) {
       .finally(() => setEditingBio(false));
   }
 
+  function Followers() {
+    return (
+      <div className="follow-stat">
+        <div className="follow-value">{followers.length}</div>
+        <div className="follow-text" onClick={handleShowFollowers}>
+          Followers
+        </div>
+      </div>
+    );
+  }
+  function Following() {
+    return (
+      <div className="follow-stat">
+        <div className="follow-value">{following.length}</div>
+        <div className="follow-text" onClick={handleShowFollowing}>
+          Following
+        </div>
+      </div>
+    );
+  }
+  function ProfileUpload() {
+    return (
+      <>
+        <input
+          type="file"
+          name="imgfile"
+          accept="image/*"
+          id="upload-profile-picture"
+          onChange={handleUploadProfilePicture}
+          hidden
+        />
+        <label htmlFor="upload-profile-picture">
+          <div
+            className={
+              get(currentUser, "logged_in") &&
+              get(currentUser, "user_id") === userInfo._id
+                ? "profile-picture-upload"
+                : ""
+            }
+          >
+            <UploadFileIcon style={{ fontSize: "2.5rem" }} />
+            Upload Profile Picture
+          </div>
+        </label>
+      </>
+    );
+  }
+  function EditBiographyButton() {
+    return (
+      <IconButton
+        style={{
+          position: "absolute",
+          top: 0,
+          right: 0,
+          color: "white",
+          padding: "0.25rem",
+        }}
+        onClick={() => {
+          startEditBiography();
+        }}
+      >
+        <EditIcon />
+      </IconButton>
+    );
+  }
+
+  function EditBiographyField() {
+    return (
+      <TextField
+        variant="standard"
+        value={updatedBio}
+        multiline
+        rows={4}
+        color="primary"
+        inputProps={{
+          style: {
+            fontSize: "1.35rem",
+            color: "white",
+            textAlign: "center",
+          },
+        }}
+        onChange={(e) => {
+          setUpdatedBio(e.target.value);
+        }}
+      />
+    );
+  }
+
   return (
     <>
       <div
@@ -123,17 +202,7 @@ export default function UserProfile(props) {
       >
         <div className="profile-user-info">
           <div className="profile-top-wrapper">
-            <div className="follow-stat">
-              <div className="follow-value">{followers.length}</div>
-              <div
-                className="follow-text"
-                onClick={() => {
-                  setShowFollowers(true);
-                }}
-              >
-                Followers
-              </div>
-            </div>
+            <Followers />
             <div className="profile-picture" style={{ position: "relative" }}>
               <Avatar
                 src={
@@ -148,42 +217,10 @@ export default function UserProfile(props) {
                 }}
               />
               {get(currentUser, "user_id") === userInfo._id && (
-                <>
-                  <input
-                    type="file"
-                    name="imgfile"
-                    accept="image/*"
-                    id="upload-profile-picture"
-                    onChange={props.changeProfilePicture}
-                    hidden
-                  />
-                  <label htmlFor="upload-profile-picture">
-                    <div
-                      className={
-                        get(currentUser, "logged_in") &&
-                        get(currentUser, "user_id") === userInfo._id
-                          ? "profile-picture-upload"
-                          : ""
-                      }
-                    >
-                      <UploadFileIcon style={{ fontSize: "2.5rem" }} />
-                      Upload Profile Picture
-                    </div>
-                  </label>
-                </>
+                <ProfileUpload />
               )}
             </div>
-            <div className="follow-stat">
-              <div className="follow-value">{following.length}</div>
-              <div
-                className="follow-text"
-                onClick={() => {
-                  setShowFollowing(true);
-                }}
-              >
-                Following
-              </div>
-            </div>
+            <Following />
           </div>
           <div className="profile-username">{username}</div>
           <div className="profile-biography" style={{ position: "relative" }}>
@@ -193,20 +230,7 @@ export default function UserProfile(props) {
                 : biography ?? "")}
 
             {get(currentUser, "user_id") === userInfo._id && !editingBio && (
-              <IconButton
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  right: 0,
-                  color: "white",
-                  padding: "0.25rem",
-                }}
-                onClick={() => {
-                  startEditBiography();
-                }}
-              >
-                <EditIcon />
-              </IconButton>
+              <EditBiographyButton />
             )}
             {editingBio && (
               <TextField
@@ -240,17 +264,13 @@ export default function UserProfile(props) {
               >
                 <IconButton
                   style={{ color: "#FFAC7D", padding: "0.25rem" }}
-                  onClick={() => {
-                    cancelUpdatedBiography();
-                  }}
+                  onClick={cancelUpdatedBiography}
                 >
                   <CloseIcon />
                 </IconButton>
                 <IconButton
                   style={{ color: "#7AFF87", padding: "0.25rem" }}
-                  onClick={() => {
-                    submitUpdatedBiography();
-                  }}
+                  onClick={submitUpdatedBiography}
                 >
                   <CheckIcon />
                 </IconButton>
@@ -258,14 +278,7 @@ export default function UserProfile(props) {
             )}
           </div>
         </div>
-        <div className="profile-solved-section">
-          <div className="profile-solved-count">Solved: {totalSolved}</div>
-          <div className="profile-solved-distribution">
-            {difficultyGenerator(Easy, totalSolved, "easy")}
-            {difficultyGenerator(Medium, totalSolved, "medium")}
-            {difficultyGenerator(Hard, totalSolved, "hard")}
-          </div>
-        </div>
+        <DifficultyBar solvedProblems={solved} />
       </div>
       <FollowList
         title="Following"

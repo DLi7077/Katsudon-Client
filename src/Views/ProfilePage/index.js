@@ -3,7 +3,6 @@ import { useLocation } from "react-router-dom";
 import { get, omit, pick } from "lodash";
 import UserProfile from "../../Components/User/UserProfile";
 import { CircularProgress, IconButton } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
 import getSearchParams from "../../Utils/getSearchParams";
 import UserAPI from "../../Api/UserAPI";
 import SolutionTable from "../../Components/SolutionTable";
@@ -11,15 +10,10 @@ import SolutionModal from "../../Components/SolutionModal";
 import SkillBox from "../../Components/User/Skillbox";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import PersonRemoveAlt1Icon from "@mui/icons-material/PersonRemoveAlt1";
-import banner from "../../Assets/banner.jpg";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  updateProfilePicture,
-  updateFollowing,
-  updateProfileBanner,
-} from "../../Store/Reducers/user";
+import { updateFollowing } from "../../Store/Reducers/user";
 import "./styles.css";
+import Banner from "./Banner";
 
 const classes = {
   follow: {
@@ -28,25 +22,32 @@ const classes = {
     right: "5px",
     color: "white",
   },
+  loadingFollow: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "350px",
+    minWidth: "250px",
+    backgroundColor: "black",
+    border: "2px solid #FF66EB",
+    borderRadius: "8px",
+  },
+};
+
+const directionMapping = {
+  0: null,
+  1: "desc",
+  2: "asc",
 };
 
 export default function ProfilePage(props) {
-  const theme = createTheme({
-    palette: {
-      primary: { main: props.color ?? "##FF66EB" },
-      secondary: { main: "#ffffff" },
-    },
-  });
-
   const currentUser = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
-
   const location = useLocation();
   const [userInfo, setUserInfo] = useState(null);
   const [solutions, setSolutions] = useState({});
   const [isLoading, setLoading] = useState(true);
-  const [bannerHover, setBannerHover] = useState(false);
   const [awaitFollow, setAwaitFollow] = useState(false);
   const [tableLoading, setTableLoading] = useState(true);
   const [sortBy, setSortBy] = useState("last_solved_at");
@@ -57,7 +58,6 @@ export default function ProfilePage(props) {
     sortBy: "last_solved_at",
     sortDir: "desc",
   });
-
   const [solutionDisplay, setSolutionDisplay] = useState(false);
   const [problemBlock, setProblemBlock] = useState({});
   const [solutionsBlock, setSolutionsBlock] = useState({});
@@ -89,7 +89,6 @@ export default function ProfilePage(props) {
         }, 100);
       });
   }
-
   async function getSolutions() {
     setTableLoading(true);
     const compliedQuery = {
@@ -106,12 +105,6 @@ export default function ProfilePage(props) {
       setTableLoading(false);
     }, 100);
   }
-
-  const directionMapping = {
-    0: null,
-    1: "desc",
-    2: "asc",
-  };
 
   function handleSortDirChange(sortBy) {
     const currDirection = (sortDir + 1) % 3;
@@ -182,91 +175,33 @@ export default function ProfilePage(props) {
     setAwaitFollow(false);
   }
 
-  async function handleUploadProfileBanner(event) {
-    if (!event.target.files) return;
-
-    const bannerPicture = event.target.files[0];
-    const formData = new FormData();
-    formData.append("imgfile", bannerPicture);
-
-    await UserAPI.uploadProfileBanner(formData, get(currentUser, "auth_token"))
-      .then((res) => {
-        dispatch(
-          updateProfileBanner({
-            profile_banner_url: `${
-              res.user.profile_banner_url
-            }?${global.Date.now()}`, // force rerender
-          })
-        );
-      })
-      .catch(() => {
-        console.error("couldnt upload");
-      });
-  }
-
-  async function handleUploadProfilePicture(event) {
-    if (!event.target.files) return;
-
-    const bannerPicture = event.target.files[0];
-    const formData = new FormData();
-    formData.append("imgfile", bannerPicture);
-
-    await UserAPI.uploadProfilePicture(formData, get(currentUser, "auth_token"))
-      .then((res) => {
-        dispatch(
-          updateProfilePicture({
-            profile_picture_url: `${
-              res.user.profile_picture_url
-            }?${global.Date.now()}`, // force rerender
-          })
-        );
-      })
-      .catch(() => {
-        console.error("couldnt upload");
-      });
-  }
-
-  const EditButton = (handleClick) => {
+  function LoadingProfile() {
     return (
-      <>
-        <input
-          type="file"
-          name="imgfile"
-          accept="image/*"
-          id="upload-banner"
-          onChange={handleClick}
-          hidden
+      <div style={classes.loadingFollow}>
+        <CircularProgress
+          style={{
+            color: props.color,
+            width: "4rem",
+            height: "4rem",
+          }}
         />
-        <label htmlFor="upload-banner">
-          <IconButton
-            onMouseEnter={() => {
-              setBannerHover(true);
-            }}
-            onMouseLeave={() => {
-              setTimeout(() => {
-                setBannerHover(false);
-              }, 100);
-            }}
-            style={{
-              position: "absolute",
-              backgroundColor: "rgba(0,0,0,0.6)",
-              color: "white",
-              top: "8px",
-              right: "8px",
-              padding: "0.5rem",
-              zIndex: 3,
-            }}
-            component="span"
-          >
-            <EditIcon style={{ fontSize: "1.75rem" }} />
-          </IconButton>
-        </label>
-        {bannerHover && (
-          <div className="profile-banner-upload">Upload Profile Banner</div>
-        )}
-      </>
+      </div>
     );
-  };
+  }
+
+  function FollowIcon() {
+    return (
+      <IconButton style={classes.follow} onClick={handleFollowClick}>
+        {(currentUser.following ?? []).includes(userInfo._id) ? (
+          <PersonRemoveAlt1Icon
+            style={{ fontSize: "2rem", color: "#FF7A7A" }}
+          />
+        ) : (
+          <PersonAddAlt1Icon style={{ fontSize: "2rem", color: "#7AFF87" }} />
+        )}
+      </IconButton>
+    );
+  }
 
   useEffect(() => {
     setQueryParams({
@@ -309,76 +244,23 @@ export default function ProfilePage(props) {
 
       {userInfo && !isLoading && (
         <>
-          <div className="user-profile-banner" style={{ position: "relative" }}>
-            {get(currentUser, "logged_in") &&
-              get(currentUser, "user_id") === userInfo._id &&
-              EditButton(handleUploadProfileBanner)}
-            <img
-              src={
-                get(currentUser, "user_id") === userInfo._id
-                  ? get(currentUser, "profile_banner_url") ?? banner
-                  : get(userInfo, "profile_banner_url") ?? banner
-              }
-              style={{ objectFit: "cover", width: "100%" }}
-              alt="user banner"
-            />
-          </div>
+          <Banner
+            userId={get(userInfo, "_id")}
+            bannerUrl={get(userInfo, "profile_banner_url")}
+          />
           <div className="profile-page-container">
             <div className="user-profile-wrapper">
               <div style={{ position: "relative" }}>
-                {awaitFollow && (
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      height: "350px",
-                      minWidth: "250px",
-                      backgroundColor: "black",
-                      border: "2px solid #FF66EB",
-                      borderRadius: "8px",
-                    }}
-                  >
-                    <CircularProgress
-                      style={{
-                        color: props.color,
-                        width: "4rem",
-                        height: "4rem",
-                      }}
-                    />
-                  </div>
-                )}
+                {awaitFollow && <LoadingProfile />}
                 {!awaitFollow && (
                   <>
-                    <ThemeProvider theme={theme}>
-                      <UserProfile
-                        userInfo={userInfo}
-                        borderColor="#FF66EB"
-                        changeProfilePicture={handleUploadProfilePicture}
-                      />
-                    </ThemeProvider>
+                    <UserProfile userInfo={userInfo} borderColor="#FF66EB" />
                     {get(currentUser, "user_id") !== userInfo._id && (
-                      <IconButton
-                        style={classes.follow}
-                        onClick={handleFollowClick}
-                      >
-                        {(currentUser.following ?? []).includes(
-                          userInfo._id
-                        ) ? (
-                          <PersonRemoveAlt1Icon
-                            style={{ fontSize: "2rem", color: "#FF7A7A" }}
-                          />
-                        ) : (
-                          <PersonAddAlt1Icon
-                            style={{ fontSize: "2rem", color: "#7AFF87" }}
-                          />
-                        )}
-                      </IconButton>
+                      <FollowIcon />
                     )}
                   </>
                 )}
               </div>
-
               <SkillBox
                 solved={userInfo.solved}
                 updateSkillQuery={updateSkillQuery}
