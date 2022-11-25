@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { get } from "lodash";
 import { useFormik } from "formik";
-import { Button, TextField, Snackbar, Alert } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import * as yup from "yup";
 import UserAPI from "../../Api/UserAPI";
 import { useDispatch } from "react-redux";
 import { userLogin } from "../../Store/Reducers/user";
+import {
+  setSnackbarError,
+  setSnackbarSuccess,
+} from "../../Store/Reducers/snackbar";
 
 const classes = {
   root: { borderBottom: "1px solid white" },
@@ -17,8 +21,6 @@ const classes = {
 };
 
 export default function Login(props) {
-  const [showSnackbar, setShowSnackbar] = useState(false);
-  const [snackbarContent, setSnackbarContent] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -28,17 +30,11 @@ export default function Login(props) {
         .then((res) => {
           const accessToken = get(res, "access_token");
           if (!accessToken) {
-            setSnackbarContent({
-              message: "Could not retrieve token",
-              severity: "error",
-            });
+            dispatch(setSnackbarError("Could not retrieve token"));
             return;
           }
 
-          setSnackbarContent({
-            message: "Successfully logged in!",
-            severity: "success",
-          });
+          dispatch(setSnackbarSuccess("Successfully logged in!"));
 
           const loginDetails = {
             auth_token: accessToken,
@@ -50,23 +46,16 @@ export default function Login(props) {
           navigate(`/profile`);
         })
         .catch((e) => {
-          console.error(e);
-          setSnackbarContent({
-            message: "Incorrect credentials",
-            severity: "error",
-          });
-        })
-        .finally(() => {
-          setShowSnackbar(true);
+          dispatch(setSnackbarError("Incorrect Credientals"));
         });
     }, 300);
   }
 
-  // const emailRegex = RegExp(/^\S+@\S+\.\S+$/);
+  const emailRegex = RegExp(/^\S+@\S+\.\S+$/);
   const validation = yup.object().shape({
     email: yup
       .string()
-      // .matches(emailRegex, "Invalid email")
+      .matches(emailRegex, "Invalid email")
       .required("Please enter email"),
     password: yup.string().required("Please enter password"),
   });
@@ -82,38 +71,11 @@ export default function Login(props) {
     },
   });
 
-  const snackbarMessage = (snackbarContent) => {
-    const message = get(snackbarContent, "message");
-    const severity = get(snackbarContent, "severity");
-    return (
-      <Snackbar
-        open={showSnackbar}
-        autoHideDuration={3000}
-        onClose={hideSnackbar}
-      >
-        <Alert
-          onClose={hideSnackbar}
-          severity={severity}
-          sx={{ width: "100%" }}
-        >
-          {message}
-        </Alert>
-      </Snackbar>
-    );
-  };
-
-  function hideSnackbar(event, reason) {
-    if (reason === "clickaway") return;
-
-    setShowSnackbar(false);
-  }
-
   return (
     <div
       className="content-container"
       style={{ backgroundColor: props.backgroundColor }}
     >
-      {showSnackbar && snackbarMessage(snackbarContent)}
       <form onSubmit={formik.handleSubmit} className="login-register-form">
         <TextField
           error={Boolean(formik.touched.email && formik.errors.email)}

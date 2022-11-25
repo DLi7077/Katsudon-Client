@@ -12,6 +12,10 @@ import UserAPI from "../../../Api/UserAPI";
 import DifficultyBar from "./DifficultyBar";
 import { updateProfilePicture } from "../../../Store/Reducers/user";
 import "./styles.css";
+import {
+  setSnackbarSuccess,
+  setSnackbarWarning,
+} from "../../../Store/Reducers/snackbar";
 
 /**
  * @param {string} username
@@ -79,9 +83,11 @@ export default function UserProfile(props) {
             }?${global.Date.now()}`, // force rerender
           })
         );
+
+        dispatch(setSnackbarSuccess("Uploaded profile picture"));
       })
       .catch(() => {
-        console.error("couldnt upload");
+        dispatch(setSnackbarWarning("File size must be < 5MB"));
       });
   }
 
@@ -99,8 +105,14 @@ export default function UserProfile(props) {
       })
       .then((updatedBiography) => {
         setUpdatedBio(updatedBiography);
+        dispatch(setSnackbarSuccess("Updated biography"));
       })
-      .finally(() => setEditingBio(false));
+      .catch(() => {
+        dispatch(setSnackbarWarning("Couldn't update biography"));
+      })
+      .finally(() => {
+        setEditingBio(false);
+      });
   }
 
   function Followers() {
@@ -150,46 +162,6 @@ export default function UserProfile(props) {
       </>
     );
   }
-  function EditBiographyButton() {
-    return (
-      <IconButton
-        style={{
-          position: "absolute",
-          top: 0,
-          right: 0,
-          color: "white",
-          padding: "0.25rem",
-        }}
-        onClick={() => {
-          startEditBiography();
-        }}
-      >
-        <EditIcon />
-      </IconButton>
-    );
-  }
-
-  function EditBiographyField() {
-    return (
-      <TextField
-        variant="standard"
-        value={updatedBio}
-        multiline
-        rows={4}
-        color="primary"
-        inputProps={{
-          style: {
-            fontSize: "1.35rem",
-            color: "white",
-            textAlign: "center",
-          },
-        }}
-        onChange={(e) => {
-          setUpdatedBio(e.target.value);
-        }}
-      />
-    );
-  }
 
   return (
     <>
@@ -230,7 +202,20 @@ export default function UserProfile(props) {
                 : biography ?? "")}
 
             {get(currentUser, "user_id") === userInfo._id && !editingBio && (
-              <EditBiographyButton />
+              <IconButton
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  right: 0,
+                  color: "white",
+                  padding: "0.25rem",
+                }}
+                onClick={() => {
+                  startEditBiography();
+                }}
+              >
+                <EditIcon />
+              </IconButton>
             )}
             {editingBio && (
               <TextField

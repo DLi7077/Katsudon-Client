@@ -3,24 +3,32 @@ import Navbar from "./Components/Navbar";
 import Footer from "./Components/Footer";
 import { routes } from "./Constants/routes";
 import { cloneElement, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { userLogin } from "./Store/Reducers/user";
 import UserAPI from "./Api/UserAPI";
+import {
+  setSnackbarSuccess,
+  setSnackbarWarning,
+  showSnackbar,
+} from "./Store/Reducers/snackbar";
+import SnackbarMessage from "./Components/Snackbar";
 
 const FOOTER_HEIGHT = "75px";
 const NAVBAR_HEIGHT_AND_GAP = `${80 + 20}px`;
 function App() {
+  const dispatch = useDispatch();
+  const snackbarContent = useSelector((state) => state.snackbar);
   const [pageTheme, setPageTheme] = useState(null);
   const [restoringSession, setRestoringSession] = useState(true);
-  const dispatch = useDispatch();
 
   async function restoreUserSession() {
     setRestoringSession(true);
     await UserAPI.restoreSession()
       .then((res) => {
         dispatch(userLogin(res.currentUser));
+        dispatch(setSnackbarSuccess("Restored Session"));
       })
-      .catch(() => console.error("Couldn't restore session"))
+      .catch(() => dispatch(setSnackbarWarning("Couldn't restore session")))
       .finally(() => {
         setRestoringSession(false);
       });
@@ -31,6 +39,12 @@ function App() {
     restoreUserSession();
     // eslint-disable-next-line
   }, []);
+
+  function hideSnackbar(event, reason) {
+    if (reason === "clickaway") return;
+
+    dispatch(showSnackbar(false));
+  }
 
   const COMPONENT_ROUTES = routes.map((component, idx) => {
     const componentWithColor = cloneElement(component.element, pageTheme);
@@ -45,6 +59,13 @@ function App() {
       {!restoringSession && (
         <HashRouter>
           <Navbar changeTheme={setPageTheme} />
+          {snackbarContent.show && (
+            <SnackbarMessage
+              snackbarContent={snackbarContent}
+              showSnackbar={snackbarContent.show}
+              hideSnackbar={hideSnackbar}
+            />
+          )}
           <div
             style={{
               display: "flex",
