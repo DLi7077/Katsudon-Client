@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { map } from "lodash";
 import UserAPI from "../../Api/UserAPI";
-import currentUser from "../../Utils/UserTools";
 import { postGenerator } from "./util";
 import "./styles.css";
 import Header from "./Header";
@@ -31,7 +30,7 @@ export default function Activity(props) {
 
   async function setPosts() {
     setLoading(true);
-    await UserAPI.getWeeklySolutions(currentUser("auth_token"))
+    await UserAPI.getWeeklySolutions()
       .then((solutions) => {
         // clean solutions then group by date
         setWeeklySolutions(postGenerator(solutions.rows));

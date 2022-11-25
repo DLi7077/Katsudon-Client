@@ -24,7 +24,7 @@ export default function Navbar(props) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const testUser = useSelector((state) => state.user);
+  const currentUser = useSelector((state) => state.user);
 
   const scrollY = useScrollYPosition();
   const [logoColor, setLogoColor] = useState(null);
@@ -49,10 +49,8 @@ export default function Navbar(props) {
   };
 
   function handleLogout() {
-    console.log("logging out");
     dispatch(userLogout());
     navigate("/welcome");
-    console.log(testUser);
   }
 
   useEffect(() => {
@@ -101,12 +99,12 @@ export default function Navbar(props) {
     const loggedInContent = (
       <div style={{ display: "flex", gap: "1.5rem" }}>
         <Link
-          to={`/profile?user_id=${get(testUser, "user_id")}`}
+          to={`/profile?user_id=${get(currentUser, "user_id")}`}
           className="navbar-redirect-link"
           style={{ textDecoration: "none", gap: "1rem" }}
         >
-          <Avatar src={get(testUser, "profile_picture_url")} />
-          {get(testUser, "username")}
+          <Avatar src={get(currentUser, "profile_picture_url")} />
+          {get(currentUser, "username")}
         </Link>
         <IconButton style={{ color: "white" }} onClick={handleLogout}>
           <LogoutIcon style={{ color: "white", fontSize: "2rem" }} />
@@ -114,12 +112,12 @@ export default function Navbar(props) {
       </div>
     );
 
-    return !!testUser.logged_in ? loggedInContent : loggedOutContent;
+    return !!currentUser.logged_in ? loggedInContent : loggedOutContent;
   };
 
   const visibleRedirects = omit(
     MENU_LINKS,
-    testUser.logged_in
+    currentUser.logged_in
       ? ["Welcome", "Register", "Login"]
       : ["Progress", "Profile"]
   );
@@ -178,7 +176,6 @@ export default function Navbar(props) {
               className="katsudon-logo"
               alt="katsudon-logo"
             />
-            {testUser.logged_in ? "true" : "false"}
             {map(
               omit(visibleRedirects, ["Register", "Login", "Profile"]),
               (path, label) => {

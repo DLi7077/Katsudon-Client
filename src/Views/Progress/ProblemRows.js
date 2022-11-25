@@ -2,10 +2,10 @@ import React from "react";
 import { get } from "lodash";
 import { IconButton } from "@mui/material";
 import { PROBLEM_DIFFICULTY } from "../../Constants/colors";
-import currentUser from "../../Utils/UserTools";
 import PanoramaFishEyeIcon from "@mui/icons-material/PanoramaFishEye";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import FileOpenIcon from "@mui/icons-material/FileOpen";
+import { useSelector } from "react-redux";
 
 const classes = {
   fileOpen: { fontSize: "1.5rem", color: "white", padding: 0 },
@@ -21,6 +21,7 @@ const classes = {
     rotate: "-45deg",
   },
 };
+
 const solvedStatusIcon = (completed) => {
   const iconStyle = {
     fontSize: "1.5rem",
@@ -36,6 +37,7 @@ const solvedStatusIcon = (completed) => {
 };
 
 export default function ProblemRows(props) {
+  const currentUser = useSelector((state) => state.user);
   return (
     <>
       {props.solutions.map((solution, idx) => {
@@ -43,9 +45,7 @@ export default function ProblemRows(props) {
           <div className="problem-item" key={idx}>
             <div style={{ display: "flex", alignItems: "center" }}>
               {solvedStatusIcon(
-                get(solution, "problem.solved_by").includes(
-                  currentUser("user-id")
-                )
+                get(solution, "problem.solved_by").includes(currentUser.user_id)
               )}
               <a
                 href={solution.problem.url}

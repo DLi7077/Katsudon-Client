@@ -23,6 +23,7 @@ export const userSlice = createSlice({
       state.username = get(action.payload, "username");
       state.profile_picture_url = get(action.payload, "profile_picture_url");
       state.profile_banner_url = get(action.payload, "profile_banner_url");
+      state.biography = get(action.payload, "biography");
       state.followers = get(action.payload, "followers");
       state.following = get(action.payload, "following");
       state.solved = get(action.payload, "solved");
@@ -34,7 +35,7 @@ export const userSlice = createSlice({
         );
       }
     },
-    userLogout: (state) => {
+    userLogout: () => {
       localStorage.removeItem("katsudon-lc-auth-token");
       return { ...initialState };
     },
@@ -47,6 +48,9 @@ export const userSlice = createSlice({
     updateProfileBanner: (state, action) => {
       state.profile_banner_url = get(action.payload, "profile_banner_url");
     },
+    updateProfileBiography: (state, action) => {
+      state.biography = get(action.payload, "biography");
+    },
   },
 });
 
@@ -56,6 +60,7 @@ export const {
   updateFollowing,
   updateProfilePicture,
   updateProfileBanner,
+  updateProfileBiography,
 } = userSlice.actions;
 
 export default userSlice.reducer;

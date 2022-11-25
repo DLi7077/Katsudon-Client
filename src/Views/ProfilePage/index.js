@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { get, omit, pick } from "lodash";
 import UserProfile from "../../Components/User/UserProfile";
-import { Avatar, CircularProgress, IconButton } from "@mui/material";
+import { CircularProgress, IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import getSearchParams from "../../Utils/getSearchParams";
 import UserAPI from "../../Api/UserAPI";
@@ -12,15 +12,14 @@ import SkillBox from "../../Components/User/Skillbox";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import PersonRemoveAlt1Icon from "@mui/icons-material/PersonRemoveAlt1";
 import banner from "../../Assets/banner.jpg";
-import currentUser from "../../Utils/UserTools";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import "./styles.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
   updateProfilePicture,
   updateFollowing,
   updateProfileBanner,
 } from "../../Store/Reducers/user";
+import "./styles.css";
 
 const classes = {
   follow: {
@@ -39,7 +38,7 @@ export default function ProfilePage(props) {
     },
   });
 
-  const testUser = useSelector((state) => state.user);
+  const currentUser = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
 
@@ -54,7 +53,7 @@ export default function ProfilePage(props) {
   const [sortDir, setSortDir] = useState(1);
   const [queryParams, setQueryParams] = useState({
     user_id:
-      get(getSearchParams(location), "user_id") ?? get(testUser, "user_id"),
+      get(getSearchParams(location), "user_id") ?? get(currentUser, "user_id"),
     sortBy: "last_solved_at",
     sortDir: "desc",
   });
@@ -70,11 +69,11 @@ export default function ProfilePage(props) {
       return;
     }
 
-
     const compliedQuery = {
       ...queryParams,
       user_id:
-        get(getSearchParams(location), "user_id") ?? get(testUser, "user_id"),
+        get(getSearchParams(location), "user_id") ??
+        get(currentUser, "user_id"),
     };
 
     await UserAPI.getUserProfile(compliedQuery)
@@ -96,7 +95,8 @@ export default function ProfilePage(props) {
     const compliedQuery = {
       ...queryParams,
       user_id:
-        get(getSearchParams(location), "user_id") ?? get(testUser, "user_id"),
+        get(getSearchParams(location), "user_id") ??
+        get(currentUser, "user_id"),
     };
     await UserAPI.getUserSolutions(compliedQuery).then((res) => {
       setSolutions(res);
@@ -147,7 +147,7 @@ export default function ProfilePage(props) {
   async function handleFollowClick() {
     setAwaitFollow(true);
 
-    const currentUserisFollowing = (testUser.following ?? []).includes(
+    const currentUserisFollowing = (currentUser.following ?? []).includes(
       userInfo._id
     );
 
@@ -155,9 +155,8 @@ export default function ProfilePage(props) {
       ? UserAPI.unfollowUser
       : UserAPI.followUser;
 
-    await followFunction(userInfo._id, get(testUser, "auth_token"))
+    await followFunction(userInfo._id, get(currentUser, "auth_token"))
       .then((res) => {
-        console.log(res.users[0].following);
         dispatch(
           updateFollowing({
             following: get(res.users[0], "following"),
@@ -177,7 +176,7 @@ export default function ProfilePage(props) {
           });
       })
       .catch((e) => {
-        console.log("error trying to follow/unfollow user");
+        console.error("could not follow/unfollow user");
       });
 
     setAwaitFollow(false);
@@ -190,9 +189,8 @@ export default function ProfilePage(props) {
     const formData = new FormData();
     formData.append("imgfile", bannerPicture);
 
-    await UserAPI.uploadProfileBanner(formData, get(testUser, "auth_token"))
+    await UserAPI.uploadProfileBanner(formData, get(currentUser, "auth_token"))
       .then((res) => {
-        console.log(res);
         dispatch(
           updateProfileBanner({
             profile_banner_url: `${
@@ -202,7 +200,7 @@ export default function ProfilePage(props) {
         );
       })
       .catch(() => {
-        console.log("couldnt upload");
+        console.error("couldnt upload");
       });
   }
 
@@ -213,7 +211,7 @@ export default function ProfilePage(props) {
     const formData = new FormData();
     formData.append("imgfile", bannerPicture);
 
-    await UserAPI.uploadProfilePicture(formData, get(testUser, "auth_token"))
+    await UserAPI.uploadProfilePicture(formData, get(currentUser, "auth_token"))
       .then((res) => {
         dispatch(
           updateProfilePicture({
@@ -224,7 +222,7 @@ export default function ProfilePage(props) {
         );
       })
       .catch(() => {
-        console.log("couldnt upload");
+        console.error("couldnt upload");
       });
   }
 
@@ -271,14 +269,13 @@ export default function ProfilePage(props) {
   };
 
   useEffect(() => {
-    console.log("current user", get(testUser, "user_id"));
     setQueryParams({
       ...queryParams,
       ...pick(getSearchParams(location), "user_id"),
     });
     if (!queryParams.user_id) {
       setQueryParams({
-        user_id: get(testUser, "user_id"),
+        user_id: get(currentUser, "user_id"),
       });
     }
     getUserDetails();
@@ -295,7 +292,6 @@ export default function ProfilePage(props) {
       className="content-container"
       style={{ backgroundColor: props.backgroundColor, paddingTop: 0 }}
     >
-      <Avatar src={testUser.profile_picture_url} />
       {isLoading && (
         <div
           style={{
@@ -314,13 +310,13 @@ export default function ProfilePage(props) {
       {userInfo && !isLoading && (
         <>
           <div className="user-profile-banner" style={{ position: "relative" }}>
-            {get(testUser, "logged_in") &&
-              get(testUser, "user_id") === userInfo._id &&
+            {get(currentUser, "logged_in") &&
+              get(currentUser, "user_id") === userInfo._id &&
               EditButton(handleUploadProfileBanner)}
             <img
               src={
-                get(testUser, "user_id") === userInfo._id
-                  ? get(testUser, "profile_banner_url") ?? banner
+                get(currentUser, "user_id") === userInfo._id
+                  ? get(currentUser, "profile_banner_url") ?? banner
                   : get(userInfo, "profile_banner_url") ?? banner
               }
               style={{ objectFit: "cover", width: "100%" }}
@@ -361,12 +357,14 @@ export default function ProfilePage(props) {
                         changeProfilePicture={handleUploadProfilePicture}
                       />
                     </ThemeProvider>
-                    {get(testUser, "user_id") !== userInfo._id && (
+                    {get(currentUser, "user_id") !== userInfo._id && (
                       <IconButton
                         style={classes.follow}
                         onClick={handleFollowClick}
                       >
-                        {(testUser.following ?? []).includes(userInfo._id) ? (
+                        {(currentUser.following ?? []).includes(
+                          userInfo._id
+                        ) ? (
                           <PersonRemoveAlt1Icon
                             style={{ fontSize: "2rem", color: "#FF7A7A" }}
                           />

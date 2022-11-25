@@ -3,10 +3,11 @@ import UploadFileIcon from "@mui/icons-material/UploadFile";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import { get, reduce } from "lodash";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import FollowList from "./FollowList";
 import "./styles.css";
 import { useDispatch, useSelector } from "react-redux";
+import { updateProfileBiography } from "../../../Store/Reducers/user";
 import EditIcon from "@mui/icons-material/Edit";
 import UserAPI from "../../../Api/UserAPI";
 
@@ -48,15 +49,13 @@ const difficultyGenerator = (solved, total, difficulty) => {
  * @returns A profile component
  */
 export default function UserProfile(props) {
+  const currentUser = useSelector((state) => state.user);
   const [showFollowers, setShowFollowers] = useState(false);
   const [showFollowing, setShowFollowing] = useState(false);
   const [editingBio, setEditingBio] = useState(false);
-  const [updatedBio, setUpdatedBio] = useState("");
+  const [updatedBio, setUpdatedBio] = useState(currentUser.biography);
 
-  const testUser = useSelector((state) => state.user);
-  useEffect(() => {
-    console.log(testUser);
-  }, [testUser]);
+  const dispatch = useDispatch();
 
   function handleCloseFollowers() {
     setShowFollowers(false);
@@ -89,7 +88,6 @@ export default function UserProfile(props) {
 
   function startEditBiography() {
     setEditingBio(true);
-    setUpdatedBio(biography);
   }
 
   function cancelUpdatedBiography() {
@@ -101,9 +99,17 @@ export default function UserProfile(props) {
       setEditingBio(false);
       return;
     }
-    await UserAPI.updateBiography(updatedBio, get(testUser, "auth_token"));
-    setEditingBio(false);
-    window.location.reload(false);
+
+    await UserAPI.updateBiography(updatedBio)
+      .then((res) => {
+        const updatedBiography = get(res.user, "biography");
+        dispatch(updateProfileBiography({ biography: updatedBiography }));
+        return updatedBiography;
+      })
+      .then((updatedBiography) => {
+        setUpdatedBio(updatedBiography);
+      })
+      .finally(() => setEditingBio(false));
   }
 
   return (
@@ -131,8 +137,8 @@ export default function UserProfile(props) {
             <div className="profile-picture" style={{ position: "relative" }}>
               <Avatar
                 src={
-                  get(testUser, "user_id") === userInfo._id
-                    ? testUser.profile_picture_url
+                  get(currentUser, "user_id") === userInfo._id
+                    ? currentUser.profile_picture_url
                     : profile_picture_url
                 }
                 style={{
@@ -141,32 +147,31 @@ export default function UserProfile(props) {
                   border: "2px solid white",
                 }}
               />
-              {get(testUser, "logged_in") &&
-                get(testUser, "user_id") === userInfo._id && (
-                  <>
-                    <input
-                      type="file"
-                      name="imgfile"
-                      accept="image/*"
-                      id="upload-profile-picture"
-                      onChange={props.changeProfilePicture}
-                      hidden
-                    />
-                    <label htmlFor="upload-profile-picture">
-                      <div
-                        className={
-                          get(testUser, "logged_in") &&
-                          get(testUser, "user_id") === userInfo._id
-                            ? "profile-picture-upload"
-                            : ""
-                        }
-                      >
-                        <UploadFileIcon style={{ fontSize: "2.5rem" }} />
-                        Upload Profile Picture
-                      </div>
-                    </label>
-                  </>
-                )}
+              {get(currentUser, "user_id") === userInfo._id && (
+                <>
+                  <input
+                    type="file"
+                    name="imgfile"
+                    accept="image/*"
+                    id="upload-profile-picture"
+                    onChange={props.changeProfilePicture}
+                    hidden
+                  />
+                  <label htmlFor="upload-profile-picture">
+                    <div
+                      className={
+                        get(currentUser, "logged_in") &&
+                        get(currentUser, "user_id") === userInfo._id
+                          ? "profile-picture-upload"
+                          : ""
+                      }
+                    >
+                      <UploadFileIcon style={{ fontSize: "2.5rem" }} />
+                      Upload Profile Picture
+                    </div>
+                  </label>
+                </>
+              )}
             </div>
             <div className="follow-stat">
               <div className="follow-value">{following.length}</div>
@@ -182,25 +187,27 @@ export default function UserProfile(props) {
           </div>
           <div className="profile-username">{username}</div>
           <div className="profile-biography" style={{ position: "relative" }}>
-            {!editingBio && <>{biography ?? ""}</>}
-            {get(testUser, "logged_in") &&
-              get(testUser, "user_id") === userInfo._id &&
-              !editingBio && (
-                <IconButton
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    right: 0,
-                    color: "white",
-                    padding: "0.25rem",
-                  }}
-                  onClick={() => {
-                    startEditBiography();
-                  }}
-                >
-                  <EditIcon />
-                </IconButton>
-              )}
+            {!editingBio &&
+              (get(currentUser, "user_id") === userInfo._id
+                ? currentUser.biography
+                : biography ?? "")}
+
+            {get(currentUser, "user_id") === userInfo._id && !editingBio && (
+              <IconButton
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  right: 0,
+                  color: "white",
+                  padding: "0.25rem",
+                }}
+                onClick={() => {
+                  startEditBiography();
+                }}
+              >
+                <EditIcon />
+              </IconButton>
+            )}
             {editingBio && (
               <TextField
                 variant="standard"
