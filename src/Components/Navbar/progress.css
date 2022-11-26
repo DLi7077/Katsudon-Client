@@ -1,0 +1,12 @@
+.loading {
+  width: 10%;
+  height: 3px;
+  background-color: white;
+
+  transition: width 300ms ease-in-out, opacity 600ms ease-in-out;
+}
+
+.loaded {
+  width: 100%;
+  opacity: 0;
+}

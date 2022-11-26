@@ -1,16 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { map } from "lodash";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setLoaded,
+  startLoading,
+  stopLoading,
+} from "../../Store/Reducers/progress";
 import UserAPI from "../../Api/UserAPI";
+import { map } from "lodash";
 import { postGenerator } from "./util";
-import "./styles.css";
 import Header from "./Header";
-import { CircularProgress } from "@mui/material";
 import SolutionModal from "../../Components/SolutionModal";
 import ActivityPost from "./ActivityPost";
+import "./styles.css";
 
 export default function Activity(props) {
+  const dispatch = useDispatch();
+  const progress = useSelector((state) => state.progress);
+
   const [weeklySolutions, setWeeklySolutions] = useState([]);
-  const [isLoading, setLoading] = useState(true);
   // solution modal
   const [solutionDisplay, setSolutionDisplay] = useState(false);
   const [problemBlock, setProblemBlock] = useState({});
@@ -28,23 +35,27 @@ export default function Activity(props) {
     setSolutionDisplay(false);
   }
 
-  async function setPosts() {
-    setLoading(true);
+  async function retrievePosts() {
+    dispatch(startLoading());
     await UserAPI.getWeeklySolutions()
       .then((solutions) => {
         // clean solutions then group by date
         setWeeklySolutions(postGenerator(solutions.rows));
+        setTimeout(() => {
+          dispatch(setLoaded());
+        }, 100);
       })
       .catch(console.error)
       .finally(() => {
         setTimeout(() => {
-          setLoading(false);
-        }, 200);
+          dispatch(stopLoading());
+        }, 600);
       });
   }
 
   useEffect(() => {
-    setPosts();
+    retrievePosts();
+    // eslint-disable-next-line
   }, []);
 
   function DateDivider({ date }) {
@@ -93,21 +104,8 @@ export default function Activity(props) {
         solutions={solutionsBlock}
       />
       <Header text={props.text} color={props.color} />
-      {isLoading && (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            marginTop: "10%",
-          }}
-        >
-          <CircularProgress
-            style={{ color: props.color, width: "4rem", height: "4rem" }}
-          />
-        </div>
-      )}
-      {!isLoading && (
+
+      {progress.loaded && (
         <div
           className="align-down"
           style={{ alignItems: "center", gap: "2rem" }}

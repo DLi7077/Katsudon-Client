@@ -18,6 +18,7 @@ import { MENU_LINKS } from "../../Constants/navbar";
 import "./styles.css";
 import { useDispatch, useSelector } from "react-redux";
 import { userLogout } from "../../Store/Reducers/user";
+import ProgressBar from "./ProgressBar";
 
 export default function Navbar(props) {
   const location = useLocation();
@@ -25,10 +26,15 @@ export default function Navbar(props) {
   const dispatch = useDispatch();
 
   const currentUser = useSelector((state) => state.user);
+  const progress = useSelector((state) => state.progress);
 
   const scrollY = useScrollYPosition();
   const [logoColor, setLogoColor] = useState(null);
   const [anchorElement, setAnchorElement] = useState(null);
+
+  useEffect(() => {
+    console.log(progress);
+  }, [progress]);
 
   const classes = {
     MenuItem: {
@@ -80,7 +86,7 @@ export default function Navbar(props) {
   }, [scrollY]);
 
   // display sections depending on if the user is logged in
-  const userSection = () => {
+  function UserSection() {
     const signedOutLinks = pick(visibleRedirects, ["Register", "Login"]);
     const loggedOutContent = map(signedOutLinks, (path, label) => (
       <Link
@@ -112,8 +118,12 @@ export default function Navbar(props) {
       </div>
     );
 
-    return !!currentUser.logged_in ? loggedInContent : loggedOutContent;
-  };
+    return (
+      <div className="navbar-redirect-link">
+        {!!currentUser.logged_in ? loggedInContent : loggedOutContent}
+      </div>
+    );
+  }
 
   const visibleRedirects = omit(
     MENU_LINKS,
@@ -141,8 +151,56 @@ export default function Navbar(props) {
     },
   });
 
+  function MobileMenu() {
+    return (
+      <Menu
+        style={{ marginLeft: "-1.5rem" }}
+        anchorEl={anchorElement}
+        open={!!anchorElement}
+        onClose={() => setAnchorElement(null)}
+      >
+        {map(visibleRedirects, (path, label) => {
+          return (
+            <Link key={label} to={path} style={classes.link}>
+              <MenuItem sx={classes.MenuItem}>{label}</MenuItem>
+            </Link>
+          );
+        })}
+      </Menu>
+    );
+  }
+
+  function DesktopMenu() {
+    return (
+      <div className="navbar-link-wrapper">
+        <img src={katsudonLogo} className="katsudon-logo" alt="katsudon-logo" />
+        {map(
+          omit(visibleRedirects, ["Register", "Login", "Profile"]),
+          (path, label) => {
+            return (
+              <div key={label} className="redirect-links">
+                <Link
+                  to={path}
+                  className="navbar-redirect-link"
+                  style={{ textDecoration: "none", position: "relative" }}
+                >
+                  <div>
+                    {label}
+                    {path === location.pathname && (
+                      <div style={classes.underline}></div>
+                    )}
+                  </div>
+                </Link>
+              </div>
+            );
+          }
+        )}
+      </div>
+    );
+  }
+
   return (
-    <>
+    <nav>
       <div className="navbar-container">
         <div className="navbar-menu">
           <IconButton
@@ -153,55 +211,15 @@ export default function Navbar(props) {
             <MenuIcon style={{ color: "white", fontSize: "4rem" }} />
           </IconButton>
           <ThemeProvider theme={theme}>
-            <Menu
-              style={{ marginLeft: "-1.5rem" }}
-              anchorEl={anchorElement}
-              open={!!anchorElement}
-              onClose={() => setAnchorElement(null)}
-            >
-              {map(visibleRedirects, (path, label) => {
-                return (
-                  <Link key={label} to={path} style={classes.link}>
-                    <MenuItem sx={classes.MenuItem}>{label}</MenuItem>
-                  </Link>
-                );
-              })}
-            </Menu>
+            <MobileMenu />
           </ThemeProvider>
         </div>
         <div className="navbar-redirect-section">
-          <div className="navbar-link-wrapper">
-            <img
-              src={katsudonLogo}
-              className="katsudon-logo"
-              alt="katsudon-logo"
-            />
-            {map(
-              omit(visibleRedirects, ["Register", "Login", "Profile"]),
-              (path, label) => {
-                return (
-                  <div key={label} className="redirect-links">
-                    <Link
-                      to={path}
-                      className="navbar-redirect-link"
-                      style={{ textDecoration: "none", position: "relative" }}
-                    >
-                      <div>
-                        {label}
-                        {path === location.pathname && (
-                          <div style={classes.underline}></div>
-                        )}
-                      </div>
-                    </Link>
-                  </div>
-                );
-              }
-            )}
-          </div>
-          <div className="navbar-redirect-link">{userSection()}</div>
+          <DesktopMenu />
+          <UserSection />
         </div>
       </div>
-      <div className="navbar-bottom-padding" />
-    </>
+      <ProgressBar loading={progress.loading} loaded={progress.loaded} />
+    </nav>
   );
 }
