@@ -1,33 +1,44 @@
 import { useEffect, useState } from "react";
-import CircularProgress from "@mui/material/CircularProgress";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setLoaded,
+  startLoading,
+  stopLoading,
+} from "../../Store/Reducers/progress";
 import { get, pick } from "lodash";
 import UserFilter from "../../Components/Filters/UserSearchBar";
 import UserProfile from "../../Components/User/UserProfile";
 import UserAPI from "../../Api/UserAPI";
-import "./styles.css";
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import { Link } from "react-router-dom";
+import "./styles.css";
 
 export default function Users(props) {
+  const dispatch = useDispatch();
+  const progress = useSelector((state) => state.progress);
+
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [currrentUserDetails, setCurrentUserDetails] = useState(null);
-  const [isLoading, setLoading] = useState(true);
   const [userProfileLoading, setUserProfileLoading] = useState(false);
 
   async function getAllUsers() {
-    setLoading(true);
-    await UserAPI.getAllUsers().then((res) => {
-      const allUsers = res.users.map((userDetails) => {
-        return pick(userDetails, ["_id", "username", "profile_picture_url"]);
+    dispatch(startLoading());
+    await UserAPI.getAllUsers()
+      .then((res) => {
+        const allUsers = res.users.map((userDetails) => {
+          return pick(userDetails, ["_id", "username", "profile_picture_url"]);
+        });
+        setUsers(allUsers);
+        setTimeout(() => {
+          dispatch(setLoaded());
+        }, 100);
+      })
+      .finally(() => {
+        setTimeout(() => {
+          dispatch(stopLoading());
+        }, 600);
       });
-
-      setUsers(allUsers);
-    });
-
-    setTimeout(() => {
-      setLoading(false);
-    }, 300);
   }
 
   async function getSelectedUserDetails(user_id) {
@@ -39,6 +50,7 @@ export default function Users(props) {
   // Runs on page load, fetches all users
   useEffect(() => {
     getAllUsers();
+    // eslint-disable-next-line
   }, []);
 
   // Runs on User Selection, loads user profile card
@@ -47,7 +59,7 @@ export default function Users(props) {
     selectedUser && getSelectedUserDetails(selectedUser);
     setTimeout(() => {
       setUserProfileLoading(false);
-    }, 500);
+    }, 100);
   }, [selectedUser]);
 
   return (
@@ -55,23 +67,9 @@ export default function Users(props) {
       className="content-container"
       style={{ backgroundColor: props.backgroundColor, position: "relative" }}
     >
-      {isLoading && (
-        <div
-          style={{
-            position: "absolute",
-            left: "50%",
-            top: "50%",
-            translate: "-50% -50%",
-          }}
-        >
-          <CircularProgress
-            style={{ color: props.color, width: "8rem", height: "8rem" }}
-          />
-        </div>
-      )}
       <div className="user-page-content-container">
         <div className="user-page-search-container">
-          {!isLoading && (
+          {progress.loaded && (
             <UserFilter
               allUsers={users}
               selectedUser={selectedUser}
@@ -83,7 +81,7 @@ export default function Users(props) {
           className="user-page-user-profile-container"
           style={{ position: "relative" }}
         >
-          {!isLoading && userProfileLoading && (
+          {progress.loaded && userProfileLoading && (
             <div
               style={{
                 position: "absolute",
@@ -101,12 +99,12 @@ export default function Users(props) {
               />
             </div>
           )}
-          {!userProfileLoading && currrentUserDetails && (
+          {!userProfileLoading && !!currrentUserDetails && (
             <>
               <UserProfile userInfo={currrentUserDetails} />
               <Link
                 to={`/profile?user_id=${get(selectedUser, "_id")}`}
-                className='problem-link'
+                className="problem-link"
                 style={{ textDecoration: "none" }}
               >
                 <Button style={{ color: "white", fontSize: "1.25rem" }}>

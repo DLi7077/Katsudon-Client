@@ -12,9 +12,14 @@ import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import PersonRemoveAlt1Icon from "@mui/icons-material/PersonRemoveAlt1";
 import { useDispatch, useSelector } from "react-redux";
 import { updateFollowing } from "../../Store/Reducers/user";
-import "./styles.css";
 import Banner from "./Banner";
 import { setSnackbarSuccess } from "../../Store/Reducers/snackbar";
+import "./styles.css";
+import {
+  setLoaded,
+  startLoading,
+  stopLoading,
+} from "../../Store/Reducers/progress";
 
 const classes = {
   follow: {
@@ -43,12 +48,13 @@ const directionMapping = {
 
 export default function ProfilePage(props) {
   const currentUser = useSelector((state) => state.user);
+  const progress = useSelector((state) => state.progress);
 
   const dispatch = useDispatch();
   const location = useLocation();
+
   const [userInfo, setUserInfo] = useState(null);
   const [solutions, setSolutions] = useState({});
-  const [isLoading, setLoading] = useState(true);
   const [awaitFollow, setAwaitFollow] = useState(false);
   const [tableLoading, setTableLoading] = useState(true);
   const [sortBy, setSortBy] = useState("last_solved_at");
@@ -63,10 +69,9 @@ export default function ProfilePage(props) {
   const [problemBlock, setProblemBlock] = useState({});
   const [solutionsBlock, setSolutionsBlock] = useState({});
 
+  // retrieves user's info for profile card
   async function getUserDetails() {
-    setLoading(true);
     if (!queryParams.user_id) {
-      setLoading(false);
       return;
     }
 
@@ -83,13 +88,9 @@ export default function ProfilePage(props) {
       })
       .catch(() => {
         setUserInfo(undefined);
-      })
-      .finally(() => {
-        setTimeout(() => {
-          setLoading(false);
-        }, 100);
       });
   }
+
   async function getSolutions() {
     setTableLoading(true);
     const compliedQuery = {
@@ -168,9 +169,6 @@ export default function ProfilePage(props) {
           })
           .catch(() => {
             setUserInfo(null);
-          })
-          .finally(() => {
-            setLoading(false);
           });
       })
       .catch((e) => {
@@ -179,6 +177,34 @@ export default function ProfilePage(props) {
 
     setAwaitFollow(false);
   }
+
+  useEffect(() => {
+    dispatch(startLoading());
+    setQueryParams({
+      ...queryParams,
+      ...pick(getSearchParams(location), "user_id"),
+    });
+    if (!queryParams.user_id) {
+      setQueryParams({
+        user_id: get(currentUser, "user_id"),
+      });
+    }
+    // getSolutions();
+    getUserDetails().then(() => {
+      setTimeout(() => {
+        dispatch(setLoaded());
+        setTimeout(() => {
+          dispatch(stopLoading());
+        }, 600);
+      }, 100);
+    });
+    // eslint-disable-next-line
+  }, [location]);
+
+  useEffect(() => {
+    getSolutions();
+    // eslint-disable-next-line
+  }, [queryParams]);
 
   function LoadingProfile() {
     return (
@@ -208,46 +234,12 @@ export default function ProfilePage(props) {
     );
   }
 
-  useEffect(() => {
-    setQueryParams({
-      ...queryParams,
-      ...pick(getSearchParams(location), "user_id"),
-    });
-    if (!queryParams.user_id) {
-      setQueryParams({
-        user_id: get(currentUser, "user_id"),
-      });
-    }
-    getUserDetails();
-    // eslint-disable-next-line
-  }, [location]);
-
-  useEffect(() => {
-    getSolutions();
-    // eslint-disable-next-line
-  }, [queryParams]);
-
   return (
     <div
       className="content-container"
       style={{ backgroundColor: props.backgroundColor, paddingTop: 0 }}
     >
-      {isLoading && (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100%",
-          }}
-        >
-          <CircularProgress
-            style={{ color: props.color, width: "8rem", height: "8rem" }}
-          />
-        </div>
-      )}
-
-      {userInfo && !isLoading && (
+      {userInfo && progress.loaded && (
         <>
           <Banner
             userId={get(userInfo, "_id")}
@@ -293,7 +285,7 @@ export default function ProfilePage(props) {
           </div>
         </>
       )}
-      {userInfo === null && !isLoading && (
+      {userInfo === null && progress.loaded && (
         <div
           style={{
             display: "flex",

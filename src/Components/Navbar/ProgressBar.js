@@ -1,0 +1,8 @@
+import React from "react";
+import "./progress.css";
+export default function ProgressBar({ loading, loaded }) {
+  const loadingStatus =
+    (loading ? "loading" : "") + " " + (loading && loaded ? "loaded" : "");
+
+  return <div className={loadingStatus} />;
+}
