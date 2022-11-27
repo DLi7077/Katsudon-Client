@@ -12,6 +12,7 @@ import UserAPI from "../../Api/UserAPI";
 import { Button, CircularProgress } from "@mui/material";
 import { Link } from "react-router-dom";
 import "./styles.css";
+import Header from "./Header";
 
 export default function Users(props) {
   const dispatch = useDispatch();
@@ -67,16 +68,15 @@ export default function Users(props) {
       className="content-container"
       style={{ backgroundColor: props.backgroundColor, position: "relative" }}
     >
+      <Header color={props.color} text={props.text} />
       <div className="user-page-content-container">
-        <div className="user-page-search-container">
-          {progress.loaded && (
-            <UserFilter
-              allUsers={users}
-              selectedUser={selectedUser}
-              setSelectedUser={setSelectedUser}
-            />
-          )}
-        </div>
+        {progress.loaded && (
+          <UserFilter
+            allUsers={users}
+            selectedUser={selectedUser}
+            setSelectedUser={setSelectedUser}
+          />
+        )}
         <div
           className="user-page-user-profile-container"
           style={{ position: "relative" }}

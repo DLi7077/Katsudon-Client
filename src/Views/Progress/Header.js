@@ -1,47 +1,38 @@
 import PanoramaFishEyeIcon from "@mui/icons-material/PanoramaFishEye";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import TitleHeader from "../../Components/Views/TitleHeader";
+import { percentToColor } from "../../Components/Codeblock/CodeLength";
 
-function ProgressHeader({ textColor, themeColor }) {
-  return (
-    <div
-      className="align-down"
-      style={{
-        textAlign: "center",
-        alignItems: "center",
-        width: "100%",
-        marginBottom: "1.5rem",
-        color: textColor,
-        gap: "0.5rem",
-      }}
-    >
-      <span style={{ fontSize: "2.5rem" }}>Weekly Progress</span>
-      <span
-        style={{
-          fontSize: "1.25rem",
-          color: themeColor,
-        }}
-      >
-        <PersonAddAlt1Icon
-          style={{
-            fontSize: "1.5rem",
-            color: "#7AFF87",
-            marginRight: ".25rem",
-            verticalAlign: "-0.25rem",
-          }}
-        />
-        Follow others to see how they're progressing this week, and try out
-        problems they've solved!
-      </span>
+function ColorHint() {
+  const blueHint = percentToColor(35, 47, 225);
+  const greenHint = percentToColor(20, 47, 225);
+  const redHint = percentToColor(5, 47, 225);
+
+  const colorHints = [
+    { color: blueHint, length: 4 },
+    { color: greenHint, length: 12 },
+    { color: redHint, length: 18 },
+  ];
+
+  const GradientHintList = () =>
+    colorHints.map((colorHint) => (
       <div
         style={{
-          backgroundColor: themeColor,
-          marginTop: "1rem",
-          height: "2px",
-          width: "90%",
+          width: `${colorHint.length}px`,
+          height: "4px",
+          backgroundColor: colorHint.color,
         }}
       />
-    </div>
+    ));
+
+  return (
+    <span style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+      <div className="align-down" style={{ gap: "2px" }}>
+        <GradientHintList />
+      </div>
+      <span>Solution Length</span>
+    </span>
   );
 }
 
@@ -65,14 +56,30 @@ function Legend() {
         />
         Not Solved
       </div>
+      <ColorHint />
     </div>
   );
 }
 
-export default function Header(props) {
+export default function WeeklyProgressHeader(props) {
   return (
     <>
-      <ProgressHeader textColor={props.text} themeColor={props.color} />
+      <TitleHeader
+        textColor={props.text}
+        themeColor={props.color}
+        title="Weekly Progress"
+      >
+        <PersonAddAlt1Icon
+          style={{
+            fontSize: "1.5rem",
+            color: "#7AFF87",
+            marginRight: ".25rem",
+            verticalAlign: "-0.25rem",
+          }}
+        />
+        Follow others to see how they're progressing this week, and try out
+        problems they've solved!
+      </TitleHeader>
       <Legend />
     </>
   );
