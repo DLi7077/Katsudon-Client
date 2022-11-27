@@ -53,8 +53,6 @@ export default function CodeLength({ length }) {
   const SPAN_LENGTH = 20;
   const lengthToPixels = Math.min(SPAN_LENGTH, SPAN_LENGTH * colorPercent);
 
-  console.log(bluenessPercent);
-
   return (
     <span
       style={{

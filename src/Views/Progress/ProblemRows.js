@@ -30,8 +30,6 @@ const classes = {
 };
 
 const solvedStatusIcon = (completed) => {
-
-
   const iconStyle = {
     fontSize: "1.5rem",
     marginRight: "0.25rem",
