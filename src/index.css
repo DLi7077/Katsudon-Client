@@ -84,8 +84,21 @@ code {
   gap: 1rem;
 }
 
+.page-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 100px;
+  padding-bottom: 75px;
+}
+
 @media only screen and (max-width: 700px) {
   :root {
-    font-size: min(12px, 3vw);
+    font-size: min(12px, 4vw);
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .page-container {
+    margin-top: 70px;
   }
 }

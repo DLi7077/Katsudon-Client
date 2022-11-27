@@ -147,25 +147,6 @@ export default function Navbar(props) {
     },
   });
 
-  function MobileMenu() {
-    return (
-      <Menu
-        style={{ marginLeft: "-1.5rem" }}
-        anchorEl={anchorElement}
-        open={!!anchorElement}
-        onClose={() => setAnchorElement(null)}
-      >
-        {map(visibleRedirects, (path, label) => {
-          return (
-            <Link key={label} to={path} style={classes.link}>
-              <MenuItem sx={classes.MenuItem}>{label}</MenuItem>
-            </Link>
-          );
-        })}
-      </Menu>
-    );
-  }
-
   function DesktopMenu() {
     return (
       <div className="navbar-link-wrapper">
@@ -207,7 +188,20 @@ export default function Navbar(props) {
             <MenuIcon style={{ color: "white", fontSize: "4rem" }} />
           </IconButton>
           <ThemeProvider theme={theme}>
-            <MobileMenu />
+            <Menu
+              style={{ marginLeft: "-1.5rem" }}
+              anchorEl={anchorElement}
+              open={!!anchorElement}
+              onClose={() => setAnchorElement(null)}
+            >
+              {map(visibleRedirects, (path, label) => {
+                return (
+                  <Link key={label} to={path} style={classes.link}>
+                    <MenuItem sx={classes.MenuItem}>{label}</MenuItem>
+                  </Link>
+                );
+              })}
+            </Menu>
           </ThemeProvider>
         </div>
         <div className="navbar-redirect-section">

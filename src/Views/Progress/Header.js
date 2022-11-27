@@ -16,8 +16,9 @@ function ColorHint() {
   ];
 
   const GradientHintList = () =>
-    colorHints.map((colorHint) => (
+    colorHints.map((colorHint, idx) => (
       <div
+        key={`colorhint-${idx}`}
         style={{
           width: `${colorHint.length}px`,
           height: "4px",

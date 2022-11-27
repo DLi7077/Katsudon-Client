@@ -8,20 +8,24 @@ import { userLogin } from "./Store/Reducers/user";
 import UserAPI from "./Api/UserAPI";
 import {
   setSnackbarSuccess,
+  setSnackbarInfo,
   setSnackbarWarning,
   showSnackbar,
 } from "./Store/Reducers/snackbar";
 import SnackbarMessage from "./Components/Snackbar";
 
-const FOOTER_HEIGHT = "75px";
-const NAVBAR_HEIGHT_AND_GAP = `${80 + 20}px`;
 function App() {
   const dispatch = useDispatch();
   const snackbarContent = useSelector((state) => state.snackbar);
+  const currentUser = useSelector((state) => state.user);
   const [pageTheme, setPageTheme] = useState(null);
   const [restoringSession, setRestoringSession] = useState(true);
 
   async function restoreUserSession() {
+    if (!currentUser.auth_token) return;
+
+    dispatch(setSnackbarInfo("Restoring Session..."));
+
     setRestoringSession(true);
     await UserAPI.restoreSession()
       .then((res) => {
@@ -56,23 +60,18 @@ function App() {
 
   return (
     <>
+      {snackbarContent.show && (
+        <SnackbarMessage
+          snackbarContent={snackbarContent}
+          showSnackbar={snackbarContent.show}
+          hideSnackbar={hideSnackbar}
+        />
+      )}
       {!restoringSession && (
         <HashRouter>
           <Navbar changeTheme={setPageTheme} />
-          {snackbarContent.show && (
-            <SnackbarMessage
-              snackbarContent={snackbarContent}
-              showSnackbar={snackbarContent.show}
-              hideSnackbar={hideSnackbar}
-            />
-          )}
           <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              marginTop: NAVBAR_HEIGHT_AND_GAP,
-              paddingBottom: FOOTER_HEIGHT,
-            }}
+            className="page-container"
           >
             <Routes>{COMPONENT_ROUTES}</Routes>
           </div>

@@ -25,8 +25,9 @@
 pre {
   background-color: rgb(26, 26, 26);
   white-space: pre-line;
-  padding: 0.25rem;
-  border-radius: 8px;
+  padding: 0.5rem;
+  padding-right: 1rem;
+  width: fit-content;
 }
 
 .solution-block {
