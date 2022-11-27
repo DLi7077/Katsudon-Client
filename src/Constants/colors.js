@@ -12,6 +12,7 @@ export const PAGETHEME = {
     color: "#7AFFEF",
     navbar: "#13554d",
     backgroundColor: "#22292A",
+    text: "#a6d9d5",
   },
   Purple: {
     color: "#ff66db",

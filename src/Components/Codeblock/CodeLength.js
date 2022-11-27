@@ -12,7 +12,7 @@ function rgbToHex(rgb) {
   return `#${result}`;
 }
 
-function percentToColor(percent, lower, upper) {
+export function percentToColor(percent, lower, upper) {
   //validation
   const lowerBound = Math.max(0, Math.min(lower, 255));
   const upperBound = Math.max(0, Math.min(upper, 255));
@@ -49,13 +49,14 @@ function percentToColor(percent, lower, upper) {
 export default function CodeLength({ length }) {
   const MAX_LENGTH_COLOR = 1500;
   const colorPercent = Math.min(1, length / MAX_LENGTH_COLOR);
-  const bluenessPercent = 60 * (1 - colorPercent);
+  const bluenessPercent = 50 * (1 - colorPercent);
   const SPAN_LENGTH = 20;
   const lengthToPixels = Math.min(SPAN_LENGTH, SPAN_LENGTH * colorPercent);
 
   return (
     <span
       style={{
+        // color gradient
         backgroundColor: percentToColor(bluenessPercent, 47, 225),
         width: `${lengthToPixels}px`,
         height: "4px",

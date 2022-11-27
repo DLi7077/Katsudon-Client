@@ -45,7 +45,7 @@ const solvedStatusIcon = (completed) => {
 
 export default function ProblemRows(props) {
   const currentUser = useSelector((state) => state.user);
-  
+
   return props.solutions.map((solution, idx) => {
     return (
       <div className="problem-item" key={idx}>
