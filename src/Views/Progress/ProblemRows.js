@@ -6,6 +6,7 @@ import PanoramaFishEyeIcon from "@mui/icons-material/PanoramaFishEye";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import FileOpenIcon from "@mui/icons-material/FileOpen";
 import { useSelector } from "react-redux";
+import CodeLength from "../../Components/Codeblock/CodeLength";
 
 const classes = {
   fileOpen: { fontSize: "1.5rem", color: "white", padding: 0 },
@@ -19,6 +20,12 @@ const classes = {
     left: "50%",
     translate: "-50% -50%",
     rotate: "-45deg",
+  },
+  solutionFileSpan: {
+    display: "flex",
+    whiteSpace: "nowrap",
+    alignItems: "center",
+    gap: "0.25rem",
   },
 };
 
@@ -38,50 +45,46 @@ const solvedStatusIcon = (completed) => {
 
 export default function ProblemRows(props) {
   const currentUser = useSelector((state) => state.user);
-  return (
-    <>
-      {props.solutions.map((solution, idx) => {
-        return (
-          <div className="problem-item" key={idx}>
-            <div style={{ display: "flex", alignItems: "center" }}>
-              {solvedStatusIcon(
-                get(solution, "problem.solved_by").includes(currentUser.user_id)
-              )}
-              <a
-                href={solution.problem.url}
-                target="_blank"
-                rel="noreferrer"
-                className="hover-link"
-                style={{
-                  color: PROBLEM_DIFFICULTY[solution.problem.difficulty],
-                }}
-              >
-                {solution.problem.id}
-                {". "}
-                {solution.problem.title}
-              </a>
+  
+  return props.solutions.map((solution, idx) => {
+    return (
+      <div className="problem-item" key={idx}>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          {solvedStatusIcon(
+            get(solution, "problem.solved_by").includes(currentUser.user_id)
+          )}
+          <a
+            href={solution.problem.url}
+            target="_blank"
+            rel="noreferrer"
+            className="hover-link"
+            style={{
+              color: PROBLEM_DIFFICULTY[solution.problem.difficulty],
+            }}
+          >
+            {solution.problem.id}
+            {". "}
+            {solution.problem.title}
+          </a>
+        </div>
+        <span style={classes.solutionFileSpan}>
+          {solution.solution_language}
+          <IconButton
+            style={{ padding: 0 }}
+            onClick={() => {
+              props.handleOpenSolutionModel(get(solution, "problem"), {
+                [solution.solution_language]: solution,
+              });
+            }}
+          >
+            <div style={{ position: "relative", height: "1.5rem" }}>
+              <FileOpenIcon style={classes.fileOpen} />
+              {!!get(solution, "failed") && <div style={classes.crossOut} />}
             </div>
-            <span style={{ whiteSpace: "nowrap" }}>
-              {solution.solution_language}
-              <IconButton
-                style={{ padding: 0 }}
-                onClick={() => {
-                  props.handleOpenSolutionModel(get(solution, "problem"), {
-                    [solution.solution_language]: solution,
-                  });
-                }}
-              >
-                <div style={{ position: "relative", height: "1.5rem" }}>
-                  <FileOpenIcon style={classes.fileOpen} />
-                  {!!get(solution, "failed") && (
-                    <div style={classes.crossOut} />
-                  )}
-                </div>
-              </IconButton>
-            </span>
-          </div>
-        );
-      })}
-    </>
-  );
+          </IconButton>
+          <CodeLength length={solution.solution_length} />
+        </span>
+      </div>
+    );
+  });
 }

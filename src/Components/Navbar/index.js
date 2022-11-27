@@ -15,10 +15,10 @@ import MenuIcon from "@mui/icons-material/Menu";
 import katsudonLogo from "../../Assets/katsudon.svg";
 import { routeColors } from "../../Constants/routes";
 import { MENU_LINKS } from "../../Constants/navbar";
-import "./styles.css";
 import { useDispatch, useSelector } from "react-redux";
 import { userLogout } from "../../Store/Reducers/user";
 import ProgressBar from "./ProgressBar";
+import "./styles.css";
 
 export default function Navbar(props) {
   const location = useLocation();
@@ -31,10 +31,6 @@ export default function Navbar(props) {
   const scrollY = useScrollYPosition();
   const [logoColor, setLogoColor] = useState(null);
   const [anchorElement, setAnchorElement] = useState(null);
-
-  useEffect(() => {
-    console.log(progress);
-  }, [progress]);
 
   const classes = {
     MenuItem: {
