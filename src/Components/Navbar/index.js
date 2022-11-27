@@ -215,7 +215,11 @@ export default function Navbar(props) {
           <UserSection />
         </div>
       </div>
-      <ProgressBar loading={progress.loading} loaded={progress.loaded} />
+      <ProgressBar
+        loading={progress.loading}
+        loaded={progress.loaded}
+        color={logoColor}
+      />
     </nav>
   );
 }

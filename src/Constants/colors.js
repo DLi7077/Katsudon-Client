@@ -1,4 +1,13 @@
+// selected from https://dli7077.github.io/osu-theme/
+
 export const PAGETHEME = {
+  Monotone: {
+    color: "white",
+    navbar: "#000000",
+    backgroundColor: "#18171C",
+    section: "#696969",
+    text: "#d4d4d4",
+  },
   Orange: {
     color: "#FFAA7A",
     navbar: "#ac6a39",
@@ -6,12 +15,25 @@ export const PAGETHEME = {
     text: "#d9bca6",
     section: "#38322e",
   },
-  Blue: { color: "#25B2FF", navbar: "#15425a", backgroundColor: "#22242A" },
-  Green: { color: "#7AFF87", navbar: "13561a", backgroundColor: "#7AFF87" },
+  Blue: {
+    color: "#25B2FF",
+    navbar: "#395bac",
+    backgroundColor: "#22242A",
+    section: "#2e3338",
+    text: "#a6c3d9",
+  },
+  Green: {
+    color: "#66ffad",
+    navbar: "#39ac6e",
+    backgroundColor: "#222a25",
+    section: "#2e3832",
+    text: "#a6d9bd",
+  },
   LightBlue: {
     color: "#7AFFEF",
     navbar: "#13554d",
     backgroundColor: "#22292A",
+    section: "#382e36",
     text: "#a6d9d5",
   },
   Purple: {
