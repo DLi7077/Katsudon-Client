@@ -26,21 +26,20 @@ function App() {
 
     dispatch(setSnackbarInfo("Restoring Session..."));
 
-    setRestoringSession(true);
     await UserAPI.restoreSession()
       .then((res) => {
         dispatch(userLogin(res.currentUser));
         dispatch(setSnackbarSuccess("Restored Session"));
       })
-      .catch(() => dispatch(setSnackbarWarning("Couldn't restore session")))
-      .finally(() => {
-        setRestoringSession(false);
-      });
+      .catch(() => dispatch(setSnackbarWarning("Couldn't restore session")));
   }
 
   // Attempt to restore session on load
   useEffect(() => {
-    restoreUserSession();
+    setRestoringSession(true);
+    restoreUserSession().then(() => {
+      setRestoringSession(false);
+    });
     // eslint-disable-next-line
   }, []);
 
@@ -70,9 +69,7 @@ function App() {
       {!restoringSession && (
         <HashRouter>
           <Navbar changeTheme={setPageTheme} />
-          <div
-            className="page-container"
-          >
+          <div className="page-container">
             <Routes>{COMPONENT_ROUTES}</Routes>
           </div>
           <Footer />
