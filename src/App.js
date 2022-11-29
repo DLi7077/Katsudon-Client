@@ -22,24 +22,28 @@ function App() {
   const [restoringSession, setRestoringSession] = useState(true);
 
   async function restoreUserSession() {
-    if (!currentUser.auth_token) return;
+    if (!currentUser.auth_token) {
+      setRestoringSession(false);
+      return;
+    }
 
     dispatch(setSnackbarInfo("Restoring Session..."));
 
+    setRestoringSession(true);
     await UserAPI.restoreSession()
       .then((res) => {
         dispatch(userLogin(res.currentUser));
         dispatch(setSnackbarSuccess("Restored Session"));
       })
-      .catch(() => dispatch(setSnackbarWarning("Couldn't restore session")));
+      .catch(() => dispatch(setSnackbarWarning("Couldn't restore session")))
+      .finally(() => {
+        setRestoringSession(false);
+      });
   }
 
   // Attempt to restore session on load
   useEffect(() => {
-    setRestoringSession(true);
-    restoreUserSession().then(() => {
-      setRestoringSession(false);
-    });
+    restoreUserSession();
     // eslint-disable-next-line
   }, []);
 

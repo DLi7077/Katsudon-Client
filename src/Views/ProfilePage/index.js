@@ -247,7 +247,7 @@ export default function ProfilePage(props) {
           />
           <div className="profile-page-container">
             <div className="user-profile-wrapper">
-              <div style={{ position: "relative" }}>
+              <div style={{ position: "relative", width: "fit-content" }}>
                 {awaitFollow && <LoadingProfile />}
                 {!awaitFollow && (
                   <>

@@ -12,7 +12,7 @@ nav {
   display: flex;
   justify-content: center;
 
-  transition-property: height, background-color;
+  transition-property: height, background-color, position;
   transition-duration: 0.3s;
   transition-timing-function: ease;
   transition-delay: 0s;
