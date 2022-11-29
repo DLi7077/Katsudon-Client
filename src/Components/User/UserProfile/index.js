@@ -169,7 +169,7 @@ export default function UserProfile(props) {
         className="profile-container"
         style={{
           border: `2px solid ${props.borderColor ?? "white"}`,
-          position: "relative",
+          position: "relative"
         }}
       >
         <div className="profile-user-info">
