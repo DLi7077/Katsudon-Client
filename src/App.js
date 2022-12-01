@@ -5,6 +5,8 @@ import { routes } from "./Constants/routes";
 import { cloneElement, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { userLogin } from "./Store/Reducers/user";
+import { ThemeProvider } from "@mui/material";
+import { MAIN_THEME } from "./Constants/theme";
 import UserAPI from "./Api/UserAPI";
 import {
   setSnackbarSuccess,
@@ -72,11 +74,13 @@ function App() {
       )}
       {!restoringSession && (
         <HashRouter>
-          <Navbar changeTheme={setPageTheme} />
-          <div className="page-container">
-            <Routes>{COMPONENT_ROUTES}</Routes>
-          </div>
-          <Footer />
+          <ThemeProvider theme={MAIN_THEME}>
+            <Navbar changeTheme={setPageTheme} />
+            <div className="page-container">
+              <Routes>{COMPONENT_ROUTES}</Routes>
+            </div>
+            <Footer />
+          </ThemeProvider>
         </HashRouter>
       )}
     </>

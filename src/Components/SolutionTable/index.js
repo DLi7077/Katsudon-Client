@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { map } from "lodash";
 import {
   Table,
@@ -6,14 +5,8 @@ import {
   TableHead,
   TableRow,
   TableCell,
-  IconButton,
-  CircularProgress,
-  Menu,
-  MenuItem,
+  CircularProgress
 } from "@mui/material";
-import SortIcon from "@mui/icons-material/Sort";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import SolutionRow from "./SolutionRow.js";
 import "./styles.css";
 
@@ -51,7 +44,7 @@ export default function SolutionTable(props) {
     tableHeader: {
       color: props.headerColor,
       fontSize: "1.4rem",
-      padding: "0.5rem",
+      padding: "1rem",
     },
     tableCell: {
       textAlign: "left",
@@ -78,72 +71,14 @@ export default function SolutionTable(props) {
     },
   };
 
-  const [anchorElement, setAnchorElement] = useState(null);
 
-  const sortDirStatus = (sortKey) => {
-    if (props.sortBy === sortKey) {
-      if (props.queryParams.sortDir === "asc")
-        return <KeyboardArrowDownIcon style={classes.arrowIcon} />;
-
-      if (props.queryParams.sortDir === "desc")
-        return <KeyboardArrowUpIcon style={classes.arrowIcon} />;
-    }
-    return <></>;
-  };
-
-  const sortKeys = [
-    { label: "Problem", value: "problem_id" },
-    { label: "Solved At", value: "last_solved_at" },
-  ];
 
   return (
     <Table className="solution-table">
       <TableHead>
-        <TableRow className="header">
-          <TableCell style={classes.tableHeader}>
-            <IconButton
-              style={classes.iconButton}
-              onClick={(e) => {
-                setAnchorElement(e.currentTarget);
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <SortIcon style={classes.sortIcon} />
-              </div>
-            </IconButton>
-            <Menu
-              anchorEl={anchorElement}
-              open={!!anchorElement}
-              onClose={() => setAnchorElement(null)}
-              style={{ marginLeft: "-1rem", opacity: 0.75 }}
-            >
-              {map(sortKeys, (key, idx) => {
-                return (
-                  <MenuItem
-                    key={idx}
-                    style={{
-                      width: "100px",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      padding: "0.5rem",
-                      fontSize: "1.15rem",
-                    }}
-                    onClick={() => {
-                      props.handleSortDirChange(key.value);
-                    }}
-                  >
-                    <div>{key.label}</div>
-                    {sortDirStatus(key.value)}
-                  </MenuItem>
-                );
-              })}
-            </Menu>
+        <TableRow style={{ padding: "2rem" }}>
+          <TableCell style={{ ...classes.tableHeader, paddingLeft: "1rem" }}>
+            #
           </TableCell>
 
           <TableCell style={classes.tableHeader} colSpan={3}>

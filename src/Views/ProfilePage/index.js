@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { get, omit, pick } from "lodash";
-import UserProfile from "../../Components/User/UserProfile";
 import { CircularProgress, IconButton } from "@mui/material";
+import UserProfile from "../../Components/User/UserProfile";
 import getSearchParams from "../../Utils/getSearchParams";
 import UserAPI from "../../Api/UserAPI";
 import SolutionTable from "../../Components/SolutionTable";
@@ -10,9 +10,9 @@ import useSolutionModal from "../../Hooks/useSolutionModal";
 import SkillBox from "../../Components/User/Skillbox";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import PersonRemoveAlt1Icon from "@mui/icons-material/PersonRemoveAlt1";
+import Banner from "./Banner";
 import { useDispatch, useSelector } from "react-redux";
 import { updateFollowing } from "../../Store/Reducers/user";
-import Banner from "./Banner";
 import { setSnackbarSuccess } from "../../Store/Reducers/snackbar";
 import "./styles.css";
 import {
@@ -20,6 +20,7 @@ import {
   startLoading,
   stopLoading,
 } from "../../Store/Reducers/progress";
+import { useSolutionQueryParams } from "./Hooks";
 
 const classes = {
   follow: {
@@ -40,12 +41,6 @@ const classes = {
   },
 };
 
-const directionMapping = {
-  0: null,
-  1: "desc",
-  2: "asc",
-};
-
 export default function ProfilePage(props) {
   const currentUser = useSelector((state) => state.user);
   const progress = useSelector((state) => state.progress);
@@ -57,8 +52,9 @@ export default function ProfilePage(props) {
   const [solutions, setSolutions] = useState({});
   const [awaitFollow, setAwaitFollow] = useState(false);
   const [tableLoading, setTableLoading] = useState(true);
-  const [sortBy, setSortBy] = useState("last_solved_at");
-  const [sortDir, setSortDir] = useState(1);
+  const { sortBy, sortDir, changeSortBy, changeSortDir } =
+    useSolutionQueryParams("problem_id", "asc");
+
   const [queryParams, setQueryParams] = useState({
     user_id:
       get(getSearchParams(location), "user_id") ?? get(currentUser, "user_id"),
@@ -91,6 +87,10 @@ export default function ProfilePage(props) {
       });
   }
 
+  useEffect(() => {
+    console.log(sortBy);
+  }, [sortBy]);
+
   async function getSolutions() {
     setTableLoading(true);
     const compliedQuery = {
@@ -106,17 +106,6 @@ export default function ProfilePage(props) {
     setTimeout(() => {
       setTableLoading(false);
     }, 100);
-  }
-
-  function handleSortDirChange(sortBy) {
-    const currDirection = (sortDir + 1) % 3;
-    setQueryParams({
-      ...queryParams,
-      sortBy: sortBy,
-      sortDir: directionMapping[currDirection],
-    });
-    setSortBy(sortBy);
-    setSortDir(currDirection);
   }
 
   function updateSkillQuery(tagList) {
@@ -177,7 +166,6 @@ export default function ProfilePage(props) {
         user_id: get(currentUser, "user_id"),
       });
     }
-    // getSolutions();
     getUserDetails().then(() => {
       setTimeout(() => {
         dispatch(setLoaded());
@@ -257,7 +245,6 @@ export default function ProfilePage(props) {
                 handleOpenSolutionModel={handleOpenSolutionModel}
                 headerColor={props.color}
                 backgroundColor={"#382E37"}
-                handleSortDirChange={handleSortDirChange}
                 loading={tableLoading}
                 queryParams={queryParams}
                 sortBy={sortBy}

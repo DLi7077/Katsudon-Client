@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { get, map, omit, pick } from "lodash";
 import {
   Avatar,
-  createTheme,
   IconButton,
   Menu,
   MenuItem,
@@ -18,6 +17,7 @@ import { MENU_LINKS } from "../../Constants/navbar";
 import { useDispatch, useSelector } from "react-redux";
 import { userLogout } from "../../Store/Reducers/user";
 import ProgressBar from "./ProgressBar";
+import { MAIN_THEME } from "../../Constants/theme";
 import "./styles.css";
 
 export default function Navbar(props) {
@@ -108,25 +108,6 @@ export default function Navbar(props) {
       : ["Progress", "Profile"]
   );
 
-  const theme = createTheme({
-    palette: {
-      primary: {
-        main: "#000000",
-      },
-      secondary: {
-        main: "#000000",
-      },
-    },
-    components: {
-      // Name of the component
-      MuiMenu: {
-        paper: {
-          backgroundColor: "#000000",
-        },
-      },
-    },
-  });
-
   function DesktopMenu() {
     return (
       <div className="navbar-link-wrapper">
@@ -183,22 +164,20 @@ export default function Navbar(props) {
           >
             <MenuIcon style={{ color: "white", fontSize: "4rem" }} />
           </IconButton>
-          <ThemeProvider theme={theme}>
-            <Menu
-              style={{ marginLeft: "-1.5rem" }}
-              anchorEl={anchorElement}
-              open={!!anchorElement}
-              onClose={() => setAnchorElement(null)}
-            >
-              {map(visibleRedirects, (path, label) => {
-                return (
-                  <Link key={label} to={path} style={classes.link}>
-                    <MenuItem sx={classes.MenuItem}>{label}</MenuItem>
-                  </Link>
-                );
-              })}
-            </Menu>
-          </ThemeProvider>
+          <Menu
+            style={{ marginLeft: "-1.5rem" }}
+            anchorEl={anchorElement}
+            open={!!anchorElement}
+            onClose={() => setAnchorElement(null)}
+          >
+            {map(visibleRedirects, (path, label) => {
+              return (
+                <Link key={label} to={path} style={classes.link}>
+                  <MenuItem sx={classes.MenuItem}>{label}</MenuItem>
+                </Link>
+              );
+            })}
+          </Menu>
         </div>
         <div className="navbar-redirect-section">
           <DesktopMenu />
