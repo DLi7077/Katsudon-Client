@@ -170,7 +170,7 @@ export default function Navbar(props) {
                 backgroundColor: `${get(
                   routeColors,
                   `${location.pathname}.navbar`
-                )}dd`,
+                )}`,
               }
             : {}  
         }
