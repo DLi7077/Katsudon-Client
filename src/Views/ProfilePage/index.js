@@ -6,7 +6,7 @@ import { CircularProgress, IconButton } from "@mui/material";
 import getSearchParams from "../../Utils/getSearchParams";
 import UserAPI from "../../Api/UserAPI";
 import SolutionTable from "../../Components/SolutionTable";
-import SolutionModal from "../../Components/SolutionModal";
+import useSolutionModal from "../../Hooks/useSolutionModal";
 import SkillBox from "../../Components/User/Skillbox";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import PersonRemoveAlt1Icon from "@mui/icons-material/PersonRemoveAlt1";
@@ -65,9 +65,9 @@ export default function ProfilePage(props) {
     sortBy: "last_solved_at",
     sortDir: "desc",
   });
-  const [solutionDisplay, setSolutionDisplay] = useState(false);
-  const [problemBlock, setProblemBlock] = useState({});
-  const [solutionsBlock, setSolutionsBlock] = useState({});
+
+  const { handleOpenSolutionModel, SolutionModalComponent } =
+    useSolutionModal();
 
   // retrieves user's info for profile card
   async function getUserDetails() {
@@ -125,18 +125,6 @@ export default function ProfilePage(props) {
         ? { ...queryParams, tags: tagList }
         : omit(queryParams, "tags")
     );
-  }
-
-  function handleOpenSolutionModel(problem, solutions) {
-    setProblemBlock(problem);
-    setSolutionsBlock(solutions);
-    setSolutionDisplay(true);
-  }
-
-  function handleCloseSolutionModel() {
-    setProblemBlock({});
-    setSolutionsBlock({});
-    setSolutionDisplay(false);
   }
 
   async function handleFollowClick() {
@@ -276,12 +264,7 @@ export default function ProfilePage(props) {
                 sortDir={sortDir}
               />
             </div>
-            <SolutionModal
-              open={solutionDisplay}
-              handleClose={handleCloseSolutionModel}
-              problem={problemBlock}
-              solutions={solutionsBlock}
-            />
+            <SolutionModalComponent />
           </div>
         </>
       )}

@@ -9,7 +9,7 @@ import UserAPI from "../../Api/UserAPI";
 import { map } from "lodash";
 import { postGenerator } from "./util";
 import Header from "./Header";
-import SolutionModal from "../../Components/SolutionModal";
+import useSolutionModal from "../../Hooks/useSolutionModal";
 import ActivityPost from "./ActivityPost";
 import "./styles.css";
 
@@ -18,22 +18,9 @@ export default function Activity(props) {
   const progress = useSelector((state) => state.progress);
 
   const [weeklySolutions, setWeeklySolutions] = useState([]);
-  // solution modal
-  const [solutionDisplay, setSolutionDisplay] = useState(false);
-  const [problemBlock, setProblemBlock] = useState({});
-  const [solutionsBlock, setSolutionsBlock] = useState({});
 
-  function handleOpenSolutionModel(problem, solutions) {
-    setProblemBlock(problem);
-    setSolutionsBlock(solutions);
-    setSolutionDisplay(true);
-  }
-
-  function handleCloseSolutionModel() {
-    setProblemBlock({});
-    setSolutionsBlock({});
-    setSolutionDisplay(false);
-  }
+  const { handleOpenSolutionModel, SolutionModalComponent } =
+    useSolutionModal();
 
   async function retrievePosts() {
     dispatch(startLoading());
@@ -97,12 +84,7 @@ export default function Activity(props) {
       className="content-container"
       style={{ backgroundColor: props.backgroundColor }}
     >
-      <SolutionModal
-        open={solutionDisplay}
-        handleClose={handleCloseSolutionModel}
-        problem={problemBlock}
-        solutions={solutionsBlock}
-      />
+      <SolutionModalComponent />
       <Header text={props.text} color={props.color} />
 
       {progress.loaded && (
