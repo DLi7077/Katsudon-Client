@@ -61,26 +61,6 @@ export default function Navbar(props) {
     props.changeTheme(get(routeColors, pathname));
   }, [location, props]);
 
-  useEffect(() => {
-    const navbar = document.querySelector(".navbar-container");
-    const katsudonLogo = document.querySelector(".katsudon-logo");
-
-    if (scrollY > 50) {
-      navbar.classList.add("navbar-container-condensed");
-      navbar.style.backgroundColor = `${get(
-        routeColors,
-        `${location.pathname}.navbar`
-      )}dd`;
-      katsudonLogo.classList.add("katsudon-logo-condensed");
-      return;
-    } else {
-      navbar.classList.remove("navbar-container-condensed");
-      katsudonLogo.classList.remove("katsudon-logo-condensed");
-      navbar.style.backgroundColor = "black";
-    }
-    // eslint-disable-next-line
-  }, [scrollY]);
-
   // display sections depending on if the user is logged in
   function UserSection() {
     const signedOutLinks = pick(visibleRedirects, ["Register", "Login"]);
@@ -150,7 +130,11 @@ export default function Navbar(props) {
   function DesktopMenu() {
     return (
       <div className="navbar-link-wrapper">
-        <img src={katsudonLogo} className="katsudon-logo" alt="katsudon-logo" />
+        <img
+          src={katsudonLogo}
+          className={`katsudon-logo ${scrollY > 50 ? "logo-condensed" : ""}`}
+          alt="katsudon-logo"
+        />
         {map(
           omit(visibleRedirects, ["Register", "Login", "Profile"]),
           (path, label) => {
@@ -178,7 +162,19 @@ export default function Navbar(props) {
 
   return (
     <nav>
-      <div className="navbar-container">
+      <div
+        className={`navbar-container ${scrollY > 50 ? "navbar-condensed" : ""}`}
+        style={
+          scrollY > 50
+            ? {
+                backgroundColor: `${get(
+                  routeColors,
+                  `${location.pathname}.navbar`
+                )}dd`,
+              }
+            : {}  
+        }
+      >
         <div className="navbar-menu">
           <IconButton
             onClick={(e) => {
