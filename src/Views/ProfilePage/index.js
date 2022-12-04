@@ -20,7 +20,7 @@ import {
   startLoading,
   stopLoading,
 } from "../../Store/Reducers/progress";
-import { useSolutionQueryParams } from "./Hooks";
+import { useSolutionQueryParams } from "../../Hooks/useSolutionQueryParams";
 
 const classes = {
   follow: {
@@ -86,10 +86,6 @@ export default function ProfilePage(props) {
         setUserInfo(undefined);
       });
   }
-
-  useEffect(() => {
-    console.log(sortBy);
-  }, [sortBy]);
 
   async function getSolutions() {
     setTableLoading(true);
