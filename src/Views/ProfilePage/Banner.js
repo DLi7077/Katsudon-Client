@@ -70,6 +70,7 @@ export default function Banner({ userId, bannerUrl }) {
               right: "8px",
               padding: "0.5rem",
               zIndex: 3,
+              border:'2px solid rgba(255,255,255,0.6)'
             }}
             component="span"
           >
