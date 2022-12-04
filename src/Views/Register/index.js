@@ -85,7 +85,7 @@ export default function Register(props) {
             error={Boolean(formik.touched.username && formik.errors.username)}
             helperText={formik.touched.username && formik.errors.username}
             type="text"
-            label="Username"
+            label="Username (display name)"
             name="username"
             variant="standard"
             onChange={formik.handleChange}
