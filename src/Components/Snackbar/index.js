@@ -5,7 +5,7 @@ import { Alert, Snackbar } from "@mui/material";
  * @param {string} severity - error | warninng | info | success
  * @param {bool} showSnackbar - snackbar is visible
  * @param {void} hideSnackbar - handles hiding / closing the snackbar
- * @returns {ReactComponentElement} a react component
+ * @returns {ReactElement} a react component
  */
 function SnackbarMessage({ snackbarContent, showSnackbar, hideSnackbar }) {
   const { message, severity } = snackbarContent;
