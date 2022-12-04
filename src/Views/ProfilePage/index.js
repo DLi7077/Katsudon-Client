@@ -1,19 +1,22 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { get, omit, pick } from "lodash";
+import { useDispatch, useSelector } from "react-redux";
+import { updateFollowing } from "../../Store/Reducers/user";
+import {
+  setSnackbarSuccess,
+  setSnackbarWarning,
+} from "../../Store/Reducers/snackbar";
+import { IconButton } from "@mui/material";
+import useSolutionModal from "../../Hooks/useSolutionModal";
 import UserProfile from "../../Components/User/UserProfile";
-import { CircularProgress, IconButton } from "@mui/material";
-import getSearchParams from "../../Utils/getSearchParams";
 import UserAPI from "../../Api/UserAPI";
 import SolutionTable from "../../Components/SolutionTable";
-import useSolutionModal from "../../Hooks/useSolutionModal";
+import getSearchParams from "../../Utils/getSearchParams";
 import SkillBox from "../../Components/User/Skillbox";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import PersonRemoveAlt1Icon from "@mui/icons-material/PersonRemoveAlt1";
-import { useDispatch, useSelector } from "react-redux";
-import { updateFollowing } from "../../Store/Reducers/user";
 import Banner from "./Banner";
-import { setSnackbarSuccess } from "../../Store/Reducers/snackbar";
 import "./styles.css";
 import {
   setLoaded,
@@ -55,7 +58,6 @@ export default function ProfilePage(props) {
 
   const [userInfo, setUserInfo] = useState(null);
   const [solutions, setSolutions] = useState({});
-  const [awaitFollow, setAwaitFollow] = useState(false);
   const [tableLoading, setTableLoading] = useState(true);
   const [sortBy, setSortBy] = useState("last_solved_at");
   const [sortDir, setSortDir] = useState(1);
@@ -128,7 +130,10 @@ export default function ProfilePage(props) {
   }
 
   async function handleFollowClick() {
-    setAwaitFollow(true);
+    if (!get(currentUser, "logged_in")) {
+      dispatch(setSnackbarWarning("You must be logged in to follow users"));
+      return;
+    }
 
     const willUnfollow = (currentUser.following ?? []).includes(userInfo._id);
 
@@ -151,6 +156,7 @@ export default function ProfilePage(props) {
         dispatch(setSnackbarSuccess(followStatusMessage));
       })
       .then(async () => {
+        // refetch to update user's following list
         await UserAPI.getUserProfile(queryParams)
           .then((res) => {
             setUserInfo(res.user);
@@ -162,8 +168,6 @@ export default function ProfilePage(props) {
       .catch((e) => {
         console.error("could not follow/unfollow user");
       });
-
-    setAwaitFollow(false);
   }
 
   useEffect(() => {
@@ -194,20 +198,6 @@ export default function ProfilePage(props) {
     // eslint-disable-next-line
   }, [queryParams]);
 
-  function LoadingProfile() {
-    return (
-      <div style={classes.loadingFollow}>
-        <CircularProgress
-          style={{
-            color: props.color,
-            width: "4rem",
-            height: "4rem",
-          }}
-        />
-      </div>
-    );
-  }
-
   function FollowIcon() {
     return (
       <IconButton style={classes.follow} onClick={handleFollowClick}>
@@ -236,15 +226,8 @@ export default function ProfilePage(props) {
           <div className="profile-page-container">
             <div className="user-profile-wrapper">
               <div style={{ position: "relative", width: "fit-content" }}>
-                {awaitFollow && <LoadingProfile />}
-                {!awaitFollow && (
-                  <>
-                    <UserProfile userInfo={userInfo} borderColor="#FF66EB" />
-                    {get(currentUser, "user_id") !== userInfo._id && (
-                      <FollowIcon />
-                    )}
-                  </>
-                )}
+                <UserProfile userInfo={userInfo} borderColor="#FF66EB" />
+                {get(currentUser, "user_id") !== userInfo._id && <FollowIcon />}
               </div>
               <SkillBox
                 solved={userInfo.solved}
