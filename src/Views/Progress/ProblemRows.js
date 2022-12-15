@@ -82,7 +82,7 @@ export default function ProblemRows(props) {
               {!!get(solution, "failed") && <div style={classes.crossOut} />}
             </div>
           </IconButton>
-          <CodeLength length={solution.solution_length} />
+          <CodeLength solutionCode={solution.solution_code} />
         </span>
       </div>
     );
