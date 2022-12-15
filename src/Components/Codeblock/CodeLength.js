@@ -1,4 +1,5 @@
 import React from "react";
+import getCodeLength from "../../Utils/getCodeLength";
 
 function rgbToHex(rgb) {
   const result = rgb.reduce((acc, curr) => {
@@ -46,7 +47,8 @@ export function percentToColor(percent, lower, upper) {
 // lower the value, more light blue
 // bound from 0 to 50 (red - light blue)
 // inverse proportional relationship between length and blue-ness
-export default function CodeLength({ length }) {
+export default function CodeLength({ solutionCode }) {
+  const length = getCodeLength(solutionCode);
   const MAX_LENGTH_COLOR = 1500;
   const colorPercent = Math.min(1, length / MAX_LENGTH_COLOR);
   const bluenessPercent = 50 * (1 - colorPercent);
