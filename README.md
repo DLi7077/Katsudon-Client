@@ -15,3 +15,6 @@ you can either reinstall node or use node version manager:
 `npm install` to install packages and dependencies
 <br/>
 `npm run start` to start the client
+
+If you are using Visual Studio Code, make sure you have the `Prettier - Code formatter` extension\
+Run `Alt + Shift + F` or the `Format Document` command to format code
