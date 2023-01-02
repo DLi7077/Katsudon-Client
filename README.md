@@ -3,7 +3,7 @@
 ### Automating submissions using <a href='https://github.com/DLi7077/katsudon-leetcode-extension'> katsudon-leetcode-extension </a>
 
 ## Development
-Use node version `v16.13.21`
+Use node version `v16.13.2`
 <br/>
 You can either reinstall node or use node version manager:
 - install nvm for linux here : https://github.com/nvm-sh/nvm
