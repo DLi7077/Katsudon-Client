@@ -7,8 +7,7 @@ export default function CodeBlock(props) {
       language={props.language}
       style={{...atomDark}}
       showLineNumbers
-      lineNumberStyle={{ minWidth: 0 }}
-      showInlineLineNumbers
+      lineNumberStyle={{ minWidth: '2rem' }}
     >
       {props.code}
     </SyntaxHighlighter>
