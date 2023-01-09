@@ -16,6 +16,9 @@ import "./styles.css";
 export default function Activity(props) {
   const dispatch = useDispatch();
   const progress = useSelector((state) => state.progress);
+  const user = useSelector((state) => state.user);
+
+  console.log(user.user_id)
 
   const [weeklySolutions, setWeeklySolutions] = useState([]);
 
@@ -24,7 +27,7 @@ export default function Activity(props) {
 
   async function retrievePosts() {
     dispatch(startLoading());
-    await UserAPI.getWeeklySolutions()
+    await UserAPI.getWeeklySolutions(user.user_id)
       .then((solutions) => {
         // clean solutions then group by date
         setWeeklySolutions(postGenerator(solutions.rows));

@@ -17,11 +17,11 @@ async function getUserSolutions(queryParams) {
   });
 }
 
-async function getWeeklySolutions() {
+async function getWeeklySolutions(userId) {
   return Api({
     method: "get",
     endpoint: `api/solution/weekly-progress`,
-    params: {},
+    params: { user_id: userId },
   });
 }
 
@@ -56,7 +56,7 @@ async function restoreSession() {
   });
 }
 
-async function followUser(user_id, token) {
+async function followUser(user_id) {
   return Api({
     method: "post",
     endpoint: "api/user/follow",

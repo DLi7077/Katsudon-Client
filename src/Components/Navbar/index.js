@@ -103,9 +103,7 @@ export default function Navbar(props) {
 
   const visibleRedirects = omit(
     MENU_LINKS,
-    currentUser.logged_in
-      ? ["Welcome", "Register", "Login"]
-      : ["Progress", "Profile"]
+    currentUser.logged_in ? ["Welcome", "Register", "Login"] : ["Profile"]
   );
 
   const theme = createTheme({
@@ -172,7 +170,7 @@ export default function Navbar(props) {
                   `${location.pathname}.navbar`
                 )}`,
               }
-            : {}  
+            : {}
         }
       >
         <div className="navbar-menu">
