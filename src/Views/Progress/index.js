@@ -18,8 +18,6 @@ export default function Activity(props) {
   const progress = useSelector((state) => state.progress);
   const user = useSelector((state) => state.user);
 
-  console.log(user.user_id)
-
   const [weeklySolutions, setWeeklySolutions] = useState([]);
 
   const { handleOpenSolutionModel, SolutionModalComponent } =
