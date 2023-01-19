@@ -25,6 +25,7 @@ import {
 import useSolutionQuery from "../../Hooks/useSolutionQuery";
 import coalesceQuery from "../../Utils/coalesceQuery";
 import SolutionFilter from "../../Components/Filters/SolutionFilter";
+import SolutionCalendar from "../../Components/SolutionCalendar.js";
 
 const classes = {
   follow: {
@@ -55,6 +56,7 @@ export default function ProfilePage(props) {
   const [userInfo, setUserInfo] = useState(null);
   const [solutions, setSolutions] = useState({});
   const [tableLoading, setTableLoading] = useState(true);
+  const [solutionCalendar, setSolutionCalendar] = useState([]);
 
   const {
     sortBy,
@@ -110,19 +112,27 @@ export default function ProfilePage(props) {
     }
 
     const compliedQuery = {
-      ...queryParams,
+      // ...queryParams,
       user_id:
         get(getSearchParams(location), "user_id") ??
         get(currentUser, "user_id"),
     };
 
     await UserAPI.getUserProfile(compliedQuery)
-      .then((res) => {
+      .then(async (res) => {
         setUserInfo(res.user);
+        const userId = get(res.user, "_id");
+        await getSolutionCalendar(userId);
       })
       .catch(() => {
         setUserInfo(undefined);
       });
+  }
+
+  async function getSolutionCalendar(userId) {
+    await UserAPI.getSolutionCalendar(userId).then((res) => {
+      setSolutionCalendar(res.calendar);
+    });
   }
 
   async function getSolutions() {
@@ -229,12 +239,12 @@ export default function ProfilePage(props) {
             bannerUrl={get(userInfo, "profile_banner_url")}
           />
           <div className="profile-page-container">
-            <div
-              className="user-profile-wrapper"
-              style={{ position: "relative", width: "fit-content" }}
-            >
-              <UserProfile userInfo={userInfo} borderColor="#FF66EB" />
-              {get(currentUser, "user_id") !== userInfo._id && <FollowIcon />}
+            <div className="profile-calendar-container">
+              <div style={{ position: "relative", width: "fit-content" }}>
+                <UserProfile userInfo={userInfo} borderColor="#FF66EB" />
+                {get(currentUser, "user_id") !== userInfo._id && <FollowIcon />}
+              </div>
+              <SolutionCalendar calendar={solutionCalendar} />
             </div>
             <div style={{ width: "100%" }}>
               <div className="solution-table-query-container">

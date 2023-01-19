@@ -25,6 +25,14 @@ async function getWeeklySolutions(userId) {
   });
 }
 
+async function getSolutionCalendar(userId) {
+  return Api({
+    method: "get",
+    endpoint: `api/solution/solution-calendar`,
+    params: { user_id: userId },
+  });
+}
+
 async function getUserProfile(queryParams) {
   return Api({
     method: "get",
@@ -64,7 +72,7 @@ async function followUser(user_id) {
   });
 }
 
-async function unfollowUser(user_id, token) {
+async function unfollowUser(user_id) {
   return Api({
     method: "post",
     endpoint: "api/user/unfollow",
@@ -72,7 +80,7 @@ async function unfollowUser(user_id, token) {
   });
 }
 
-async function updateBiography(biography, token) {
+async function updateBiography(biography) {
   return Api({
     method: "post",
     endpoint: "api/user/edit-bio",
@@ -80,25 +88,19 @@ async function updateBiography(biography, token) {
   });
 }
 
-async function uploadProfileBanner(formData, token) {
+async function uploadProfileBanner(formData) {
   return Api({
     method: "post",
     endpoint: "api/user/upload-banner",
     body: formData,
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
   });
 }
 
-async function uploadProfilePicture(formData, token) {
+async function uploadProfilePicture(formData) {
   return Api({
     method: "post",
     endpoint: "api/user/upload-pfp",
     body: formData,
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
   });
 }
 
@@ -106,6 +108,7 @@ const UserAPI = {
   getAllUsers,
   getUserSolutions,
   getWeeklySolutions,
+  getSolutionCalendar,
   getUserProfile,
   createAccount,
   restoreSession,
