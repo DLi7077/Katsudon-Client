@@ -36,6 +36,7 @@ export default function SolutionRow(props) {
   };
 
   const SHOWN_LANGUAGES = 2;
+  const solvedLanguages = keys(omit(props.details.solutions, "failed"));
 
   return (
     <TableRow>
@@ -92,27 +93,19 @@ export default function SolutionRow(props) {
             </div>
           </IconButton>
           <div style={{ display: "flex", gap: "2px" }}>
-            {map(
-              take(
-                keys(omit(props.details.solutions, "failed")),
-                SHOWN_LANGUAGES
-              ),
-              (language, idx) => {
-                return (
-                  <img
-                    key={idx}
-                    src={LANGUAGE_LOGOS[language]}
-                    alt={language}
-                    style={classes.languageLogo}
-                  />
-                );
-              }
-            )}
+            {map(take(solvedLanguages, SHOWN_LANGUAGES), (language, idx) => {
+              return (
+                <img
+                  key={idx}
+                  src={LANGUAGE_LOGOS[language]}
+                  alt={language}
+                  style={classes.languageLogo}
+                />
+              );
+            })}
 
-            {keys(props.details.solutions).length > SHOWN_LANGUAGES && (
-              <div>
-                +{keys(props.details.solutions).length - SHOWN_LANGUAGES}
-              </div>
+            {solvedLanguages.length > SHOWN_LANGUAGES && (
+              <div>+{solvedLanguages.length - SHOWN_LANGUAGES}</div>
             )}
           </div>
         </div>
