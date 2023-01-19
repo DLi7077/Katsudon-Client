@@ -1,0 +1,17 @@
+.skill-tag {
+  width: fit-content;
+  height: fit-content;
+  padding: 0.25rem;
+  padding-inline: 0.75rem;
+  color: white;
+  font-size: 1.15rem;
+  background-color: #ba5d8d;
+  border-radius: 20px;
+  font-family: "robotoReg";
+}
+
+.skill-tag:hover {
+  cursor: pointer;
+  background-color: rgba(163, 48, 163, 0.5);
+  color: white;
+}

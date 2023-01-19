@@ -36,18 +36,26 @@
   font-size: 2rem;
 }
 
+.solution-table-query-container {
+  margin-inline: 10rem;
+  display: flex;
+  justify-self: center;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+
 @media only screen and (max-width: 1100px) {
-  .user-profile-wrapper {
-    flex-direction: row;
-    justify-content: center;
-  }
-  .profile-page-container {
-    justify-content: center;
-  }
+
   .skill-tag-container {
     flex-direction: row;
     flex-wrap: wrap;
     max-width: none;
+  }
+  .solution-table-query-container {
+    width: 100%;
+    margin-inline: 0;
   }
 }
 

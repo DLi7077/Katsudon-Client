@@ -13,7 +13,6 @@ import UserProfile from "../../Components/User/UserProfile";
 import UserAPI from "../../Api/UserAPI";
 import SolutionTable from "../../Components/SolutionTable";
 import getSearchParams from "../../Utils/getSearchParams";
-import SkillBox from "../../Components/User/Skillbox";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import PersonRemoveAlt1Icon from "@mui/icons-material/PersonRemoveAlt1";
 import Banner from "./Banner";
@@ -230,42 +229,38 @@ export default function ProfilePage(props) {
             bannerUrl={get(userInfo, "profile_banner_url")}
           />
           <div className="profile-page-container">
-            <div className="user-profile-wrapper">
-              <div style={{ position: "relative", width: "fit-content" }}>
-                <UserProfile userInfo={userInfo} borderColor="#FF66EB" />
-                {get(currentUser, "user_id") !== userInfo._id && <FollowIcon />}
-              </div>
-              <SkillBox
-                solved={userInfo.solved}
-                selectedTags={problemTags}
-                updateSkillQuery={updateSkillQuery}
-              />
-            </div>
             <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                gap: "2rem",
-              }}
+              className="user-profile-wrapper"
+              style={{ position: "relative", width: "fit-content" }}
             >
-              <SolutionFilter
-                difficulty={difficulty}
-                setDifficulty={setDifficulty}
-                sortBy={sortBy}
-                setSortBy={setSortBy}
-                sortDir={sortDir}
-                setSortDir={setSortDir}
-              />
-              <SolutionTable
-                solutions={solutions.rows}
-                handleOpenSolutionModel={handleOpenSolutionModel}
-                headerColor={props.color}
-                backgroundColor={"#382E37"}
-                loading={tableLoading}
-              />
+              <UserProfile userInfo={userInfo} borderColor="#FF66EB" />
+              {get(currentUser, "user_id") !== userInfo._id && <FollowIcon />}
             </div>
-            <SolutionModalComponent />
+            <div style={{ width: "100%" }}>
+              <div className="solution-table-query-container">
+                <SolutionFilter
+                  difficulty={difficulty}
+                  setDifficulty={setDifficulty}
+                  problemTags={problemTags}
+                  setProblemTags={setProblemTags}
+                  sortBy={sortBy}
+                  setSortBy={setSortBy}
+                  sortDir={sortDir}
+                  setSortDir={setSortDir}
+                  solved={userInfo.solved}
+                  selectedTags={problemTags}
+                  updateSkillQuery={updateSkillQuery}
+                />
+                <SolutionTable
+                  solutions={solutions.rows}
+                  handleOpenSolutionModel={handleOpenSolutionModel}
+                  headerColor={props.color}
+                  backgroundColor={"#382E37"}
+                  loading={tableLoading}
+                />
+              </div>
+              <SolutionModalComponent />
+            </div>
           </div>
         </>
       )}

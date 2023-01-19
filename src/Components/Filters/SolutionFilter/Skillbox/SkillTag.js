@@ -6,10 +6,10 @@ export default function SkillTag(props) {
     <div
       className="skill-tag"
       style={{
-        ...(props.selected && {
-          color: "white",
-          backgroundColor: "#18171C",
-        }),
+        color: "white",
+        ...(props.selected
+          ? { backgroundColor: "#ba5d8d" }
+          : { backgroundColor: "#3d3d3d" }),
       }}
       onClick={() => {
         props.addTags(props.tag);
