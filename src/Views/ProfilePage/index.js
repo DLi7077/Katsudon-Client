@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { get, omit, pick } from "lodash";
+import { get, pick } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import { updateFollowing } from "../../Store/Reducers/user";
 import {
@@ -99,7 +99,7 @@ export default function ProfilePage(props) {
     };
 
     setQueryParams(coalesceQuery(compliedQuery, ["tags", "difficulty"]));
-  }, [sortBy, sortDir, problemTags, difficulty]);
+  }, [sortBy, sortDir, problemTags, difficulty, location, currentUser]);
 
   const { handleOpenSolutionModel, SolutionModalComponent } =
     useSolutionModal();
@@ -128,13 +128,13 @@ export default function ProfilePage(props) {
 
   async function getSolutions() {
     setTableLoading(true);
-    await UserAPI.getUserSolutions(queryParams).then((res) => {
-      setSolutions(res);
-    });
-
-    setTimeout(() => {
-      setTableLoading(false);
-    }, 100);
+    await UserAPI.getUserSolutions(queryParams)
+      .then((res) => {
+        setSolutions(res);
+      })
+      .finally(() => {
+        setTableLoading(false);
+      });
   }
 
   async function handleFollowClick() {
@@ -252,6 +252,10 @@ export default function ProfilePage(props) {
               <SolutionFilter
                 difficulty={difficulty}
                 setDifficulty={setDifficulty}
+                sortBy={sortBy}
+                setSortBy={setSortBy}
+                sortDir={sortDir}
+                setSortDir={setSortDir}
               />
               <SolutionTable
                 solutions={solutions.rows}
@@ -265,7 +269,7 @@ export default function ProfilePage(props) {
           </div>
         </>
       )}
-      {!!userInfo && progress.loaded && (
+      {!userInfo && progress.loaded && (
         <div
           style={{
             display: "flex",
