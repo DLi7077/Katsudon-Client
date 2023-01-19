@@ -5,10 +5,9 @@ import "./styles.css";
 
 const classes = {
   selectContainer: {
-    width: "100%",
     backgroundColor: "rgba(0,0,0,0.2)",
     paddingTop: "1rem",
-    marginInline: "1rem",
+    paddingInline: "1rem",
     display: "flex",
     alignItems: "center",
     gap: "2rem",
