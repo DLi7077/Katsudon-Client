@@ -15,11 +15,8 @@ const classes = {
 
 export default function ProblemTagFilter(props) {
   return (
-    <div style={{ marginInline: "1rem", position: "relative" }}>
-      <QueryLabel style={{ position: "absolute", top: 0, zIndex: 10 }}>
-        Problem Tags
-      </QueryLabel>
-      <br />
+    <div style={{ marginInline: "1rem" }}>
+      <QueryLabel style={{ marginBottom: "0.5rem" }}>Problem Tags</QueryLabel>
       <div style={classes.problemTags}>
         <SkillBox
           solved={props.solved}
