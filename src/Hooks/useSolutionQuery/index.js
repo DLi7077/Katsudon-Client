@@ -4,7 +4,7 @@ export default function useSolutionQuery() {
   const [sortBy, setSortBy] = useState("created_at");
   const [sortDir, setSortDir] = useState("desc");
   const [problemTags, setProblemTags] = useState(["Array"]);
-  const [difficulty, setDifficulty] = useState(null);
+  const [difficulty, setDifficulty] = useState("Hard");
 
   const VALID_SORT_BYS = [
     { label: "Solved at", value: "created_at" },
