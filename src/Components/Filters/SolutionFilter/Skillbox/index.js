@@ -57,10 +57,10 @@ export default function SkillBox(props) {
 
   return (
     <>
-      {map(selectedTags, (details, idx) => {
+      {map(selectedTags, (details) => {
         return (
           <SkillTag
-            key={idx}
+            key={`skill-tag-${details.label}`}
             tag={details.label}
             frequency={details.frequency}
             selected={details.selected}
@@ -68,10 +68,10 @@ export default function SkillBox(props) {
           />
         );
       })}
-      {map(nonSelectedTags, (details, idx) => {
+      {map(nonSelectedTags, (details) => {
         return (
           <SkillTag
-            key={idx}
+            key={`skill-tag-${details.label}`}
             tag={details.label}
             frequency={details.frequency}
             selected={details.selected}

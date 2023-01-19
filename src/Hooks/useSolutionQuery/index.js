@@ -3,7 +3,7 @@ import { useState } from "react";
 export default function useSolutionQuery() {
   const [sortBy, setSortBy] = useState("created_at");
   const [sortDir, setSortDir] = useState("desc");
-  const [problemTags, setProblemTags] = useState(["Array"]);
+  const [problemTags, setProblemTags] = useState([]);
   const [difficulty, setDifficulty] = useState("All");
 
 
