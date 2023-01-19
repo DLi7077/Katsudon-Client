@@ -25,6 +25,7 @@ import {
 } from "../../Store/Reducers/progress";
 import useSolutionQuery from "../../Hooks/useSolutionQuery";
 import coalesceQuery from "../../Utils/coalesceQuery";
+import SolutionFilter from "../../Components/Filters/SolutionFilter";
 
 const classes = {
   follow: {
@@ -94,7 +95,7 @@ export default function ProfilePage(props) {
       sortBy: sortBy,
       sortDir: sortDir,
       tags: problemTags,
-      difficulty: difficulty,
+      difficulty: difficulty === "All" ? "" : difficulty,
     };
 
     setQueryParams(coalesceQuery(compliedQuery, ["tags", "difficulty"]));
@@ -240,7 +241,18 @@ export default function ProfilePage(props) {
                 updateSkillQuery={updateSkillQuery}
               />
             </div>
-            <div style={{ overflow: "auto" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                gap: "2rem",
+              }}
+            >
+              <SolutionFilter
+                difficulty={difficulty}
+                setDifficulty={setDifficulty}
+              />
               <SolutionTable
                 solutions={solutions.rows}
                 handleOpenSolutionModel={handleOpenSolutionModel}

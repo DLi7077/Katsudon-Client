@@ -13,6 +13,7 @@ import {
   showSnackbar,
 } from "./Store/Reducers/snackbar";
 import SnackbarMessage from "./Components/Snackbar";
+import { ThemeProvider, createTheme } from "@mui/material";
 
 function App() {
   const dispatch = useDispatch();
@@ -20,6 +21,16 @@ function App() {
   const currentUser = useSelector((state) => state.user);
   const [pageTheme, setPageTheme] = useState(null);
   const [restoringSession, setRestoringSession] = useState(true);
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: "#FFFFFF",
+      },
+      secondary: {
+        main: "#606060",
+      },
+    },
+  });
 
   async function restoreUserSession() {
     if (!currentUser.auth_token) {
@@ -71,13 +82,15 @@ function App() {
         />
       )}
       {!restoringSession && (
-        <HashRouter>
-          <Navbar changeTheme={setPageTheme} />
-          <div className="page-container">
-            <Routes>{COMPONENT_ROUTES}</Routes>
-          </div>
-          <Footer />
-        </HashRouter>
+        <ThemeProvider theme={theme}>
+          <HashRouter>
+            <Navbar changeTheme={setPageTheme} />
+            <div className="page-container">
+              <Routes>{COMPONENT_ROUTES}</Routes>
+            </div>
+            <Footer />
+          </HashRouter>
+        </ThemeProvider>
       )}
     </>
   );
