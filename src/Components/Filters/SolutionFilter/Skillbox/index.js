@@ -1,7 +1,6 @@
 import { filter, get, map, omit, orderBy, pick, reduce, values } from "lodash";
 import SkillTag from "./SkillTag";
 import "./styles.css";
-import "../user.css";
 import { useEffect, useState } from "react";
 
 export default function SkillBox(props) {
@@ -57,37 +56,29 @@ export default function SkillBox(props) {
   }, [tagReference]);
 
   return (
-    <div>
-      <div className="user-page-section-header"> Skills</div>
-      <div
-        className="user-page-section-content"
-        style={{ backgroundColor: props.backgroundColor ?? "#382E37" }}
-      >
-        <div className="skill-tag-container">
-          {map(selectedTags, (details, idx) => {
-            return (
-              <SkillTag
-                key={idx}
-                tag={details.label}
-                frequency={details.frequency}
-                selected={details.selected}
-                addTags={handleAddTags}
-              />
-            );
-          })}
-          {map(nonSelectedTags, (details, idx) => {
-            return (
-              <SkillTag
-                key={idx}
-                tag={details.label}
-                frequency={details.frequency}
-                selected={details.selected}
-                addTags={handleAddTags}
-              />
-            );
-          })}
-        </div>
-      </div>
-    </div>
+    <>
+      {map(selectedTags, (details, idx) => {
+        return (
+          <SkillTag
+            key={idx}
+            tag={details.label}
+            frequency={details.frequency}
+            selected={details.selected}
+            addTags={handleAddTags}
+          />
+        );
+      })}
+      {map(nonSelectedTags, (details, idx) => {
+        return (
+          <SkillTag
+            key={idx}
+            tag={details.label}
+            frequency={details.frequency}
+            selected={details.selected}
+            addTags={handleAddTags}
+          />
+        );
+      })}
+    </>
   );
 }

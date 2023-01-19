@@ -1,23 +1,17 @@
 import { FormControl, Select, MenuItem, IconButton } from "@mui/material";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import QueryLabel from "./QueryLabel";
 
 export default function SortQuery(props) {
   return (
     <div style={{ display: "flex", alignItems: "center" }}>
-      <div
-        style={{
-          position: "relative",
-        }}
-      >
+      <div style={{ position: "relative" }}>
         <FormControl sx={{ m: 1, minWidth: 90, color: "white" }} size="small">
           <Select
             variant="standard"
             value={props.sortBy}
-            sx={{
-              fontSize: "1.25rem",
-              color: "white",
-            }}
+            sx={{ fontSize: "1.25rem", color: "white" }}
             label="Difficulty"
             onChange={(e) => {
               const selectedSortBy = e.target.value;
@@ -32,16 +26,7 @@ export default function SortQuery(props) {
             </MenuItem>
           </Select>
         </FormControl>
-        <div
-          style={{
-            position: "absolute",
-            top: "-4px",
-            left: "8px",
-            color: "rgba(255,255,255,0.6)",
-          }}
-        >
-          Sort by
-        </div>
+        <QueryLabel style={{ position: "absolute" }}>Sort by</QueryLabel>
       </div>
       <IconButton
         style={{ color: "white", fontSize: "1.5rem", padding: "0.25rem" }}
