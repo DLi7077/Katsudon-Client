@@ -1,10 +1,11 @@
 import DifficultyFilter from "./DifficultyFilter";
+import SortDirection from "./SortQuery";
 
 const classes = {
   filterContainer: {
     width: "100%",
     backgroundColor: "rgba(0,0,0,0.2)",
-    padding: "0.5rem",
+    paddingInline: "0.5rem",
     display: "flex",
     alignItems: "center",
   },
@@ -19,6 +20,12 @@ export default function SolutionFilter(props) {
       <DifficultyFilter
         difficulty={props.difficulty}
         setDifficulty={props.setDifficulty}
+      />
+      <SortDirection
+        sortBy={props.sortBy}
+        setSortBy={props.setSortBy}
+        sortDir={props.sortDir}
+        setSortDir={props.setSortDir}
       />
     </div>
   );
