@@ -23,6 +23,8 @@ import {
   startLoading,
   stopLoading,
 } from "../../Store/Reducers/progress";
+import useSolutionQuery from "../../Hooks/useSolutionQuery";
+import coalesceQuery from "../../Utils/coalesceQuery";
 
 const classes = {
   follow: {
@@ -43,12 +45,6 @@ const classes = {
   },
 };
 
-const directionMapping = {
-  0: null,
-  1: "desc",
-  2: "asc",
-};
-
 export default function ProfilePage(props) {
   const currentUser = useSelector((state) => state.user);
   const progress = useSelector((state) => state.progress);
@@ -59,14 +55,50 @@ export default function ProfilePage(props) {
   const [userInfo, setUserInfo] = useState(null);
   const [solutions, setSolutions] = useState({});
   const [tableLoading, setTableLoading] = useState(true);
-  const [sortBy, setSortBy] = useState("last_solved_at");
-  const [sortDir, setSortDir] = useState(1);
-  const [queryParams, setQueryParams] = useState({
-    user_id:
-      get(getSearchParams(location), "user_id") ?? get(currentUser, "user_id"),
-    sortBy: "last_solved_at",
-    sortDir: "desc",
-  });
+
+  const {
+    sortBy,
+    setSortBy,
+    sortDir,
+    setSortDir,
+    problemTags,
+    setProblemTags,
+    difficulty,
+    setDifficulty,
+  } = useSolutionQuery();
+
+  const [queryParams, setQueryParams] = useState(
+    coalesceQuery(
+      {
+        user_id:
+          get(getSearchParams(location), "user_id") ??
+          get(currentUser, "user_id"),
+        sortBy: sortBy,
+        sortDir: sortDir,
+        tags: problemTags,
+        difficulty: difficulty,
+      },
+      ["tags", "difficulty"]
+    )
+  );
+
+  function updateSkillQuery(tagList) {
+    setProblemTags(tagList);
+  }
+
+  useEffect(() => {
+    const compliedQuery = {
+      user_id:
+        get(getSearchParams(location), "user_id") ??
+        get(currentUser, "user_id"),
+      sortBy: sortBy,
+      sortDir: sortDir,
+      tags: problemTags,
+      difficulty: difficulty,
+    };
+
+    setQueryParams(coalesceQuery(compliedQuery, ["tags", "difficulty"]));
+  }, [sortBy, sortDir, problemTags, difficulty]);
 
   const { handleOpenSolutionModel, SolutionModalComponent } =
     useSolutionModal();
@@ -95,38 +127,13 @@ export default function ProfilePage(props) {
 
   async function getSolutions() {
     setTableLoading(true);
-    const compliedQuery = {
-      ...queryParams,
-      user_id:
-        get(getSearchParams(location), "user_id") ??
-        get(currentUser, "user_id"),
-    };
-    await UserAPI.getUserSolutions(compliedQuery).then((res) => {
+    await UserAPI.getUserSolutions(queryParams).then((res) => {
       setSolutions(res);
     });
 
     setTimeout(() => {
       setTableLoading(false);
     }, 100);
-  }
-
-  function handleSortDirChange(sortBy) {
-    const currDirection = (sortDir + 1) % 3;
-    setQueryParams({
-      ...queryParams,
-      sortBy: sortBy,
-      sortDir: directionMapping[currDirection],
-    });
-    setSortBy(sortBy);
-    setSortDir(currDirection);
-  }
-
-  function updateSkillQuery(tagList) {
-    setQueryParams(
-      tagList.length
-        ? { ...queryParams, tags: tagList }
-        : omit(queryParams, "tags")
-    );
   }
 
   async function handleFollowClick() {
@@ -172,16 +179,14 @@ export default function ProfilePage(props) {
 
   useEffect(() => {
     dispatch(startLoading());
+
     setQueryParams({
       ...queryParams,
-      ...pick(getSearchParams(location), "user_id"),
+      ...(!!queryParams.user_id
+        ? pick(getSearchParams(location), "user_id")
+        : { user_id: get(currentUser, "user_id") }),
     });
-    if (!queryParams.user_id) {
-      setQueryParams({
-        user_id: get(currentUser, "user_id"),
-      });
-    }
-    // getSolutions();
+
     getUserDetails().then(() => {
       setTimeout(() => {
         dispatch(setLoaded());
@@ -231,6 +236,7 @@ export default function ProfilePage(props) {
               </div>
               <SkillBox
                 solved={userInfo.solved}
+                selectedTags={problemTags}
                 updateSkillQuery={updateSkillQuery}
               />
             </div>
@@ -240,18 +246,14 @@ export default function ProfilePage(props) {
                 handleOpenSolutionModel={handleOpenSolutionModel}
                 headerColor={props.color}
                 backgroundColor={"#382E37"}
-                handleSortDirChange={handleSortDirChange}
                 loading={tableLoading}
-                queryParams={queryParams}
-                sortBy={sortBy}
-                sortDir={sortDir}
               />
             </div>
             <SolutionModalComponent />
           </div>
         </>
       )}
-      {userInfo === null && progress.loaded && (
+      {!!userInfo && progress.loaded && (
         <div
           style={{
             display: "flex",

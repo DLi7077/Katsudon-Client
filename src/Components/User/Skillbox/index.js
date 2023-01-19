@@ -14,7 +14,7 @@ export default function SkillBox(props) {
           accumulator[tag] = {
             label: tag,
             frequency: 1 + (get(accumulator, `${tag}.frequency`) || 0),
-            selected: false,
+            selected: props.selectedTags.includes(tag),
           };
         });
 
