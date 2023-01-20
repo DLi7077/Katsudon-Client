@@ -225,6 +225,10 @@ export default function ProfilePage(props) {
             <ProfileAvatar
               userInfo={userInfo}
               style={{ alignSelf: "flex-end" }}
+              avatarStyle={{
+                width: "120px",
+                height: "120px",
+              }}
             />
             <div style={{ display: "flex", alignItems: "center" }}>
               <div style={{ fontSize: "2rem" }}>{userInfo.username}</div>
@@ -265,7 +269,7 @@ export default function ProfilePage(props) {
                   solutions={solutions.rows}
                   handleOpenSolutionModel={handleOpenSolutionModel}
                   headerColor={props.color}
-                  backgroundColor={`${props.color}11`}
+                  backgroundColor={`${props.text}11`}
                   loading={tableLoading}
                 />
               </div>

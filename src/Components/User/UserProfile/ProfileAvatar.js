@@ -81,6 +81,7 @@ export default function ProfileAvatar(props) {
           width: "100px",
           height: "100px",
           border: "2px solid white",
+          ...props.avatarStyle,
         }}
       />
       {get(currentUser, "user_id") === props.userInfo._id && <ProfileUpload />}
