@@ -1,21 +1,9 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { updateProfileBiography } from "../../../Store/Reducers/user";
-import { Avatar, IconButton, TextField } from "@mui/material";
-import { get } from "lodash";
-import UploadFileIcon from "@mui/icons-material/UploadFile";
-import CheckIcon from "@mui/icons-material/Check";
-import CloseIcon from "@mui/icons-material/Close";
-import EditIcon from "@mui/icons-material/Edit";
 import FollowList from "./FollowList";
-import UserAPI from "../../../Api/UserAPI";
 import DifficultyBar from "./DifficultyBar";
-import { updateProfilePicture } from "../../../Store/Reducers/user";
 import "./styles.css";
-import {
-  setSnackbarSuccess,
-  setSnackbarWarning,
-} from "../../../Store/Reducers/snackbar";
+import ProfileAvatar from "./ProfileAvatar";
+import Biography from "./Biography";
 
 /**
  * @param {string} username
@@ -29,22 +17,11 @@ import {
  * @returns A profile component
  */
 export default function UserProfile(props) {
-  const dispatch = useDispatch();
-  const currentUser = useSelector((state) => state.user);
   const [showFollowers, setShowFollowers] = useState(false);
   const [showFollowing, setShowFollowing] = useState(false);
-  const [editingBio, setEditingBio] = useState(false);
-  const [updatedBio, setUpdatedBio] = useState(currentUser.biography);
 
   const { userInfo } = props;
-  const {
-    username,
-    biography,
-    followers,
-    following,
-    profile_picture_url,
-    solved,
-  } = userInfo;
+  const { username, followers, following, solved } = userInfo;
 
   function handleCloseFollowers() {
     setShowFollowers(false);
@@ -57,62 +34,6 @@ export default function UserProfile(props) {
   }
   function handleShowFollowing() {
     setShowFollowing(true);
-  }
-
-  function startEditBiography() {
-    setEditingBio(true);
-  }
-
-  function cancelUpdatedBiography() {
-    setEditingBio(false);
-  }
-
-  async function handleUploadProfilePicture(event) {
-    if (!event.target.files) return;
-
-    const bannerPicture = event.target.files[0];
-    const formData = new FormData();
-    formData.append("imgfile", bannerPicture);
-
-    await UserAPI.uploadProfilePicture(formData, get(currentUser, "auth_token"))
-      .then((res) => {
-        dispatch(
-          updateProfilePicture({
-            profile_picture_url: `${
-              res.user.profile_picture_url
-            }?${global.Date.now()}`, // force rerender
-          })
-        );
-
-        dispatch(setSnackbarSuccess("Uploaded profile picture"));
-      })
-      .catch(() => {
-        dispatch(setSnackbarWarning("File size must be < 5MB"));
-      });
-  }
-
-  async function submitUpdatedBiography() {
-    if (biography === updatedBio) {
-      setEditingBio(false);
-      return;
-    }
-
-    await UserAPI.updateBiography(updatedBio)
-      .then((res) => {
-        const updatedBiography = get(res.user, "biography");
-        dispatch(updateProfileBiography({ biography: updatedBiography }));
-        return updatedBiography;
-      })
-      .then((updatedBiography) => {
-        setUpdatedBio(updatedBiography);
-        dispatch(setSnackbarSuccess("Updated biography"));
-      })
-      .catch(() => {
-        dispatch(setSnackbarWarning("Couldn't update biography"));
-      })
-      .finally(() => {
-        setEditingBio(false);
-      });
   }
 
   function Followers() {
@@ -135,33 +56,6 @@ export default function UserProfile(props) {
       </div>
     );
   }
-  function ProfileUpload() {
-    return (
-      <>
-        <input
-          type="file"
-          name="imgfile"
-          accept="image/*"
-          id="upload-profile-picture"
-          onChange={handleUploadProfilePicture}
-          hidden
-        />
-        <label htmlFor="upload-profile-picture">
-          <div
-            className={
-              get(currentUser, "logged_in") &&
-              get(currentUser, "user_id") === userInfo._id
-                ? "profile-picture-upload"
-                : ""
-            }
-          >
-            <UploadFileIcon style={{ fontSize: "2.5rem" }} />
-            Upload Profile Picture
-          </div>
-        </label>
-      </>
-    );
-  }
 
   return (
     <>
@@ -169,99 +63,17 @@ export default function UserProfile(props) {
         className="profile-container"
         style={{
           border: `2px solid ${props.borderColor ?? "white"}`,
-          position: "relative"
+          position: "relative",
         }}
       >
         <div className="profile-user-info">
           <div className="profile-top-wrapper">
             <Followers />
-            <div className="profile-picture" style={{ position: "relative" }}>
-              <Avatar
-                src={
-                  get(currentUser, "user_id") === userInfo._id
-                    ? currentUser.profile_picture_url
-                    : profile_picture_url
-                }
-                style={{
-                  width: "100px",
-                  height: "100px",
-                  border: "2px solid white",
-                }}
-              />
-              {get(currentUser, "user_id") === userInfo._id && (
-                <ProfileUpload />
-              )}
-            </div>
+            <ProfileAvatar userInfo={userInfo} />
             <Following />
           </div>
           <div className="profile-username">{username}</div>
-          <div className="profile-biography" style={{ position: "relative" }}>
-            {!editingBio &&
-              (get(currentUser, "user_id") === userInfo._id
-                ? currentUser.biography
-                : biography ?? "")}
-
-            {get(currentUser, "user_id") === userInfo._id && !editingBio && (
-              <IconButton
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  right: 0,
-                  color: "white",
-                  padding: "0.25rem",
-                }}
-                onClick={() => {
-                  startEditBiography();
-                }}
-              >
-                <EditIcon />
-              </IconButton>
-            )}
-            {editingBio && (
-              <TextField
-                variant="standard"
-                value={updatedBio}
-                multiline
-                rows={4}
-                color="primary"
-                inputProps={{
-                  style: {
-                    fontSize: "1.35rem",
-                    color: "white",
-                    textAlign: "center",
-                  },
-                }}
-                onChange={(e) => {
-                  setUpdatedBio(e.target.value);
-                }}
-              />
-            )}
-            {editingBio && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  right: 0,
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "flex-start",
-                }}
-              >
-                <IconButton
-                  style={{ color: "#FFAC7D", padding: "0.25rem" }}
-                  onClick={cancelUpdatedBiography}
-                >
-                  <CloseIcon />
-                </IconButton>
-                <IconButton
-                  style={{ color: "#7AFF87", padding: "0.25rem" }}
-                  onClick={submitUpdatedBiography}
-                >
-                  <CheckIcon />
-                </IconButton>
-              </div>
-            )}
-          </div>
+          <Biography userInfo={userInfo} />
         </div>
         <DifficultyBar solvedProblems={solved} />
       </div>
