@@ -37,8 +37,8 @@ export const PAGETHEME = {
     text: "#a6d9d5",
   },
   Purple: {
-    color: "#ff66db",
-    navbar: "#ac3991",
+    color: "#ff66ab",
+    navbar: "#ac396d",
     backgroundColor: "#2a2228",
     section: "#382e36",
     text: "#d9a6d3",

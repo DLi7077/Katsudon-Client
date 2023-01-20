@@ -72,8 +72,8 @@ export default function SolutionTable(props) {
   };
 
   return (
-    <Table className="solution-table">
-      <TableHead>
+    <Table>
+      <TableHead className="solution-header">
         <TableRow className="header">
           <TableCell style={classes.tableHeader}>#</TableCell>
           <TableCell style={classes.tableHeader} colSpan={3}>

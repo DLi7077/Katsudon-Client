@@ -1,7 +1,8 @@
 import "./styles.css";
 
 import { Tooltip } from "@mui/material";
-import { get, reduce } from "lodash";
+import difficultyDistribution from "../../../Utils/difficultyDistribution";
+
 const fractionToPercent = (fraction) => {
   return `${fraction * 100}%`;
 };
@@ -29,16 +30,7 @@ function DifficultyGenerator({ solved, total, difficulty }) {
 }
 
 function DifficultyBar({ solvedProblems }) {
-  const { Easy, Medium, Hard } = reduce(
-    solvedProblems,
-    (accumulator, problem) => {
-      const currDifficulty = get(problem, "difficulty");
-      accumulator[currDifficulty] += 1;
-
-      return accumulator;
-    },
-    { Easy: 0, Medium: 0, Hard: 0 }
-  );
+  const { Easy, Medium, Hard } = difficultyDistribution(solvedProblems);
   const totalSolved = Easy + Medium + Hard;
 
   return (
