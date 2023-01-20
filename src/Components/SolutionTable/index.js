@@ -45,6 +45,7 @@ export default function SolutionTable(props) {
       color: props.headerColor,
       fontSize: "1.4rem",
       padding: "1rem",
+      fontFamily: "robotoReg",
     },
     tableCell: {
       textAlign: "left",
@@ -53,6 +54,7 @@ export default function SolutionTable(props) {
       margin: 0,
       padding: 0,
       paddingInline: "1rem",
+      fontFamily: "robotoReg",
     },
     link: {
       textDecoration: "none",

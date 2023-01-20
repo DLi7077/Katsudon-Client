@@ -25,7 +25,6 @@ export default function SolutionDistribution({ solvedProblems }) {
     return 250 + proportion * -250 + 2;
   };
 
-  console.log(proportionToOffset(proportions.easy));
   const circleThickness = 4;
 
   return (
