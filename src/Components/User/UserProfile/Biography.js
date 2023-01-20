@@ -52,10 +52,11 @@ export default function Biography(props) {
 
   return (
     <div className="profile-biography" style={{ position: "relative" }}>
-      {!editingBio &&
-        (get(currentUser, "user_id") === props.userInfo._id
-          ? currentUser.biography
-          : props.userInfo.biography ?? "")}
+      {!editingBio && (
+        <div style={{ padding: "0.25rem", color: "white" }}>
+          {props.userInfo.biography}
+        </div>
+      )}
 
       {get(currentUser, "user_id") === props.userInfo._id && !editingBio && (
         <IconButton
@@ -83,7 +84,7 @@ export default function Biography(props) {
             color="primary"
             inputProps={{
               style: {
-                fontSize: "1.35rem",
+                fontSize: "1.25rem",
                 color: "white",
                 textAlign: "center",
               },

@@ -4,7 +4,6 @@ export default function WeekBar({ week, year, count, firstWeek, color }) {
       style={{
         position: "relative",
         height: `${2 + count * 2}px`,
-
         maxHeight: "100%",
       }}
     >
