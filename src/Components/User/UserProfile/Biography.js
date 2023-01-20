@@ -54,7 +54,9 @@ export default function Biography(props) {
     <div className="profile-biography" style={{ position: "relative" }}>
       {!editingBio && (
         <div style={{ padding: "0.25rem", color: "white" }}>
-          {props.userInfo.biography}
+          {get(currentUser, "user_id") === props.userInfo._id
+            ? currentUser.biography
+            : props.userInfo.biography ?? ""}
         </div>
       )}
 
