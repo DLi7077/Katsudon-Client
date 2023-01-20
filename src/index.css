@@ -38,7 +38,7 @@ code {
 
 .content-container {
   box-sizing: border-box;
-  width: min(100vw, 1200px);
+  width: min(100vw, 1000px);
   min-height: 80vh;
   background-color: #292929;
   padding-top: 2rem;
@@ -101,4 +101,21 @@ code {
   .page-container {
     margin-top: 70px;
   }
+}
+
+/* scroll bar */
+/* width */
+::-webkit-scrollbar {
+  width: 4px;
+  max-height: 4px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: white;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: lightgrey;
 }

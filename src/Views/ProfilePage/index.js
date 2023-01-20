@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { get, pick } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import { updateFollowing } from "../../Store/Reducers/user";
@@ -7,7 +7,7 @@ import {
   setSnackbarSuccess,
   setSnackbarWarning,
 } from "../../Store/Reducers/snackbar";
-import { IconButton } from "@mui/material";
+import { Avatar, IconButton } from "@mui/material";
 import useSolutionModal from "../../Hooks/useSolutionModal";
 import UserAPI from "../../Api/UserAPI";
 import SolutionTable from "../../Components/SolutionTable";
@@ -28,6 +28,7 @@ import SolutionCalendar from "../../Components/SolutionCalendar.js";
 import SolutionDistribution from "../../Components/SolutionDistribution";
 import ProfileAvatar from "../../Components/User/UserProfile/ProfileAvatar";
 import Biography from "../../Components/User/UserProfile/Biography";
+import HelperLabel from "../../Components/Views/HelperLabel";
 
 export default function ProfilePage(props) {
   const currentUser = useSelector((state) => state.user);
@@ -196,15 +197,15 @@ export default function ProfilePage(props) {
     // eslint-disable-next-line
   }, [queryParams]);
 
-  function FollowIcon() {
+  function FollowIcon(props) {
     return (
-      <IconButton onClick={handleFollowClick}>
+      <IconButton onClick={handleFollowClick} style={{ ...props.style }}>
         {(currentUser.following ?? []).includes(userInfo._id) ? (
           <PersonRemoveAlt1Icon
             style={{ fontSize: "1.5rem", color: "#FF7A7A" }}
           />
         ) : (
-          <PersonAddAlt1Icon style={{ fontSize: "2rem", color: "#7AFF87" }} />
+          <PersonAddAlt1Icon style={{ fontSize: "1.5rem", color: "#7AFF87" }} />
         )}
       </IconButton>
     );
@@ -222,20 +223,98 @@ export default function ProfilePage(props) {
             bannerUrl={get(userInfo, "profile_banner_url")}
           />
           <div className="username-profile-container">
-            <ProfileAvatar
-              userInfo={userInfo}
-              style={{ alignSelf: "flex-end" }}
-              avatarStyle={{
-                width: "120px",
-                height: "120px",
+            <div
+              style={{
+                display: "flex",
+                alignItems: "flex-end",
+                height: "100%",
               }}
-            />
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <div style={{ fontSize: "2rem" }}>{userInfo.username}</div>
-              {get(currentUser, "user_id") !== userInfo._id && <FollowIcon />}
+            >
+              <div
+                style={{
+                  position: "relative",
+                  height: "fit-content",
+                }}
+              >
+                <ProfileAvatar
+                  userInfo={userInfo}
+                  avatarStyle={{
+                    width: "120px",
+                    height: "120px",
+                  }}
+                />
+
+                {get(currentUser, "user_id") !== userInfo._id && (
+                  <FollowIcon
+                    style={{
+                      position: "absolute",
+                      bottom: "0",
+                      right: "-2px",
+                      backgroundColor: "rgba(0,0,0,0.7)",
+                    }}
+                  />
+                )}
+              </div>
             </div>
+            <div style={{ fontSize: "2rem" }}>{userInfo.username}</div>
           </div>
+
           <div className="profile-page-container">
+            <div className="follow-details">
+              <div
+                className="user-page-follow-list"
+                style={{ position: "relative", width: "250px" }}
+              >
+                {userInfo.followers.map((user) => {
+                  return (
+                    <Link
+                      key={`${user.username}-follower`}
+                      to={`/profile?user_id=${user._id}`}
+                      style={{
+                        fontSize: "1.25rem",
+                        color: "white",
+                        textDecoration: "none",
+                      }}
+                    >
+                      <Avatar
+                        src={get(user, "profile_picture_url")}
+                        style={{ width: "32px", height: "32px" }}
+                      />
+                    </Link>
+                  );
+                })}
+                <HelperLabel style={{ position: "absolute", top: 0, left: 0 }}>
+                  Followers
+                </HelperLabel>
+              </div>
+
+              <div
+                className="user-page-follow-list"
+                style={{ position: "relative", width: "250px" }}
+              >
+                {userInfo.following.map((user) => {
+                  return (
+                    <Link
+                      key={`${user.username}-following`}
+                      to={`/profile?user_id=${user._id}`}
+                      style={{
+                        fontSize: "1.25rem",
+                        color: "white",
+                        textDecoration: "none",
+                      }}
+                    >
+                      <Avatar
+                        src={get(user, "profile_picture_url")}
+                        style={{ width: "32px", height: "32px" }}
+                      />
+                    </Link>
+                  );
+                })}
+                <HelperLabel style={{ position: "absolute", top: 0, left: 0 }}>
+                  Following
+                </HelperLabel>
+              </div>
+            </div>
             <div className="profile-calendar-container">
               <div className="user-details-container">
                 <SolutionDistribution solvedProblems={userInfo.solved} />
