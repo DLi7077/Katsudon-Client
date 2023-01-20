@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/katsudon-client/static/css/main.02a1575c.chunk.css",
-    "main.js": "/katsudon-client/static/js/main.8d8c1f66.chunk.js",
-    "main.js.map": "/katsudon-client/static/js/main.8d8c1f66.chunk.js.map",
+    "main.css": "/katsudon-client/static/css/main.4ad288e3.chunk.css",
+    "main.js": "/katsudon-client/static/js/main.c89d8527.chunk.js",
+    "main.js.map": "/katsudon-client/static/js/main.c89d8527.chunk.js.map",
     "runtime-main.js": "/katsudon-client/static/js/runtime-main.c3140415.js",
     "runtime-main.js.map": "/katsudon-client/static/js/runtime-main.c3140415.js.map",
-    "static/js/2.57104037.chunk.js": "/katsudon-client/static/js/2.57104037.chunk.js",
-    "static/js/2.57104037.chunk.js.map": "/katsudon-client/static/js/2.57104037.chunk.js.map",
+    "static/js/2.8d5db624.chunk.js": "/katsudon-client/static/js/2.8d5db624.chunk.js",
+    "static/js/2.8d5db624.chunk.js.map": "/katsudon-client/static/js/2.8d5db624.chunk.js.map",
     "index.html": "/katsudon-client/index.html",
-    "static/css/main.02a1575c.chunk.css.map": "/katsudon-client/static/css/main.02a1575c.chunk.css.map",
-    "static/js/2.57104037.chunk.js.LICENSE.txt": "/katsudon-client/static/js/2.57104037.chunk.js.LICENSE.txt",
+    "static/css/main.4ad288e3.chunk.css.map": "/katsudon-client/static/css/main.4ad288e3.chunk.css.map",
+    "static/js/2.8d5db624.chunk.js.LICENSE.txt": "/katsudon-client/static/js/2.8d5db624.chunk.js.LICENSE.txt",
     "static/media/C++.157c521f.svg": "/katsudon-client/static/media/C++.157c521f.svg",
     "static/media/C.cac16519.svg": "/katsudon-client/static/media/C.cac16519.svg",
     "static/media/CSharp.885a32ed.svg": "/katsudon-client/static/media/CSharp.885a32ed.svg",
@@ -36,8 +36,8 @@
   },
   "entrypoints": [
     "static/js/runtime-main.c3140415.js",
-    "static/js/2.57104037.chunk.js",
-    "static/css/main.02a1575c.chunk.css",
-    "static/js/main.8d8c1f66.chunk.js"
+    "static/js/2.8d5db624.chunk.js",
+    "static/css/main.4ad288e3.chunk.css",
+    "static/js/main.c89d8527.chunk.js"
   ]
 }
