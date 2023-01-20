@@ -9,8 +9,8 @@ export default function SolutionCalendar(props) {
         alignItems: "flex-end",
         gap: "3px",
         backgroundColor: "rgba(0,0,0,0.25)",
+        height: "calc(209px - 3rem)",
         padding: "1.5rem",
-        height: "200px",
       }}
     >
       {props.calendar.map((instance, idx) => {

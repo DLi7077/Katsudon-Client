@@ -9,7 +9,6 @@ import {
 } from "../../Store/Reducers/snackbar";
 import { IconButton } from "@mui/material";
 import useSolutionModal from "../../Hooks/useSolutionModal";
-import UserProfile from "../../Components/User/UserProfile";
 import UserAPI from "../../Api/UserAPI";
 import SolutionTable from "../../Components/SolutionTable";
 import getSearchParams from "../../Utils/getSearchParams";
@@ -27,25 +26,8 @@ import coalesceQuery from "../../Utils/coalesceQuery";
 import SolutionFilter from "../../Components/Filters/SolutionFilter";
 import SolutionCalendar from "../../Components/SolutionCalendar.js";
 import SolutionDistribution from "../../Components/SolutionDistribution";
-
-const classes = {
-  follow: {
-    position: "absolute",
-    top: "4px",
-    right: "5px",
-    color: "white",
-  },
-  loadingFollow: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "350px",
-    minWidth: "250px",
-    backgroundColor: "black",
-    border: "2px solid #FF66EB",
-    borderRadius: "8px",
-  },
-};
+import ProfileAvatar from "../../Components/User/UserProfile/ProfileAvatar";
+import Biography from "../../Components/User/UserProfile/Biography";
 
 export default function ProfilePage(props) {
   const currentUser = useSelector((state) => state.user);
@@ -216,10 +198,10 @@ export default function ProfilePage(props) {
 
   function FollowIcon() {
     return (
-      <IconButton style={classes.follow} onClick={handleFollowClick}>
+      <IconButton onClick={handleFollowClick}>
         {(currentUser.following ?? []).includes(userInfo._id) ? (
           <PersonRemoveAlt1Icon
-            style={{ fontSize: "2rem", color: "#FF7A7A" }}
+            style={{ fontSize: "1.5rem", color: "#FF7A7A" }}
           />
         ) : (
           <PersonAddAlt1Icon style={{ fontSize: "2rem", color: "#7AFF87" }} />
@@ -239,17 +221,30 @@ export default function ProfilePage(props) {
             userId={get(userInfo, "_id")}
             bannerUrl={get(userInfo, "profile_banner_url")}
           />
+          <div className="username-profile-container">
+            <ProfileAvatar
+              userInfo={userInfo}
+              style={{ alignSelf: "flex-end" }}
+            />
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <div style={{ fontSize: "2rem" }}>{userInfo.username}</div>
+              {get(currentUser, "user_id") !== userInfo._id && <FollowIcon />}
+            </div>
+          </div>
           <div className="profile-page-container">
             <div className="profile-calendar-container">
-              <div style={{ position: "relative", width: "fit-content" }}>
-                <UserProfile userInfo={userInfo} borderColor="#FF66EB" />
-                {get(currentUser, "user_id") !== userInfo._id && <FollowIcon />}
+              <div className="user-details-container">
+                <SolutionDistribution solvedProblems={userInfo.solved} />
+                <div style={{ width: "250px" }}>
+                  <Biography userInfo={userInfo} />
+                </div>
               </div>
-              <SolutionDistribution solvedProblems={userInfo.solved} />
-              <SolutionCalendar
-                calendar={solutionCalendar}
-                color={props.color}
-              />
+              <div style={{ height: "209px" }}>
+                <SolutionCalendar
+                  calendar={solutionCalendar}
+                  color={props.color}
+                />
+              </div>
             </div>
             <div style={{ width: "100%" }}>
               <div className="solution-table-query-container">

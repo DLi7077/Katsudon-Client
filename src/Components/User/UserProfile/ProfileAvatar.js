@@ -67,7 +67,10 @@ export default function ProfileAvatar(props) {
     );
   }
   return (
-    <div className="profile-picture" style={{ position: "relative" }}>
+    <div
+      className="profile-picture"
+      style={{ position: "relative", ...props.style }}
+    >
       <Avatar
         src={
           get(currentUser, "user_id") === props.userInfo._id
@@ -78,7 +81,6 @@ export default function ProfileAvatar(props) {
           width: "100px",
           height: "100px",
           border: "2px solid white",
-          ...props.style,
         }}
       />
       {get(currentUser, "user_id") === props.userInfo._id && <ProfileUpload />}
