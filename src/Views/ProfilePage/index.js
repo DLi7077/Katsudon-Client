@@ -226,39 +226,47 @@ export default function ProfilePage(props) {
             <div
               style={{
                 display: "flex",
-                alignItems: "flex-end",
-                height: "100%",
+                alignItems: "center",
+                width: "min(800px,100%)",
+                gap: "2rem",
               }}
             >
               <div
                 style={{
-                  position: "relative",
-                  height: "fit-content",
+                  display: "flex",
+                  alignItems: "flex-end",
+                  height: "100%",
                 }}
               >
-                <ProfileAvatar
-                  userInfo={userInfo}
-                  avatarStyle={{
-                    width: "120px",
-                    height: "120px",
+                <div
+                  style={{
+                    position: "relative",
+                    height: "fit-content",
                   }}
-                />
-
-                {get(currentUser, "user_id") !== userInfo._id && (
-                  <FollowIcon
-                    style={{
-                      position: "absolute",
-                      bottom: "0",
-                      right: "-2px",
-                      backgroundColor: "rgba(0,0,0,0.7)",
+                >
+                  <ProfileAvatar
+                    userInfo={userInfo}
+                    avatarStyle={{
+                      width: "120px",
+                      height: "120px",
                     }}
                   />
-                )}
-              </div>
-            </div>
-            <div style={{ fontSize: "2rem" }}>{userInfo.username}</div>
-          </div>
 
+                  {get(currentUser, "user_id") !== userInfo._id && (
+                    <FollowIcon
+                      style={{
+                        position: "absolute",
+                        bottom: "0",
+                        right: "-2px",
+                        backgroundColor: "rgba(0,0,0,0.7)",
+                      }}
+                    />
+                  )}
+                </div>
+              </div>
+              <div style={{ fontSize: "2rem" }}>{userInfo.username}</div>
+            </div>
+          </div>
           <div className="profile-page-container">
             <div className="follow-details">
               <div
