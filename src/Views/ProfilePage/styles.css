@@ -1,9 +1,9 @@
 .profile-page-container {
   display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
   flex-wrap: wrap;
-  gap: 3rem;
+  gap: 2rem;
   margin: 2rem;
   box-sizing: border-box;
 }
@@ -30,12 +30,44 @@
 }
 
 .username-profile-container {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   gap: 2rem;
   height: 50px;
   background-color: rgba(0, 0, 0, 0.4);
+  width: 100%;
+  
   padding-inline: 12rem;
+}
+
+.follow-details {
+  display: flex;
+  justify-content: center;
+  row-gap: 1rem;
+  column-gap: 4rem;
+  flex-wrap: wrap;
+  margin-top: -1rem;
+}
+
+.user-page-follow-list {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 1.5rem;
+  overflow-y: auto;
+}
+
+.profile-calendar-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  row-gap: 2rem;
+  padding: 1rem;
+
+  column-gap: 4rem;
+
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .user-details-container {
@@ -46,16 +78,7 @@
   gap: 2rem;
 }
 
-.profile-calendar-container {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  gap: 3rem;
-  flex-wrap: wrap;
-}
-
 .solution-table-query-container {
-  margin-inline: 10rem;
   display: flex;
   justify-self: center;
   flex-direction: column;
@@ -74,14 +97,14 @@
     width: 100%;
     margin-inline: 0;
   }
-  .username-profile-container {
-    padding-inline: 2rem;
-  }
 }
 
-@media only screen and (max-width: 734px) {
+@media only screen and (max-width: 754px) {
   .user-details-container {
     flex-direction: row;
     justify-content: center;
+  }
+  .username-profile-container {
+    padding-inline: 2rem;
   }
 }

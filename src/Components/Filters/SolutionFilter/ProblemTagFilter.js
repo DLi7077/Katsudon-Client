@@ -1,5 +1,5 @@
 import SkillBox from "./Skillbox";
-import QueryLabel from "./QueryLabel";
+import HelperLabel from "../../Views/HelperLabel";
 
 const classes = {
   problemTags: {
@@ -16,7 +16,7 @@ const classes = {
 export default function ProblemTagFilter(props) {
   return (
     <div style={{ marginInline: "1rem" }}>
-      <QueryLabel style={{ marginBottom: "0.5rem" }}>Problem Tags</QueryLabel>
+      <HelperLabel style={{ marginBottom: "0.5rem" }}>Problem Tags</HelperLabel>
       <div style={classes.problemTags}>
         <SkillBox
           solved={props.solved}

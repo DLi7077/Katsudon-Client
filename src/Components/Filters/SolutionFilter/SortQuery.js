@@ -1,7 +1,7 @@
 import { FormControl, Select, MenuItem, IconButton } from "@mui/material";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import QueryLabel from "./QueryLabel";
+import HelperLabel from "../../Views/HelperLabel";
 
 export default function SortQuery(props) {
   return (
@@ -26,7 +26,7 @@ export default function SortQuery(props) {
             </MenuItem>
           </Select>
         </FormControl>
-        <QueryLabel style={{ position: "absolute" }}>Sort by</QueryLabel>
+        <HelperLabel style={{ position: "absolute" }}>Sort by</HelperLabel>
       </div>
       <IconButton
         style={{ color: "white", fontSize: "1.5rem", padding: "0.25rem" }}

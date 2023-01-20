@@ -3,7 +3,7 @@ import React from "react";
 import { PROBLEM_DIFFICULTY } from "../../../Constants/colors";
 import { FormControl, Select, MenuItem } from "@mui/material";
 import { map } from "lodash";
-import QueryLabel from "./QueryLabel";
+import HelperLabel from "../../Views/HelperLabel";
 
 export default function DifficultyFilter(props) {
   return (
@@ -38,7 +38,7 @@ export default function DifficultyFilter(props) {
           })}
         </Select>
       </FormControl>
-      <QueryLabel style={{ position: "absolute" }}>Difficulty</QueryLabel>
+      <HelperLabel style={{ position: "absolute" }}>Difficulty</HelperLabel>
     </div>
   );
 }

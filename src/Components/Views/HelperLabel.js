@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function QueryLabel(props) {
+export default function HelperLabel(props) {
   return (
     <div
       style={{
