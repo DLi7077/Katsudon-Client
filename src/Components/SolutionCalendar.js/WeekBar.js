@@ -1,9 +1,9 @@
-export default function WeekBar({ week, year, count, firstWeek }) {
+export default function WeekBar({ week, year, count, firstWeek, color }) {
   return (
     <div
       style={{
         position: "relative",
-        height: `${count * 2}px`,
+        height: `${2 + count * 2}px`,
 
         maxHeight: "100%",
       }}
@@ -12,7 +12,7 @@ export default function WeekBar({ week, year, count, firstWeek }) {
         style={{
           width: "min(6px,1vw)",
           height: "100%",
-          backgroundColor: "white",
+          backgroundColor: count === 0 ? "white" : color,
           maxHeight: "100%",
         }}
       />

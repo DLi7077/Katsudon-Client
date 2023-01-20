@@ -1,10 +1,9 @@
-.solution-table {
+.solution-header {
   /* border-radius: 8px 8px 0px 0px; */
-  background-color: black;
+  background-color: rgba(0, 0, 0, 0.25);
 }
 
 .solution-table-body {
-  background-color: #444444;
   padding: 1px;
   border: 0;
   margin: 0;

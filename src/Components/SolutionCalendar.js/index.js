@@ -22,6 +22,7 @@ export default function SolutionCalendar(props) {
             count={count}
             year={year}
             week={week}
+            color={props.color}
           />
         );
       })}

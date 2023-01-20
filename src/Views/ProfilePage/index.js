@@ -26,6 +26,7 @@ import useSolutionQuery from "../../Hooks/useSolutionQuery";
 import coalesceQuery from "../../Utils/coalesceQuery";
 import SolutionFilter from "../../Components/Filters/SolutionFilter";
 import SolutionCalendar from "../../Components/SolutionCalendar.js";
+import SolutionDistribution from "../../Components/SolutionDistribution";
 
 const classes = {
   follow: {
@@ -244,7 +245,11 @@ export default function ProfilePage(props) {
                 <UserProfile userInfo={userInfo} borderColor="#FF66EB" />
                 {get(currentUser, "user_id") !== userInfo._id && <FollowIcon />}
               </div>
-              <SolutionCalendar calendar={solutionCalendar} />
+              <SolutionDistribution solvedProblems={userInfo.solved} />
+              <SolutionCalendar
+                calendar={solutionCalendar}
+                color={props.color}
+              />
             </div>
             <div style={{ width: "100%" }}>
               <div className="solution-table-query-container">
@@ -265,7 +270,7 @@ export default function ProfilePage(props) {
                   solutions={solutions.rows}
                   handleOpenSolutionModel={handleOpenSolutionModel}
                   headerColor={props.color}
-                  backgroundColor={"#382E37"}
+                  backgroundColor={`${props.color}11`}
                   loading={tableLoading}
                 />
               </div>
