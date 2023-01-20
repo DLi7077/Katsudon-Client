@@ -32,13 +32,12 @@
 .username-profile-container {
   box-sizing: border-box;
   display: flex;
-  align-items: center;
+  justify-content: center;
+  padding-inline: 2rem;
   gap: 2rem;
   height: 50px;
   background-color: rgba(0, 0, 0, 0.4);
   width: 100%;
-  
-  padding-inline: 12rem;
 }
 
 .follow-details {
@@ -103,8 +102,5 @@
   .user-details-container {
     flex-direction: row;
     justify-content: center;
-  }
-  .username-profile-container {
-    padding-inline: 2rem;
   }
 }
