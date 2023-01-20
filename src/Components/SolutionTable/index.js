@@ -42,7 +42,7 @@ solutions:{
 export default function SolutionTable(props) {
   const classes = {
     tableHeader: {
-      color: props.headerColor,
+      color: "white",
       fontSize: "1.4rem",
       padding: "1rem",
       fontFamily: "robotoReg",
