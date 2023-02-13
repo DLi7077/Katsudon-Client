@@ -1,9 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import LeetcodeLogo from "../../Assets/Leetcode.png";
 import UserAPI from "../../Api/UserAPI";
 import "./styles.css";
-import { useEffect } from "react";
 
 export default function LandingPage(props) {
   const [currentUsers, setCurrentUsers] = useState(null);
@@ -17,6 +16,7 @@ export default function LandingPage(props) {
   useEffect(() => {
     getTotalUsers();
   }, []);
+
   return (
     <div
       className="content-container"
@@ -26,7 +26,6 @@ export default function LandingPage(props) {
         <div className="landingpage-title">
           <div>Katsudon </div>
           <img src={LeetcodeLogo} alt="leetcode" className="leetcode-logo" />
-          <div>Leaderboard</div>
         </div>
         <div className="landingpage-details">
           <div className="landingpage-user-count">
@@ -38,7 +37,6 @@ export default function LandingPage(props) {
               navigate("/get-started");
             }}
           >
-            {" "}
             Get Started
           </button>
         </div>
