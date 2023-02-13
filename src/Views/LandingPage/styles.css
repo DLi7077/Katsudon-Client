@@ -5,7 +5,7 @@
   justify-content: center;
   align-items: center;
   gap: 1rem;
-  width: min(100vw, 1200px);
+  width: min(100vw, var(--page-container-width));
   padding: 0;
   background-color: #2a4f64;
   padding-top: 1.5rem;

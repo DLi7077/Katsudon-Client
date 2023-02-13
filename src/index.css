@@ -1,3 +1,8 @@
+:root {
+  --page-container-width: 1000px;
+  --navbar-height: 80px;
+}
+
 @font-face {
   font-family: robotoReg;
   src: url(Roboto-Regular.ttf);
@@ -38,7 +43,7 @@ code {
 
 .content-container {
   box-sizing: border-box;
-  width: min(100vw, 1000px);
+  width: min(100vw, var(--page-container-width));
   min-height: 80vh;
   background-color: #292929;
   padding-top: 2rem;
@@ -100,6 +105,9 @@ code {
 @media only screen and (max-width: 800px) {
   .page-container {
     margin-top: 70px;
+  }
+  :root {
+    --navbar-height: 50px;
   }
 }
 
