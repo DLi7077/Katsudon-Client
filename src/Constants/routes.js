@@ -15,6 +15,7 @@ export const routes = [
   { path: "/profile", element: <Profile /> },
   { path: "/users", element: <Users /> },
   { path: "/weekly-progress", element: <Progress /> },
+  { path: "/", element: <Progress /> },
 ];
 
 export const routeColors = {
@@ -25,4 +26,5 @@ export const routeColors = {
   "/profile": PAGETHEME.Purple,
   "/users": PAGETHEME.LightBlue,
   "/weekly-progress": PAGETHEME.Orange,
+  "/": PAGETHEME.Orange,
 };
