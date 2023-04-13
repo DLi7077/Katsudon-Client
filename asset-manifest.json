@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/katsudon-client/static/css/main.86014aae.chunk.css",
-    "main.js": "/katsudon-client/static/js/main.d3c9df0f.chunk.js",
-    "main.js.map": "/katsudon-client/static/js/main.d3c9df0f.chunk.js.map",
+    "main.js": "/katsudon-client/static/js/main.d340e603.chunk.js",
+    "main.js.map": "/katsudon-client/static/js/main.d340e603.chunk.js.map",
     "runtime-main.js": "/katsudon-client/static/js/runtime-main.c3140415.js",
     "runtime-main.js.map": "/katsudon-client/static/js/runtime-main.c3140415.js.map",
     "static/js/2.8d5db624.chunk.js": "/katsudon-client/static/js/2.8d5db624.chunk.js",
@@ -38,6 +38,6 @@
     "static/js/runtime-main.c3140415.js",
     "static/js/2.8d5db624.chunk.js",
     "static/css/main.86014aae.chunk.css",
-    "static/js/main.d3c9df0f.chunk.js"
+    "static/js/main.d340e603.chunk.js"
   ]
 }
