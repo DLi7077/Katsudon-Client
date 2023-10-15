@@ -66,6 +66,7 @@ export default function Verification(props) {
     }
 
     updateVerification();
+    // eslint-disable-next-line
   }, [location, currentUser]);
 
   const inputFieldProps = {
