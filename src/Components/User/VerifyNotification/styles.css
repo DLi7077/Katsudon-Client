@@ -1,0 +1,13 @@
+.notification {
+  background-color: rgb(48 48 48);
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border: 1px solid rgb(122, 122, 122);
+  font-size: 13px;
+  transition: all 200ms;
+}
+.notification:hover {
+  background-color: rgb(80, 80, 80);
+  cursor: pointer;
+}

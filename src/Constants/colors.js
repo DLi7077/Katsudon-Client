@@ -26,8 +26,8 @@ export const PAGETHEME = {
     color: "#66ffad",
     navbar: "#39ac6e",
     backgroundColor: "#222a25",
+    text: "hsl(138.8,40%,90%)",
     section: "#2e3832",
-    text: "#a6d9bd",
   },
   LightBlue: {
     color: "#7AFFEF",

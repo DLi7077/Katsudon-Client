@@ -1,19 +1,12 @@
 import React from "react";
 import InfoIcon from "@mui/icons-material/Info";
+import "./styles.css";
+import { useNavigate } from "react-router-dom";
 
 export default function VerifyNotification() {
+  const navigate = useNavigate();
   return (
-    <div
-      style={{
-        backgroundColor: "rgb(48 48 48)",
-        display: "flex",
-        alignItems: "center",
-        padding: "1rem",
-        border: "1px solid rgb(122, 122, 122)",
-        fontSize: "13px",
-        marginBottom: "1rem",
-      }}
-    >
+    <div className="notification" onClick={() => navigate("/verification")}>
       <InfoIcon style={{ marginRight: "0.5rem" }} />
       <span>
         Your account is not verified! Verify your account here to be visible to

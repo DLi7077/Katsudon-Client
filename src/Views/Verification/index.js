@@ -1,86 +1,184 @@
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { get } from "lodash";
-import { useFormik } from "formik";
-import { Button, TextField } from "@mui/material";
-import * as yup from "yup";
-import UserAPI from "../../Api/UserAPI";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
+import ReactCodeInput from "react-code-input";
 import { useDispatch, useSelector } from "react-redux";
-import { userLogin } from "../../Store/Reducers/user";
+import MarkEmailUnreadIcon from "@mui/icons-material/MarkEmailUnread";
+import UserVerificationAPI from "../../Api/UserVerificationAPI";
 import {
-  setSnackbarError,
-  setSnackbarSuccess,
-} from "../../Store/Reducers/snackbar";
-
-const classes = {
-  root: { borderBottom: "1px solid white" },
-  textInput: {
-    input: { color: "white", fontSize: "1.5rem" },
-    label: { color: "gray", fontSize: "1.25rem" },
-  },
-};
+  startLoading,
+  setLoaded,
+  stopLoading,
+} from "../../Store/Reducers/progress";
+import { userLogin } from "../../Store/Reducers/user";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function Verification(props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const currentUser = useSelector((state) => state.user);
+  const progress = useSelector((state) => state.progress);
+  const [verificationCode, setVerificationCode] = useState("");
+  const [verifying, setVerifying] = useState(false);
+  const [verificationError, setVerificationError] = useState(false);
+  async function updateVerification() {
+    dispatch(startLoading());
+    setVerificationError(false);
+    await UserVerificationAPI.createVerification().then(() => {
+      setTimeout(() => {
+        dispatch(setLoaded());
+
+        setTimeout(() => {
+          dispatch(stopLoading());
+        }, 600);
+      }, 100);
+    });
+  }
+
+  async function submitVerification(code) {
+    setVerificationError(false);
+    setVerifying(true);
+    try {
+      const verifiedUser = await UserVerificationAPI.attemptVerify(code);
+      const loginDetails = {
+        auth_token: localStorage.getItem("katsudon-lc-auth-token"),
+        ...verifiedUser.user,
+      };
+      dispatch(userLogin(loginDetails));
+    } catch (error) {
+      setVerificationError(true);
+    } finally {
+      setTimeout(() => {
+        setVerifying(false);
+      }, 300);
+    }
+  }
 
   useEffect(() => {
-    console.log(currentUser);
-    if (!currentUser.logged_in) navigate("/profile");
-    if (!currentUser.verified) navigate("/profile");
-  }, []);
+    if (!currentUser.logged_in) {
+      navigate("/weekly-progress");
+      return;
+    }
+    if (currentUser.verified) {
+      navigate("/profile");
+      return;
+    }
 
-  const emailRegex = RegExp(/^\S+@\S+\.\S+$/);
-  const validation = yup.object().shape({
-    email: yup
-      .string()
-      .matches(emailRegex, "Invalid email")
-      .required("Please enter email"),
-    password: yup.string().required("Please enter password"),
-  });
+    updateVerification();
+  }, [location, currentUser]);
 
-  const formik = useFormik({
-    initialValues: {
-      email: "",
-      password: "",
+  const inputFieldProps = {
+    inputStyle: {
+      fontFamily: "monospace",
+      margin: "4px",
+      width: "1.75rem",
+      borderRadius: "3px",
+      fontSize: "14px",
+      height: "3rem",
+      backgroundColor: "#333333",
+      color: "white",
+      border: "1px solid #adadad",
     },
-    validationSchema: validation,
-    onSubmit: (data) => {
-      console.table(data);
-    },
-  });
+  };
+
+  function Benefits() {
+    return (
+      <div className="align-center" style={{ fontSize: "14px" }}>
+        After verifying your account, you can:
+        <ul>
+          <li>
+            Create submissions via the{" "}
+            <a
+              href="https://chrome.google.com/webstore/detail/katsudon-leetcode-extensi/ncpppllgdfhgndifbpgcpkfolbbjfnol"
+              target="_blank"
+              rel="noreferrer"
+              style={{ color: props.color }}
+            >
+              Katsudon Leetcode Extension
+            </a>
+          </li>
+          <li>Customize your profile</li>
+          <li>Become visible to other users</li>
+          <li>Follow other users</li>
+        </ul>
+      </div>
+    );
+  }
 
   return (
     <div
-      className="content-container"
-      style={{ backgroundColor: props.backgroundColor }}
+      className="content-container align-down"
+      style={{ backgroundColor: props.backgroundColor, alignItems: "center" }}
     >
-      <form onSubmit={formik.handleSubmit} className="login-register-form">
-        <TextField
-          error={Boolean(formik.touched.email && formik.errors.email)}
-          helperText={formik.touched.email && formik.errors.email}
-          type="text"
-          label="Email"
-          name="email"
-          variant="standard"
-          onChange={formik.handleChange}
-          sx={classes.textInput}
-        />
-        <TextField
-          error={Boolean(formik.touched.password && formik.errors.password)}
-          helperText={formik.touched.password && formik.errors.password}
-          type="password"
-          label="Password"
-          name="password"
-          variant="standard"
-          onChange={formik.handleChange}
-          sx={classes.textInput}
-        />
-        <Button type="submit" sx={{ color: "white", fontSize: "1.25rem" }}>
-          Login
-        </Button>
-      </form>
+      <MarkEmailUnreadIcon style={{ fontSize: "4rem" }} />
+      <div style={{ fontSize: "2rem", marginBottom: "1rem" }}>
+        Verify your email address
+      </div>
+      {progress.loaded ? (
+        <>
+          <div style={{ fontSize: "1.25rem" }}>
+            A verification code was sent to your email. It will expire in 10
+            minutes.
+            <br />
+          </div>
+          <ReactCodeInput
+            type="text"
+            value={verificationCode}
+            onChange={(code) => setVerificationCode(code)}
+            fields={6}
+            {...inputFieldProps}
+          />
+          {verificationError && (
+            <div style={{ color: "#FF7A7A", fontSize: "14px" }}>
+              Incorrect verification code
+            </div>
+          )}
+          <div className="align-down" style={{ gap: "4px" }}>
+            <Button
+              style={{
+                textTransform: "none",
+                fontSize: "14px",
+                color: props.text,
+                height: "36px",
+              }}
+              variant="outlined"
+              onClick={() => submitVerification(verificationCode)}
+            >
+              {verifying ? (
+                <CircularProgress style={{ height: "24px", width: "24px" }} />
+              ) : (
+                <>Submit</>
+              )}
+            </Button>
+            <Button
+              style={{
+                textTransform: "none",
+                textDecoration: "underline",
+                fontSize: "12px",
+                color: props.text,
+              }}
+              onClick={() => updateVerification()}
+            >
+              Resend Code
+            </Button>
+          </div>
+        </>
+      ) : (
+        <div style={{ fontSize: "1.25rem" }}>
+          Sending verification code to your email...
+        </div>
+      )}
+      <div
+        style={{
+          width: "90%",
+          height: "2px",
+          backgroundColor: props.color,
+          marginTop: "2rem",
+          marginBottom: "2rem",
+        }}
+      />
+      <Benefits />
     </div>
   );
 }

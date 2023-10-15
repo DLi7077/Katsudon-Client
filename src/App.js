@@ -14,7 +14,6 @@ import {
 } from "./Store/Reducers/snackbar";
 import SnackbarMessage from "./Components/Snackbar";
 import { ThemeProvider, createTheme } from "@mui/material";
-import VerifyNotification from "./Components/User/VerifyNotification";
 
 function App() {
   const dispatch = useDispatch();

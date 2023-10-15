@@ -25,6 +25,7 @@ export const routeColors = {
   "/get-started": PAGETHEME.Blue,
   "/register": PAGETHEME.Blue,
   "/login": PAGETHEME.Blue,
+  "/verification": PAGETHEME.Green,
   "/profile": PAGETHEME.Purple,
   "/users": PAGETHEME.LightBlue,
   "/weekly-progress": PAGETHEME.Orange,
