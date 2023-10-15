@@ -18,6 +18,7 @@ export default function SolutionRow(props) {
       margin: 0,
       padding: 0,
       paddingInline: "1rem",
+      width: "75px",
     },
     fileOpen: { fontSize: "2rem", color: "white" },
     languageLogo: {

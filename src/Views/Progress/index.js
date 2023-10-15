@@ -12,11 +12,12 @@ import Header from "./Header";
 import useSolutionModal from "../../Hooks/useSolutionModal";
 import ActivityPost from "./ActivityPost";
 import "./styles.css";
+import VerifyNotification from "../../Components/User/VerifyNotification";
 
 export default function Activity(props) {
   const dispatch = useDispatch();
   const progress = useSelector((state) => state.progress);
-  const user = useSelector((state) => state.user);
+  const currentUser = useSelector((state) => state.user);
 
   const [weeklySolutions, setWeeklySolutions] = useState([]);
 
@@ -25,7 +26,7 @@ export default function Activity(props) {
 
   async function retrievePosts() {
     dispatch(startLoading());
-    await UserAPI.getWeeklySolutions(user.user_id)
+    await UserAPI.getWeeklySolutions(currentUser.user_id)
       .then((solutions) => {
         // clean solutions then group by date
         setWeeklySolutions(postGenerator(solutions.rows));
@@ -81,45 +82,48 @@ export default function Activity(props) {
   }
 
   return (
-    <div
-      className="content-container"
-      style={{ backgroundColor: props.backgroundColor }}
-    >
-      <SolutionModalComponent />
-      <Header text={props.text} color={props.color} />
+    <div className="align-down">
+      {currentUser.logged_in && !currentUser.verified && <VerifyNotification />}
+      <div
+        className="content-container"
+        style={{ backgroundColor: props.backgroundColor }}
+      >
+        <SolutionModalComponent />
+        <Header text={props.text} color={props.color} />
 
-      {progress.loaded && (
-        <div
-          className="align-down"
-          style={{ alignItems: "center", gap: "2rem" }}
-        >
-          {map(weeklySolutions, (dailySolutions, date) => {
-            return (
-              <div
-                className="align-down"
-                style={{ gap: "1.5rem" }}
-                key={`${date}-posts`}
-              >
-                <DateDivider key={date} date={date} />
-                {dailySolutions.map((post, idx) => {
-                  return (
-                    <ActivityPost
-                      key={idx}
-                      userId={post.user_id}
-                      username={post.username}
-                      profileURL={post.profile_picture_url}
-                      solved={post.solved}
-                      attempted={post.attempted}
-                      handleOpenSolutionModel={handleOpenSolutionModel}
-                      backgroundColor={props.section}
-                    />
-                  );
-                })}
-              </div>
-            );
-          })}
-        </div>
-      )}
+        {progress.loaded && (
+          <div
+            className="align-down"
+            style={{ alignItems: "center", gap: "2rem" }}
+          >
+            {map(weeklySolutions, (dailySolutions, date) => {
+              return (
+                <div
+                  className="align-down"
+                  style={{ gap: "1.5rem" }}
+                  key={`${date}-posts`}
+                >
+                  <DateDivider key={date} date={date} />
+                  {dailySolutions.map((post, idx) => {
+                    return (
+                      <ActivityPost
+                        key={idx}
+                        userId={post.user_id}
+                        username={post.username}
+                        profileURL={post.profile_picture_url}
+                        solved={post.solved}
+                        attempted={post.attempted}
+                        handleOpenSolutionModel={handleOpenSolutionModel}
+                        backgroundColor={props.section}
+                      />
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

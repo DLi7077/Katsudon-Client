@@ -6,12 +6,14 @@ import Register from "../Views/Register";
 import GetStarted from "../Views/Get Started";
 import { PAGETHEME } from "./colors";
 import Login from "../Views/Login";
+import Verification from "../Views/Verification";
 
 export const routes = [
   { path: "/welcome", element: <LandingPage /> },
   { path: "/get-started", element: <GetStarted /> },
   { path: "/register", element: <Register /> },
   { path: "/login", element: <Login /> },
+  { path: "/verification", element: <Verification /> },
   { path: "/profile", element: <Profile /> },
   { path: "/users", element: <Users /> },
   { path: "/weekly-progress", element: <Progress /> },

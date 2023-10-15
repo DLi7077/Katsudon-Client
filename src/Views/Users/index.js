@@ -13,9 +13,11 @@ import { Button, CircularProgress } from "@mui/material";
 import { Link } from "react-router-dom";
 import "./styles.css";
 import Header from "./Header";
+import VerifyNotification from "../../Components/User/VerifyNotification";
 
 export default function Users(props) {
   const dispatch = useDispatch();
+  const currentUser = useSelector((state) => state.user);
   const progress = useSelector((state) => state.progress);
 
   const [users, setUsers] = useState([]);
@@ -64,55 +66,58 @@ export default function Users(props) {
   }, [selectedUser]);
 
   return (
-    <div
-      className="content-container"
-      style={{ backgroundColor: props.backgroundColor, position: "relative" }}
-    >
-      <Header color={props.color} text={props.text} />
-      <div className="user-page-content-container">
-        {progress.loaded && (
-          <UserFilter
-            allUsers={users}
-            selectedUser={selectedUser}
-            setSelectedUser={setSelectedUser}
-          />
-        )}
-        <div
-          className="user-page-user-profile-container"
-          style={{ position: "relative" }}
-        >
-          {progress.loaded && userProfileLoading && (
-            <div
-              style={{
-                position: "absolute",
-                left: "50%",
-                top: "50%",
-                translate: "-50% -50%",
-              }}
-            >
-              <CircularProgress
+    <div className="align-down">
+      {currentUser.logged_in && !currentUser.verified && <VerifyNotification />}
+      <div
+        className="content-container"
+        style={{ backgroundColor: props.backgroundColor, position: "relative" }}
+      >
+        <Header color={props.color} text={props.text} />
+        <div className="user-page-content-container">
+          {progress.loaded && (
+            <UserFilter
+              allUsers={users}
+              selectedUser={selectedUser}
+              setSelectedUser={setSelectedUser}
+            />
+          )}
+          <div
+            className="user-page-user-profile-container"
+            style={{ position: "relative" }}
+          >
+            {progress.loaded && userProfileLoading && (
+              <div
                 style={{
-                  color: props.color,
-                  width: "4rem",
-                  height: "4rem",
+                  position: "absolute",
+                  left: "50%",
+                  top: "50%",
+                  translate: "-50% -50%",
                 }}
-              />
-            </div>
-          )}
-          {!userProfileLoading && !!currrentUserDetails && (
-            <>
-              <UserProfile userInfo={currrentUserDetails} />
-              <Link
-                to={`/profile?user_id=${get(selectedUser, "_id")}`}
-                className="problem-link"
-                style={{ textDecoration: "none" }}
               >
-                <Button style={{ color: "white", fontSize: "1.25rem" }}>
-                  View Profile
-                </Button>
-              </Link>
-            </>
-          )}
+                <CircularProgress
+                  style={{
+                    color: props.color,
+                    width: "4rem",
+                    height: "4rem",
+                  }}
+                />
+              </div>
+            )}
+            {!userProfileLoading && !!currrentUserDetails && (
+              <>
+                <UserProfile userInfo={currrentUserDetails} />
+                <Link
+                  to={`/profile?user_id=${get(selectedUser, "_id")}`}
+                  className="problem-link"
+                  style={{ textDecoration: "none" }}
+                >
+                  <Button style={{ color: "white", fontSize: "1.25rem" }}>
+                    View Profile
+                  </Button>
+                </Link>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -8,6 +8,7 @@
   box-sizing: border-box;
 }
 
+
 .user-profile-banner {
   max-width: 100%;
   width: 100%;
@@ -66,7 +67,8 @@
 
   column-gap: 4rem;
 
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(80, 80, 80, 0.1);
+  border: 1px solid #646464;
 }
 
 .user-details-container {

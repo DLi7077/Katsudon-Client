@@ -29,6 +29,7 @@ import SolutionDistribution from "../../Components/SolutionDistribution";
 import ProfileAvatar from "../../Components/User/UserProfile/ProfileAvatar";
 import Biography from "../../Components/User/UserProfile/Biography";
 import HelperLabel from "../../Components/Views/HelperLabel";
+import VerifyNotification from "../../Components/User/VerifyNotification";
 
 export default function ProfilePage(props) {
   const currentUser = useSelector((state) => state.user);
@@ -212,172 +213,179 @@ export default function ProfilePage(props) {
   }
 
   return (
-    <div
-      className="content-container"
-      style={{ backgroundColor: props.backgroundColor, paddingTop: 0 }}
-    >
-      {userInfo && progress.loaded && (
-        <>
-          <Banner
-            userId={get(userInfo, "_id")}
-            bannerUrl={get(userInfo, "profile_banner_url")}
-          />
-          <div className="username-profile-container">
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                width: "min(800px,100%)",
-                gap: "2rem",
-              }}
-            >
+    <div className="align-down">
+      {currentUser.logged_in && !currentUser.verified && <VerifyNotification />}
+      <div
+        className="content-container"
+        style={{ backgroundColor: props.backgroundColor, paddingTop: 0 }}
+      >
+        {userInfo && progress.loaded && (
+          <>
+            <Banner
+              userId={get(userInfo, "_id")}
+              bannerUrl={get(userInfo, "profile_banner_url")}
+            />
+            <div className="username-profile-container">
               <div
                 style={{
                   display: "flex",
-                  alignItems: "flex-end",
-                  height: "100%",
+                  alignItems: "center",
+                  width: "min(800px,100%)",
+                  gap: "2rem",
                 }}
               >
                 <div
                   style={{
-                    position: "relative",
-                    height: "fit-content",
+                    display: "flex",
+                    alignItems: "flex-end",
+                    height: "100%",
                   }}
                 >
-                  <ProfileAvatar
-                    userInfo={userInfo}
-                    avatarStyle={{
-                      width: "120px",
-                      height: "120px",
+                  <div
+                    style={{
+                      position: "relative",
+                      height: "fit-content",
                     }}
-                  />
-
-                  {get(currentUser, "user_id") !== userInfo._id && (
-                    <FollowIcon
-                      style={{
-                        position: "absolute",
-                        bottom: "0",
-                        right: "-2px",
-                        backgroundColor: "rgba(0,0,0,0.7)",
+                  >
+                    <ProfileAvatar
+                      userInfo={userInfo}
+                      avatarStyle={{
+                        width: "120px",
+                        height: "120px",
                       }}
                     />
-                  )}
-                </div>
-              </div>
-              <div style={{ fontSize: "2rem" }}>{userInfo.username}</div>
-            </div>
-          </div>
-          <div className="profile-page-container">
-            <div className="follow-details">
-              <div
-                className="user-page-follow-list"
-                style={{ position: "relative", width: "250px" }}
-              >
-                {userInfo.followers.map((user) => {
-                  return (
-                    <Link
-                      key={`${user.username}-follower`}
-                      to={`/profile?user_id=${user._id}`}
-                      style={{
-                        fontSize: "1.25rem",
-                        color: "white",
-                        textDecoration: "none",
-                      }}
-                    >
-                      <Avatar
-                        src={get(user, "profile_picture_url")}
-                        style={{ width: "32px", height: "32px" }}
-                      />
-                    </Link>
-                  );
-                })}
-                <HelperLabel style={{ position: "absolute", top: 0, left: 0 }}>
-                  Followers
-                </HelperLabel>
-              </div>
 
-              <div
-                className="user-page-follow-list"
-                style={{ position: "relative", width: "250px" }}
-              >
-                {userInfo.following.map((user) => {
-                  return (
-                    <Link
-                      key={`${user.username}-following`}
-                      to={`/profile?user_id=${user._id}`}
-                      style={{
-                        fontSize: "1.25rem",
-                        color: "white",
-                        textDecoration: "none",
-                      }}
-                    >
-                      <Avatar
-                        src={get(user, "profile_picture_url")}
-                        style={{ width: "32px", height: "32px" }}
+                    {get(currentUser, "user_id") !== userInfo._id && (
+                      <FollowIcon
+                        style={{
+                          position: "absolute",
+                          bottom: "0",
+                          right: "-2px",
+                          backgroundColor: "rgba(0,0,0,0.7)",
+                        }}
                       />
-                    </Link>
-                  );
-                })}
-                <HelperLabel style={{ position: "absolute", top: 0, left: 0 }}>
-                  Following
-                </HelperLabel>
+                    )}
+                  </div>
+                </div>
+                <div style={{ fontSize: "2rem" }}>{userInfo.username}</div>
               </div>
             </div>
-            <div className="profile-calendar-container">
-              <div className="user-details-container">
-                <SolutionDistribution solvedProblems={userInfo.solved} />
-                <div style={{ width: "250px" }}>
-                  <Biography userInfo={userInfo} />
+            <div className="profile-page-container">
+              <div className="follow-details">
+                <div
+                  className="user-page-follow-list"
+                  style={{ position: "relative", width: "250px" }}
+                >
+                  {userInfo.followers.map((user) => {
+                    return (
+                      <Link
+                        key={`${user.username}-follower`}
+                        to={`/profile?user_id=${user._id}`}
+                        style={{
+                          fontSize: "1.25rem",
+                          color: "white",
+                          textDecoration: "none",
+                        }}
+                      >
+                        <Avatar
+                          src={get(user, "profile_picture_url")}
+                          style={{ width: "32px", height: "32px" }}
+                        />
+                      </Link>
+                    );
+                  })}
+                  <HelperLabel
+                    style={{ position: "absolute", top: 0, left: 0 }}
+                  >
+                    Followers
+                  </HelperLabel>
+                </div>
+
+                <div
+                  className="user-page-follow-list"
+                  style={{ position: "relative", width: "250px" }}
+                >
+                  {userInfo.following.map((user) => {
+                    return (
+                      <Link
+                        key={`${user.username}-following`}
+                        to={`/profile?user_id=${user._id}`}
+                        style={{
+                          fontSize: "1.25rem",
+                          color: "white",
+                          textDecoration: "none",
+                        }}
+                      >
+                        <Avatar
+                          src={get(user, "profile_picture_url")}
+                          style={{ width: "32px", height: "32px" }}
+                        />
+                      </Link>
+                    );
+                  })}
+                  <HelperLabel
+                    style={{ position: "absolute", top: 0, left: 0 }}
+                  >
+                    Following
+                  </HelperLabel>
                 </div>
               </div>
-              <div style={{ height: "209px" }}>
-                <SolutionCalendar
-                  calendar={solutionCalendar}
-                  color={props.color}
-                />
+              <div className="profile-calendar-container">
+                <div className="user-details-container">
+                  <SolutionDistribution solvedProblems={userInfo.solved} />
+                  <div style={{ width: "250px" }}>
+                    <Biography userInfo={userInfo} />
+                  </div>
+                </div>
+                <div style={{ height: "209px" }}>
+                  <SolutionCalendar
+                    calendar={solutionCalendar}
+                    color={props.color}
+                  />
+                </div>
+              </div>
+              <div style={{ width: "100%" }}>
+                <div className="solution-table-query-container">
+                  <SolutionFilter
+                    difficulty={difficulty}
+                    setDifficulty={setDifficulty}
+                    problemTags={problemTags}
+                    setProblemTags={setProblemTags}
+                    sortBy={sortBy}
+                    setSortBy={setSortBy}
+                    sortDir={sortDir}
+                    setSortDir={setSortDir}
+                    solved={userInfo.solved}
+                    selectedTags={problemTags}
+                    updateSkillQuery={updateSkillQuery}
+                  />
+                  <SolutionTable
+                    solutions={solutions.rows}
+                    handleOpenSolutionModel={handleOpenSolutionModel}
+                    headerColor={props.color}
+                    backgroundColor={`${props.text}11`}
+                    loading={tableLoading}
+                  />
+                </div>
+                <SolutionModalComponent />
               </div>
             </div>
-            <div style={{ width: "100%" }}>
-              <div className="solution-table-query-container">
-                <SolutionFilter
-                  difficulty={difficulty}
-                  setDifficulty={setDifficulty}
-                  problemTags={problemTags}
-                  setProblemTags={setProblemTags}
-                  sortBy={sortBy}
-                  setSortBy={setSortBy}
-                  sortDir={sortDir}
-                  setSortDir={setSortDir}
-                  solved={userInfo.solved}
-                  selectedTags={problemTags}
-                  updateSkillQuery={updateSkillQuery}
-                />
-                <SolutionTable
-                  solutions={solutions.rows}
-                  handleOpenSolutionModel={handleOpenSolutionModel}
-                  headerColor={props.color}
-                  backgroundColor={`${props.text}11`}
-                  loading={tableLoading}
-                />
-              </div>
-              <SolutionModalComponent />
-            </div>
+          </>
+        )}
+        {!userInfo && progress.loaded && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              fontSize: "2rem",
+              color: "white",
+            }}
+          >
+            Invalid User
           </div>
-        </>
-      )}
-      {!userInfo && progress.loaded && (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            fontSize: "2rem",
-            color: "white",
-          }}
-        >
-          Invalid User
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
