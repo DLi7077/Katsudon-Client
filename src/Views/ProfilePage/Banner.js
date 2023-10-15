@@ -37,7 +37,11 @@ export default function Banner({ userId, bannerUrl }) {
         dispatch(setSnackbarSuccess("Uploaded banner"));
       })
       .catch(() => {
-        dispatch(setSnackbarWarning("File size must be < 5MB"));
+        if (!currentUser.verified) {
+          dispatch(
+            setSnackbarWarning("You must verify your account to do this")
+          );
+        } else dispatch(setSnackbarWarning("File size must be < 5MB"));
       });
   }
 
@@ -70,7 +74,7 @@ export default function Banner({ userId, bannerUrl }) {
               right: "8px",
               padding: "0.5rem",
               zIndex: 3,
-              border:'2px solid rgba(255,255,255,0.6)'
+              border: "2px solid rgba(255,255,255,0.6)",
             }}
             component="span"
           >

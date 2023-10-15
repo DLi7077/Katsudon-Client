@@ -10,6 +10,7 @@ const initialState = {
   followers: [],
   following: [],
   solved: [],
+  verified: false,
   auth_token: localStorage.getItem("katsudon-lc-auth-token") ?? null,
 };
 
@@ -27,6 +28,7 @@ export const userSlice = createSlice({
       state.followers = get(action.payload, "followers");
       state.following = get(action.payload, "following");
       state.solved = get(action.payload, "solved");
+      state.verified = get(action.payload, "verified");
       if (get(action.payload, "auth_token")) {
         state.auth_token = get(action.payload, "auth_token");
         localStorage.setItem(

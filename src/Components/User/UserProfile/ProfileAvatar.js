@@ -35,7 +35,11 @@ export default function ProfileAvatar(props) {
         dispatch(setSnackbarSuccess("Uploaded profile picture"));
       })
       .catch(() => {
-        dispatch(setSnackbarWarning("File size must be < 5MB"));
+        if (!currentUser.verified) {
+          dispatch(
+            setSnackbarWarning("You must verify your account to do this")
+          );
+        } else dispatch(setSnackbarWarning("File size must be < 5MB"));
       });
   }
 

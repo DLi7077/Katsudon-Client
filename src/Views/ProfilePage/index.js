@@ -167,7 +167,7 @@ export default function ProfilePage(props) {
           });
       })
       .catch((e) => {
-        console.error("could not follow/unfollow user");
+        console.error(e);
       });
   }
 

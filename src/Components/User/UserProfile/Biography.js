@@ -42,8 +42,10 @@ export default function Biography(props) {
         setUpdatedBio(updatedBiography);
         dispatch(setSnackbarSuccess("Updated biography"));
       })
-      .catch(() => {
-        dispatch(setSnackbarWarning("Couldn't update biography"));
+      .catch((error) => {
+        if (!currentUser.verifed) {
+          dispatch(setSnackbarWarning(error.response.data));
+        } else dispatch(setSnackbarWarning("Couldn't update biography"));
       })
       .finally(() => {
         setEditingBio(false);
