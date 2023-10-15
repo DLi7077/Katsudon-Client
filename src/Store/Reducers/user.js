@@ -5,6 +5,7 @@ const initialState = {
   logged_in: false,
   user_id: null,
   username: null,
+  email: "",
   profile_picture_url: null,
   profile_banner_url: null,
   followers: [],
@@ -22,6 +23,7 @@ export const userSlice = createSlice({
       state.logged_in = true;
       state.user_id = get(action.payload, "_id");
       state.username = get(action.payload, "username");
+      state.email = get(action.payload, "email");
       state.profile_picture_url = get(action.payload, "profile_picture_url");
       state.profile_banner_url = get(action.payload, "profile_banner_url");
       state.biography = get(action.payload, "biography");

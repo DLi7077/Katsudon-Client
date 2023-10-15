@@ -13,6 +13,15 @@ import {
 import { userLogin } from "../../Store/Reducers/user";
 import CircularProgress from "@mui/material/CircularProgress";
 
+const maskedEmail = (email) => {
+  const [username, domain] = email.split("@");
+  const letters = username.split("");
+  const hidden = Math.ceil(0.5 * letters.length);
+  for (let idx = 0; idx < hidden; idx++) letters[idx] = "*";
+
+  return letters.join("") + "@" + domain;
+};
+
 export default function Verification(props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -119,8 +128,8 @@ export default function Verification(props) {
       {progress.loaded ? (
         <>
           <div style={{ fontSize: "1.25rem" }}>
-            A verification code was sent to your email. It will expire in 10
-            minutes.
+            A verification code was sent to {maskedEmail(currentUser.email)}. It
+            will expire in 10 minutes.
             <br />
           </div>
           <ReactCodeInput
@@ -167,7 +176,7 @@ export default function Verification(props) {
         </>
       ) : (
         <div style={{ fontSize: "1.25rem" }}>
-          Sending verification code to your email...
+          Sending verification code to {maskedEmail(currentUser.email)}...
         </div>
       )}
       <div
