@@ -111,20 +111,3 @@ code {
     --navbar-height: 50px;
   }
 }
-
-/* scroll bar */
-/* width */
-::-webkit-scrollbar {
-  width: 4px;
-  max-height: 4px;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: white;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: lightgrey;
-}
